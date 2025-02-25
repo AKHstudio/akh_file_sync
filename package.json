@@ -1,0 +1,26 @@
+{
+    "name": "akh_file_sync",
+    "version": "1.0.0",
+    "private": false,
+    "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
+    "type": "module",
+    "scripts": {
+        "build": "node esbuild.js",
+        "lint": "eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
+    },
+    "keywords": [
+        "minecraft",
+        "addon",
+        "akhstudio"
+    ],
+    "author": "tako1dayo (akhstudio)",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/AKHstudio/akh_file_sync/issues"
+    },
+    "homepage": "https://github.com/AKHstudio/akh_file_sync#readme"
+}
