@@ -31,11 +31,9 @@ chokidar
                     })
                     .catch(() => {
                         error('Error building project');
-                        process.exit(1);
                     });
             } else {
                 error('TypeScript compilation failed');
-                process.exit(1);
             }
         });
     });
