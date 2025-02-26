@@ -34,6 +34,7 @@
     "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
     "devDependencies": {
         "@eslint/js": "^9.21.0",
+        "@types/cli-progress": "^3.11.6",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
         "esbuild": "^0.25.0",
@@ -43,7 +44,9 @@
         "typescript-eslint": "^8.25.0"
     },
     "dependencies": {
+        "chalk": "^5.4.1",
         "chokidar": "^4.0.3",
+        "cli-progress": "^3.12.0",
         "commander": "^13.1.0",
         "glob": "^11.0.1",
         "prompts": "^2.4.2",
