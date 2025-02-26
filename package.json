@@ -9,6 +9,7 @@
     },
     "scripts": {
         "build": "node esbuild.js",
+        "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
         "release": "npm run lint & npm run build"
@@ -42,6 +43,7 @@
         "typescript-eslint": "^8.25.0"
     },
     "dependencies": {
+        "chokidar": "^4.0.3",
         "commander": "^13.1.0",
         "glob": "^11.0.1",
         "prompts": "^2.4.2",
