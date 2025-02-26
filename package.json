@@ -4,6 +4,9 @@
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
+    "bin": {
+        "akhsync": "./dist/bin/akhsync.js"
+    },
     "scripts": {
         "build": "node esbuild.js",
         "lint": "eslint --config ./eslint.config.js src/",
@@ -19,6 +22,9 @@
         "addon",
         "akhstudio"
     ],
+    "engines": {
+        "node": ">=20.11.1"
+    },
     "author": "tako1dayo (akhstudio)",
     "license": "GPL-3.0",
     "bugs": {
@@ -27,6 +33,7 @@
     "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
     "devDependencies": {
         "@eslint/js": "^9.21.0",
+        "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
         "esbuild": "^0.25.0",
         "eslint": "^9.21.0",
@@ -35,6 +42,9 @@
         "typescript-eslint": "^8.25.0"
     },
     "dependencies": {
+        "commander": "^13.1.0",
+        "glob": "^11.0.1",
+        "prompts": "^2.4.2",
         "typescript": "^5.7.3"
     }
 }
