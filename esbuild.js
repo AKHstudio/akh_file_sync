@@ -10,7 +10,7 @@ tsc.on('close', (code) => {
     if (code === 0) {
         esbuild
             .build({
-                entryPoints: ['src/*.ts'],
+                entryPoints: ['src/**/*.ts'],
                 bundle: true,
                 outdir: 'dist',
                 minify: false,
