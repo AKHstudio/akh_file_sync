@@ -7,6 +7,7 @@ import { glob, globSync } from 'glob';
 import { exit } from 'process';
 import checkDirectoryExists from '@/helpers/checkDirectoryExists.js';
 import { CompilerOptions, createProgram, Diagnostic, getPreEmitDiagnostics, ModuleKind, ModuleResolutionKind, ScriptTarget } from 'typescript';
+import { error } from 'console';
 
 class BuildCommand {
     private directorys: string[];
@@ -16,9 +17,9 @@ class BuildCommand {
     /**
      *  build command class
      */
-    constructor(directorys: string[], options: { dev: boolean; only: 'behavior' | 'resource' | undefined }) {
+    constructor(directorys: string[], options: { development: boolean; only: 'behavior' | 'resource' | undefined }) {
         this.directorys = directorys;
-        this.dev = options.dev;
+        this.dev = options.development;
         this.only = options.only;
 
         if (this.directorys.length === 0) {
@@ -32,6 +33,7 @@ class BuildCommand {
 
     public async execute() {
         await this.clear();
+        // console.log('Cleared!');
         await this.copy();
     }
 
@@ -64,7 +66,7 @@ class BuildCommand {
     }
 
     private async copy() {
-        this.cpDirToBuildDir(this.only);
+        this.cpSrcDirToBuildDir(this.only);
 
         if (this.only === 'behavior' || this.only === undefined) {
             this.cpScriptsDirToBuildDir();
@@ -141,7 +143,7 @@ class BuildCommand {
         });
     }
 
-    public cpDirToBuildDir(only: typeof this.only) {
+    public cpSrcDirToBuildDir(only: typeof this.only) {
         const cliBar = new SingleBar(
             {
                 format: `{check} Copying {dirname} to build directory [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}`,
@@ -210,21 +212,23 @@ class BuildCommand {
 
             // console.log(scriptsDirPath);
 
-            glob(`${scriptsDirPath}/**/*`, {
+            const files = await glob(`${scriptsDirPath}/**/*`, {
                 posix: true,
                 nodir: true,
                 ignore: `${scriptsDirPath}/**/*.{ts,js}`,
-            }).then((files) => {
-                // console.log(files);
-                files.forEach((file) => {
-                    const filePath = path.join(destDir, 'behavior_packs', 'scripts', path.basename(file));
+            });
 
-                    cp(file, filePath, { recursive: true }).catch(() => {
-                        console.log('ℹ️', ' ', `[${chalk.blue('Copy to build scripts')}]`, chalk.yellow(`処理をスキップしました:`), directory);
-                    });
+            files.forEach((file) => {
+                // console.log('file: ', file);
 
-                    cliBar.increment();
+                const filePath = path.join(destDir, 'behavior_packs', 'scripts', file.slice(file.indexOf('scripts') + 8));
+
+                cp(file, filePath, { recursive: true }).catch((err) => {
+                    error('Error: ', err);
+                    console.log('ℹ️', ' ', `[${chalk.blue('Copy to build scripts')}]`, chalk.yellow(`処理をスキップしました:`), file);
                 });
+
+                cliBar.increment();
             });
         });
 
@@ -241,66 +245,85 @@ class BuildCommand {
         const tsBaseOptions: CompilerOptions = {
             module: ModuleKind.ES2022,
             moduleResolution: ModuleResolutionKind.Node10,
-            ib: ['es2022'],
+            lib: ['es2022'],
             strict: true,
             noImplicitAny: true,
             strictNullChecks: true,
             target: ScriptTarget.ES2022,
             removeComments: true,
             allowJs: true,
+            checkJs: false,
         };
 
         const cliBar = new SingleBar(
             {
-                format: `{check} compiling scripts {filename} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}`,
+                format: `{check} compiling scripts {dirname} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}`,
                 hideCursor: true,
                 stream: process.stdout,
             },
             Presets.legacy
         );
 
+        cliBar.start(this.directorys.length, 0, { check: '⌛', filename: chalk.blue('') });
+
         this.directorys.forEach(async (directory) => {
+            cliBar.update({ dirname: chalk.blue(directory) });
+
             const scriptsDirPath = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
 
-            await glob(`${scriptsDirPath}/**/*/`, { posix: true }).then((dirs) => {
-                // console.log(files);
+            // console.log('scriptsDirPath: ', scriptsDirPath);
+
+            const dirs = await glob(`${scriptsDirPath}/**/*/`, { posix: true });
+
+            // console.log('dirs: ', dirs);
+
+            if (dirs.length === 0) {
+                cliBar.increment();
+                console.log('ℹ️', ' ', `[${chalk.blue('compile scripts')}]`, chalk.yellow(`処理をスキップしました:`), directory);
+                return;
+            }
+
+            const filteredDirs = dirs.filter(async (dir) => {
+                const files = await glob(`${dir}/*.{ts,js}`, { nodir: true, posix: true, ignore: `${dir}/*.d.ts` });
+                return files.length > 0;
+            });
+
+            // console.log('filteredDirs: ', filteredDirs);
+
+            filteredDirs.forEach(async (dir) => {
+                const files = await glob(`${dir}/*.{ts,js}`, {
+                    nodir: true,
+                    posix: true,
+                    ignore: `${dir}/*.d.ts`,
+                });
+                // console.log('files: ', files);
 
                 const Diagnostics: Diagnostic[] = [];
 
-                const filteredDirs = dirs.filter(async (dir) => {
-                    const files = await glob(`${dir}/*.{ts,js}`, { nodir: true, posix: true, ignore: `${dir}/*.d.ts` });
-                    return files.length > 0;
-                });
+                const tsOptions: CompilerOptions = {
+                    ...tsBaseOptions,
+                    outDir: path.join(env.buildDir, directory, 'behavior_packs', 'scripts'),
+                    sourceMap: Boolean(this.dev),
+                    inlineSources: Boolean(this.dev),
+                };
 
-                console.log(filteredDirs);
+                // console.log('tsOptions: ', tsOptions);
 
-                cliBar.start(filteredDirs.length, 0, { check: '⌛', filename: chalk.blue('') });
+                const program = createProgram(files, tsOptions);
+                const emitResult = program.emit();
 
-                filteredDirs.forEach((dir) => {
-                    cliBar.update({ filename: chalk.blue(dir) });
+                // console.log('emitResult: ', emitResult);
 
-                    const tsOptions: CompilerOptions = {
-                        ...tsBaseOptions,
-                        outDir: path.join(env.buildDir, directory, 'behavior_packs', 'scripts', path.basename(dir)),
-                        sourceMap: this.dev,
-                        inlineSources: this.dev,
-                    };
+                const allDiagnostics = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
-                    const program = createProgram([dir], tsOptions);
-                    const emitResult = program.emit();
-
-                    const allDiagnostics = getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-
-                    cliBar.increment();
-
-                    Diagnostics.push(...allDiagnostics);
-                });
-
-                cliBar.update({ check: '✅' });
-                cliBar.update({ filename: chalk.green('Complete!') });
-                cliBar.stop();
+                Diagnostics.push(...allDiagnostics);
             });
+
+            cliBar.increment();
         });
+        cliBar.update({ check: '✅' });
+        cliBar.update({ filename: chalk.green('Complete!') });
+        cliBar.stop();
     }
 }
 
