@@ -3,6 +3,7 @@
 import { Command, Option } from 'commander';
 import packageJson from '../../package.json';
 import BuildCommand from '@/commands/build.js';
+import SyncCommand from '@/commands/sync.js';
 
 const program = new Command();
 
@@ -32,7 +33,7 @@ program.command("build")
         // console.log("Building...");
 
         const build = new BuildCommand(directories , options);
-        build.execute();
+        await build.execute();
     });
 
 // sync command
@@ -43,10 +44,16 @@ program.command("sync")
     .argument("[directory...]", "The directory to sync")
     .helpOption("-h, --help", "output usage sync command information")
     .option("-d,--development", "Sync the project in development mode" , false)
-    .option("--no-build", "Do not build the project before syncing" , false)
+    .option("--no-build", "Do not build the project before syncing")
     .addOption(new Option("-o, --only <type>", "sync only addon type").choices(["behavior" , "resource"]))
-    .action(async (directories : string[] , options) => {
-        console.log(directories , options);
+    .action(async (directories : string[] , options , test) => {
+        console.log(directories , test);
+        console.log( options);
+        
+        
+
+        const sync = new SyncCommand(directories , options);
+        await sync.execute();
     });
 
 program.parse();
