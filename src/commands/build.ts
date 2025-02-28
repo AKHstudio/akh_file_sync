@@ -11,23 +11,23 @@ import esbuild from 'esbuild';
 import { Listr } from 'listr2';
 
 class BuildCommand {
-    private directorys: string[];
+    private directories: string[];
     private dev: boolean;
     private only: 'behavior' | 'resource' | undefined;
 
     /**
      *  build command class
      */
-    constructor(directorys: string[], options: { development: boolean; only: 'behavior' | 'resource' | undefined }) {
-        this.directorys = directorys;
+    constructor(directories: string[], options: { development: boolean; only: 'behavior' | 'resource' | undefined }) {
+        this.directories = directories;
         this.dev = options.development;
         this.only = options.only;
 
-        if (this.directorys.length === 0) {
-            this.directorys = this.getAllAddonDirectorys();
+        if (this.directories.length === 0) {
+            this.directories = this.getAllAddondirectories();
         }
 
-        console.debug('Directorys: ', this.directorys);
+        console.debug('directories: ', this.directories);
         console.debug('Development: ', this.dev);
         console.debug('Only: ', this.only);
     }
@@ -98,12 +98,12 @@ class BuildCommand {
 
     /**
      * srcディレクトリ配下にある全てのアドオンディレクトリを取得する
-     * @returns all addon directorys
+     * @returns all addon directories
      */
-    private getAllAddonDirectorys(): string[] {
+    private getAllAddondirectories(): string[] {
         try {
-            const directorys = globSync(env.srcDir + '/*/', { posix: true });
-            const DirNames = directorys.map((directory) => path.basename(directory));
+            const directories = globSync(env.srcDir + '/*/', { posix: true });
+            const DirNames = directories.map((directory) => path.basename(directory));
             return DirNames;
         } catch (err) {
             console.error(err);
@@ -114,7 +114,7 @@ class BuildCommand {
     public clearSyncTargetDir(type: 'behavior' | 'resource') {
         const DevDirPath = path.join(env.syncTargetDir, `development_${type}_packs`);
 
-        const promises = this.directorys.map(async (directory) => {
+        const promises = this.directories.map(async (directory) => {
             const rmTargetDir = path.join(DevDirPath, `${env.akhsyncFlag}-${directory}`);
 
             rm(rmTargetDir, { recursive: true }).catch(() => {
@@ -127,7 +127,7 @@ class BuildCommand {
     }
 
     public clearOldSyncedBuildDir(only: typeof this.only) {
-        const promises = this.directorys.map(async (directory) => {
+        const promises = this.directories.map(async (directory) => {
             const rmTargetDir = path.join(env.buildDir, directory);
 
             if (only === undefined) {
@@ -155,7 +155,7 @@ class BuildCommand {
     }
 
     public cpSrcDirToBuildDir(only: typeof this.only) {
-        const promises = this.directorys.map(async (directory) => {
+        const promises = this.directories.map(async (directory) => {
             const srcDir = path.join(env.srcDir, directory);
             const destDir = path.join(env.buildDir, directory);
 
@@ -194,7 +194,7 @@ class BuildCommand {
     }
 
     public cpScriptsDirToBuildDir() {
-        const promises = this.directorys.map(async (directory) => {
+        const promises = this.directories.map(async (directory) => {
             const destDir = path.join(env.buildDir, directory);
 
             const scriptsDirPath = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
@@ -218,7 +218,7 @@ class BuildCommand {
     }
 
     public compileScripts() {
-        this.directorys.forEach(async (directory) => {
+        this.directories.forEach(async (directory) => {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
