@@ -8,7 +8,7 @@
         "akhsync": "./dist/bin/akhsync.js"
     },
     "scripts": {
-        "build": "node esbuild.js",
+        "build": "node esbuild.build.js",
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
@@ -37,7 +37,6 @@
         "@types/cli-progress": "^3.11.6",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
-        "esbuild": "^0.25.0",
         "eslint": "^9.21.0",
         "globals": "^16.0.0",
         "tsx": "^4.19.3",
@@ -48,7 +47,9 @@
         "chokidar": "^4.0.3",
         "cli-progress": "^3.12.0",
         "commander": "^13.1.0",
+        "esbuild": "^0.25.0",
         "glob": "^11.0.1",
+        "listr2": "^8.2.5",
         "prompts": "^2.4.2",
         "typescript": "^5.7.3"
     }
