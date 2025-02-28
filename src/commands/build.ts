@@ -11,9 +11,9 @@ import esbuild from 'esbuild';
 import { Listr } from 'listr2';
 
 class BuildCommand {
-    private directories: string[];
-    private dev: boolean;
-    private only: 'behavior' | 'resource' | undefined;
+    protected directories: string[];
+    protected dev: boolean;
+    protected only: 'behavior' | 'resource' | undefined;
 
     /**
      *  build command class
@@ -100,7 +100,7 @@ class BuildCommand {
      * srcディレクトリ配下にある全てのアドオンディレクトリを取得する
      * @returns all addon directories
      */
-    private getAllAddondirectories(): string[] {
+    protected getAllAddondirectories(): string[] {
         try {
             const directories = globSync(env.srcDir + '/*/', { posix: true });
             const DirNames = directories.map((directory) => path.basename(directory));
