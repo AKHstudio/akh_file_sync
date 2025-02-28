@@ -26,13 +26,27 @@ program.command("build")
     .helpOption("-h, --help", "output usage build command information")
     .option("-d,--development", "Build the project in development mode" , false)
     .addOption(new Option("-o, --only <type>", "build only addon type").choices(["behavior" , "resource"]))
-    .action(async (directorys : string[] , options) => {
-        // console.log(directorys , options);
+    .action(async (directories : string[] , options) => {
+        // console.log(directories , options);
         
         // console.log("Building...");
 
-        const build = new BuildCommand(directorys , options);
+        const build = new BuildCommand(directories , options);
         build.execute();
+    });
+
+// sync command
+// prettier-ignore
+program.command("sync")
+    .usage("[directory...] [options]")
+    .description("Sync files between two directories")
+    .argument("[directory...]", "The directory to sync")
+    .helpOption("-h, --help", "output usage sync command information")
+    .option("-d,--development", "Sync the project in development mode" , false)
+    .option("--no-build", "Do not build the project before syncing" , false)
+    .addOption(new Option("-o, --only <type>", "sync only addon type").choices(["behavior" , "resource"]))
+    .action(async (directories : string[] , options) => {
+        console.log(directories , options);
     });
 
 program.parse();
