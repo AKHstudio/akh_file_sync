@@ -46,9 +46,8 @@ program.command("sync")
     .option("-d,--development", "Sync the project in development mode" , false)
     .option("--no-build", "Do not build the project before syncing")
     .addOption(new Option("-o, --only <type>", "sync only addon type").choices(["behavior" , "resource"]))
-    .action(async (directories : string[] , options , test) => {
-        console.log(directories , test);
-        console.log( options);
+    .action(async (directories : string[] , options ) => {
+        // console.log(directories, options);
         
         
 
