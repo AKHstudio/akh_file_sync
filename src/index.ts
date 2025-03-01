@@ -5,7 +5,8 @@ const syncTargetDir = path.join(homedir(), 'AppData/Local/Packages/Microsoft.Min
 const srcDir = path.resolve('src');
 const buildDir = path.resolve('build');
 const distDir = path.resolve('dist');
+const worldDir = path.resolve('world');
 
 const akhsyncFlag = 'akhsync';
 
-export { syncTargetDir, srcDir, buildDir, distDir, akhsyncFlag };
+export { syncTargetDir, srcDir, buildDir, distDir, worldDir, akhsyncFlag };
