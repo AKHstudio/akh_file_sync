@@ -119,7 +119,7 @@ class BuildCommand {
 
             rm(rmTargetDir, { recursive: true }).catch(() => {
                 console.warn('ℹ️', ` [${chalk.green(`Clear target ${type}`)}]`, chalk.yellow(`処理をスキップしました:`), rmTargetDir);
-                console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しない可能性があります。`);
+                console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しないまたはゲームを起動中の可能性があります。`);
             });
         });
 
