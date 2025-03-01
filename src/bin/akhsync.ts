@@ -6,6 +6,7 @@ import BuildCommand from '@/commands/build.js';
 import SyncCommand from '@/commands/sync.js';
 import AsyncCommand from '@/commands/async.js';
 import WatchCommand from '@/commands/watch.js';
+import DistCommand from '@/commands/dist.js';
 
 const program = new Command();
 
@@ -83,6 +84,23 @@ program.command("watch")
 
         const watch = new WatchCommand(directories , { development: options.development , build: true, only: options.only });
         await watch.execute();
+    });
+
+// dist command
+// prettier-ignore
+program.command("dist")
+    .usage("[directory...] [options]")
+    .description("Dist files between two directories")
+    .argument("[directory...]", "The directory to dist")
+    .helpOption("-h, --help", "output usage dist command information")
+    .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
+    .option("--set-version <version>", "Set the version of the dist")
+    .option("--set-world-name <name>", "Set the world name of the dist" , "{name} {version}")
+    .action(async (directories : string[] , options) => {
+        // console.log(directories , options);
+
+        const dist = new DistCommand(directories , { setVersion: options.setVersion , type: options.type , setWorldName: options.setWorldName });
+        await dist.execute();
     });
 
 program.parse();
