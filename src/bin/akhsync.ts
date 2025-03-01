@@ -4,6 +4,7 @@ import { Command, Option } from 'commander';
 import packageJson from '../../package.json';
 import BuildCommand from '@/commands/build.js';
 import SyncCommand from '@/commands/sync.js';
+import AsyncCommand from '@/commands/async.js';
 
 const program = new Command();
 
@@ -48,11 +49,23 @@ program.command("sync")
     .addOption(new Option("-o, --only <type>", "sync only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options ) => {
         // console.log(directories, options);
-        
-        
-
         const sync = new SyncCommand(directories , options);
         await sync.execute();
+    });
+
+// async command
+// prettier-ignore
+program.command("async")
+    .usage("[directory...]")
+    .description("Async files between two directories")
+    .argument("[directory...]", "The directory to async")
+    .helpOption("-h, --help", "output usage async command information")
+    .addOption(new Option("-o, --only <type>", "async only addon type").choices(["behavior" , "resource"]))
+    .action(async (directories : string[] , option) => {
+        console.log(directories , option);
+
+        const Async = new AsyncCommand(directories , option);
+        await Async.execute();
     });
 
 program.parse();
