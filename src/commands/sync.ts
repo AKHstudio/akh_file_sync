@@ -1,11 +1,13 @@
 import buildCommand from '@/commands/build.js';
-import { Listr } from 'listr2';
+import { delay, Listr } from 'listr2';
 import * as env from '@/index.js';
 import { existsSync } from 'fs';
 import path from 'path';
+import chalk from 'chalk';
+import { cp } from 'fs/promises';
 
 class SyncCommand extends buildCommand {
-    private nobuild: boolean;
+    private build: boolean;
 
     constructor(directories: string[], options: { development: boolean; build: boolean; only: 'behavior' | 'resource' | undefined }) {
         super(directories, options);
@@ -14,19 +16,21 @@ class SyncCommand extends buildCommand {
             this.directories = super.getAllAddondirectories();
         }
 
-        console.debug('nobuild', options.build);
+        console.debug('build', options.build);
 
-        this.nobuild = options.build;
+        this.build = options.build;
     }
 
     public override async execute(): Promise<void> {
-        if (this.nobuild) {
+        if (this.build) {
             await super.execute();
+
+            await this.syncTask();
         } else {
             const task = new Listr(
                 [
                     {
-                        title: 'Clearing',
+                        title: 'Clearing Sync Target',
                         task: () => {
                             if (this.only === 'behavior') {
                                 super.clearSyncTargetDir(this.only);
@@ -38,21 +42,59 @@ class SyncCommand extends buildCommand {
                             }
                         },
                     },
-                    {
-                        title: 'Checking Builded',
-                        task: () => this.checkBuilded(),
-                    },
                 ],
                 { concurrent: false }
             );
 
-            await task.run().catch((error) => console.error(error));
+            await task
+                .run()
+                .then(async () => {
+                    await this.syncTask();
+                })
+                .catch((error) => {
+                    console.error(`❌ [${chalk.red('Check Builded')}]`, chalk.red(`エラーが発生しました:`), error);
+
+                    if (error.message === 'Builded failed') {
+                        console.warn('ℹ️', `[${chalk.green('Check Builded')}]`, chalk.yellow(`ビルドが完了していません。`));
+                    }
+                });
         }
+    }
+
+    protected async syncTask(): Promise<void> {
+        const syncTask = new Listr(
+            [
+                {
+                    title: 'Build delay',
+                    task: async () => await delay(1000),
+                },
+                {
+                    title: 'Checking Builded',
+                    task: () => this.checkBuilded(),
+                },
+                {
+                    title: 'Syncing',
+                    task: () => {
+                        if (this.only === 'behavior') {
+                            this.runSync('behavior');
+                        } else if (this.only === 'resource') {
+                            this.runSync('resource');
+                        } else {
+                            this.runSync('behavior');
+                            this.runSync('resource');
+                        }
+                    },
+                },
+            ],
+            { concurrent: false }
+        );
+
+        await syncTask.run().catch((error) => console.error(error));
     }
 
     protected checkBuilded(): void {
         this.directories.forEach((directory) => {
-            const buildDir = path.join(env.buildDir, 'build', directory);
+            const buildDir = path.join(env.buildDir, directory);
 
             if (!existsSync(buildDir)) {
                 throw new Error('Builded failed');
@@ -78,6 +120,17 @@ class SyncCommand extends buildCommand {
                     throw new Error('Builded failed');
                 }
             }
+        });
+    }
+
+    protected async runSync(type: 'behavior' | 'resource') {
+        this.directories.forEach((directory) => {
+            const buildDir = path.join(env.buildDir, directory, `${type}_packs`);
+            const syncTargetDir = path.join(env.syncTargetDir, `development_${type}_packs`, `${env.akhsyncFlag}-${directory}`);
+
+            cp(buildDir, syncTargetDir, { recursive: true, force: true }).catch((err) => {
+                console.error(`❌ [${chalk.red(`Sync target ${type}`)}]`, chalk.red(`エラーが発生しました:`), err);
+            });
         });
     }
 }
