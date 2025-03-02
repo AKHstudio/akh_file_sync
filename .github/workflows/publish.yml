@@ -41,6 +41,9 @@ jobs:
               with:
                   ref: main
 
+            - name: pakcage.json のバージョンを確認
+              run: cat package.json
+
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
               with:
