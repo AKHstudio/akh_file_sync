@@ -28,7 +28,7 @@ jobs:
             - name: npmパブリッシュ
               run: npm publish --access public
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     release:
         needs: publish
