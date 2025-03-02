@@ -1,0 +1,30 @@
+# 開発用ファイル
+.git
+.github
+.vscode
+node_modules
+.env
+.DS_Store
+
+# ビルド不要なソースコード
+src/  # ビルド後に不要なら除外
+packages/ 
+tests/
+__tests__/
+__mocks__/
+coverage/
+jest.config.js
+*.test.js
+*.spec.js
+
+# CI/CDやドキュメント関連
+.npmignore
+.gitignore
+.prettier*
+eslint*
+*.log
+TODO.md
+
+# TypeScript（コンパイル後の.jsだけを公開する場合）
+*.ts
+tsconfig.json
