@@ -95,7 +95,7 @@ program.command("dist")
     .helpOption("-h, --help", "output usage dist command information")
     .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
     .option("--set-version <version>", "Set the version of the dist")
-    .option("--set-world-name <name>", "Set the world name of the dist" , "{name} {version}")
+    .option("--set-world-name <name>", "Set the world name of the dist. replace {name} : dirName , {version} : version" , "{name} {version}")
     .action(async (directories : string[] , options) => {
         // console.log(directories , options);
 
