@@ -103,4 +103,17 @@ program.command("dist")
         await dist.execute();
     });
 
+// update command
+// prettier-ignore
+// program.command("update")
+//     .description("Update the CLI tool")
+//     .helpOption("-h, --help", "output usage update command information")
+//     .option("-d, --dist" , "Update the CLI tool to the latest version")
+//     .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
+//     .option("--set-version <version>", "Set the version of the dist")
+//     .option("--set-world-name <name>", "Set the world name of the dist. replace {name} : dirName , {version} : version" , "{name} {version}")
+//     .action((_ , options) => {
+//         console.log(options);
+//     });
+
 program.parse();
