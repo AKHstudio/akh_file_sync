@@ -28,9 +28,17 @@
     -   バージョンは `package.json` or オプションから取得する
     -   名前は `ディレクトリ名-バージョン` とする
     -   オプション
-        -   type : world , addon , pack から複数選択可能
+        -   type : world , addon から複数選択可能
         -   set-version : バージョンを指定する
         -   [ ] log : ログのレベルを設定できるようにする (リリース後実装)
--   [ ] `update` コマンド
+-   [ ] `update` コマンド (リリース後実装)
+    -   パッケージの更新を行う
+    -   @minecraft/server , -ui のバージョンを更新する
+    -   パッケージ一覧は `npm show <package-name> versions --json` で取得する
+    -   更新のために `node_modules` を消したうえで `npm install` が実行される (`npm ci` でもよい)
+    -   オプション
+        -   [ ] log : ログのレベルを設定できるようにする (リリース後実装)
+
+その他
 
 -   [ ] `dist`処理のリファクタリング
