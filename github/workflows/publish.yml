@@ -1,0 +1,54 @@
+name: Publish and Release
+
+on:
+    push:
+        tags:
+            - 'v*' # 例: v1.0.0 のようなタグをプッシュしたときに実行
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+
+            - name: Node.jsのセットアップ
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  registry-url: 'https://registry.npmjs.org/'
+
+            - name: 依存関係のインストール
+              run: npm ci
+
+            - name: ビルド
+              run: npm run release # ビルドが不要なら削除
+
+            - name: npmパブリッシュ
+              run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }}
+
+    release:
+        needs: publish
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+
+            - name: タグ名を取得
+              id: get_tag
+              run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+            - name: GitHubリリースを作成
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ env.TAG_NAME }}
+                  name: 'Release ${{ env.TAG_NAME }}'
+                  body: '🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀'
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
