@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { error } from 'console';
 import esbuild from 'esbuild';
 
-const tsc = exec('tsc -p ./tsconfig.json --noEmit src/', { cwd: process.cwd() });
+const tsc = exec('tsc -p ./tsconfig.json --noEmit', { cwd: process.cwd() });
 tsc.stdout.pipe(process.stdout);
 tsc.stderr.pipe(process.stderr);
 
