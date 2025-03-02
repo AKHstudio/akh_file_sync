@@ -1,59 +1,59 @@
 {
-    "name": "akh_file_sync",
-    "version": "1.0.1",
-    "private": false,
-    "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
-    "type": "module",
-    "bin": {
-        "akhsync": "./dist/bin/akhsync.js"
-    },
-    "scripts": {
-        "build": "node esbuild.build.js",
-        "watch": "node esbuild.watch.js",
-        "lint": "eslint --config ./eslint.config.js src/",
-        "lint:fix": "eslint --fix --config ./eslint.config.js src/",
-        "release": "npm run lint & npm run build"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
-    },
-    "keywords": [
-        "minecraft",
-        "addon",
-        "akhstudio"
-    ],
-    "engines": {
-        "node": ">=20.11.1"
-    },
-    "author": "tako1dayo (akhstudio)",
-    "license": "GPL-3.0",
-    "bugs": {
-        "url": "https://github.com/AKHstudio/akh_file_sync/issues"
-    },
-    "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
-    "devDependencies": {
-        "@eslint/js": "^9.21.0",
-        "@types/archiver": "^6.0.3",
-        "@types/cli-progress": "^3.11.6",
-        "@types/glob": "^8.1.0",
-        "@types/node": "^22.13.5",
-        "eslint": "^9.21.0",
-        "globals": "^16.0.0",
-        "tsx": "^4.19.3",
-        "typescript-eslint": "^8.25.0"
-    },
-    "dependencies": {
-        "archiver": "^7.0.1",
-        "chalk": "^5.4.1",
-        "chokidar": "^4.0.3",
-        "cli-progress": "^3.12.0",
-        "commander": "^13.1.0",
-        "esbuild": "^0.25.0",
-        "glob": "^11.0.1",
-        "listr2": "^8.2.5",
-        "prismarine-nbt": "^2.7.0",
-        "prompts": "^2.4.2",
-        "typescript": "^5.7.3"
-    }
+  "name": "akh_file_sync",
+  "version": "1.0.2",
+  "private": false,
+  "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
+  "type": "module",
+  "bin": {
+    "akhsync": "./dist/bin/akhsync.js"
+  },
+  "scripts": {
+    "build": "node esbuild.build.js",
+    "watch": "node esbuild.watch.js",
+    "lint": "eslint --config ./eslint.config.js src/",
+    "lint:fix": "eslint --fix --config ./eslint.config.js src/",
+    "release": "npm run lint & npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
+  },
+  "keywords": [
+    "minecraft",
+    "addon",
+    "akhstudio"
+  ],
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "author": "tako1dayo (akhstudio)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/AKHstudio/akh_file_sync/issues"
+  },
+  "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/archiver": "^6.0.3",
+    "@types/cli-progress": "^3.11.6",
+    "@types/glob": "^8.1.0",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
+    "tsx": "^4.19.3",
+    "typescript-eslint": "^8.25.0"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "chalk": "^5.4.1",
+    "chokidar": "^4.0.3",
+    "cli-progress": "^3.12.0",
+    "commander": "^13.1.0",
+    "esbuild": "^0.25.0",
+    "glob": "^11.0.1",
+    "listr2": "^8.2.5",
+    "prismarine-nbt": "^2.7.0",
+    "prompts": "^2.4.2",
+    "typescript": "^5.7.3"
+  }
 }
