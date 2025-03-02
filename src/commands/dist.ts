@@ -162,8 +162,8 @@ class DistCommand extends BuildCommand {
         this.directories.forEach(async (directory) => {
             const behavior_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'behavior_packs');
             const resource_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'resource_packs');
-            const worldBehavior_pack = path.join(env.worldDir, 'behavior_packs', directory + '-' + this.setVersion);
-            const worldResource_pack = path.join(env.worldDir, 'resource_packs', directory + '-' + this.setVersion);
+            const worldBehavior_pack = path.join(env.distDir, path.basename(env.worldDir) + '-' + this.setVersion, 'behavior_packs', directory + '-' + this.setVersion);
+            const worldResource_pack = path.join(env.distDir, path.basename(env.worldDir) + '-' + this.setVersion, 'resource_packs', directory + '-' + this.setVersion);
 
             cpSync(behavior_pack, worldBehavior_pack, { recursive: true, force: true });
 
@@ -185,7 +185,7 @@ class DistCommand extends BuildCommand {
         output.on('close', function () {
             // zip圧縮完了すると発火する
             const archive_size = archive.pointer();
-            console.log(`complete! mcaddon total size : ${archive_size} bytes`);
+            console.log(`complete! mcaddon total size : ${archive_size} bytes`, dest);
         });
     }
 }
