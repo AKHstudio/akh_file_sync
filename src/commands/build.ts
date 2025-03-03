@@ -242,18 +242,18 @@ class BuildCommand {
             // console.debug('tsconfigFiles: ', tsconfigFiles);
 
             // console.debug('esbuildOptions: ', {
-                entryPoints: [...scriptFiles],
-                bundle: false,
-                outdir: outdir,
-                minify: Boolean(!this.dev),
-                sourcemap: Boolean(this.dev),
-                sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
-                platform: 'node',
-                target: 'ESNext',
-                ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
-                format: 'esm',
-                packages: 'external',
-            });
+            //     entryPoints: [...scriptFiles],
+            //     bundle: false,
+            //     outdir: outdir,
+            //     minify: Boolean(!this.dev),
+            //     sourcemap: Boolean(this.dev),
+            //     sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
+            //     platform: 'node',
+            //     target: 'ESNext',
+            //     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
+            //     format: 'esm',
+            //     packages: 'external',
+            // });
 
             await esbuild
                 .build({
