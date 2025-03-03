@@ -79,6 +79,9 @@ jobs:
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
+              with:
+                  ref: main
+                  token: ${{ secrets.GH_PAT }}
 
             - name: タグ名を取得
               id: get_tag
