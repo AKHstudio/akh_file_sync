@@ -1,6 +1,6 @@
 # akhsync
 
-[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/AKHstudio/akh_file_sync/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/AKHstudio/akh_file_sync.svg)](https://github.com/AKHstudio/akh_file_sync/blob/main/LICENSE)
 
 AKHStudio が作成した mainecraft の統合版のアドオンを開発するためのライブラリです。
 
