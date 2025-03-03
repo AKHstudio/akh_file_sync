@@ -63,8 +63,18 @@ jobs:
               run: npm run release
               continue-on-error: true
 
-            - name: npmパブリッシュ
-              run: npm publish --access public
+            - name: タグを判定し、適切な npm publish を実行
+              run: |
+                  if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
+                      echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
+                      npm publish --tag beta --access public
+                  elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
+                      echo "🚀 Release Candidate として公開: npm publish --tag rc"
+                      npm publish --tag rc --access public
+                  else
+                      echo "🚀 ステーブルバージョンとして公開: npm publish"
+                      npm publish --access public
+                  fi
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               continue-on-error: true
@@ -118,6 +128,9 @@ jobs:
               run: |
                   LATEST_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | head -n 1 | cut -d: -f1)
                   NEXT_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | sed -n '2p' | cut -d: -f1)
+
+                  echo "LATEST_RELEASE_LINE: $LATEST_RELEASE_LINE"
+                  echo "NEXT_RELEASE_LINE: $NEXT_RELEASE_LINE"
 
                   if [ -z "$NEXT_RELEASE_LINE" ]; then
                       tail -n +$LATEST_RELEASE_LINE CHANGELOG.md > LATEST_CHANGELOG.md
