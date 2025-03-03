@@ -55,8 +55,8 @@ jobs:
             - name: 依存関係のインストール
               run: npm ci
 
-            - name: ビルド
-              run: npm run build
+            - name: リリースビルド
+              run: npm run Release
               continue-on-error: true
 
             - name: npmパブリッシュ
