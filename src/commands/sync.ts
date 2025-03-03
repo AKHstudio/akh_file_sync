@@ -6,6 +6,8 @@ import path from 'path';
 import chalk from 'chalk';
 import { cp } from 'fs/promises';
 
+// TODO : checkBuilded()でそもそもbehavior_packsやresource_packsが存在しない場合が考慮できていない！
+
 class SyncCommand extends buildCommand {
     private build: boolean;
 
@@ -97,27 +99,27 @@ class SyncCommand extends buildCommand {
             const buildDir = path.join(env.buildDir, directory);
 
             if (!existsSync(buildDir)) {
-                throw new Error('Builded failed (no build directory)');
+                throw new Error(`Builded failed (no build directory ${buildDir})`);
             }
 
             if (this.only === 'behavior') {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
 
                 if (!existsSync(behaviorDir)) {
-                    throw new Error('Builded failed (no behavior directory)');
+                    throw new Error(`Builded failed (no behavior directory ${behaviorDir})`);
                 }
             } else if (this.only === 'resource') {
                 const resourceDir = path.join(buildDir, 'resource_packs');
 
                 if (!existsSync(resourceDir)) {
-                    throw new Error('Builded failed (no resource directory)');
+                    throw new Error(`Builded failed (no resource directory ${resourceDir})`);
                 }
             } else {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
                 const resourceDir = path.join(buildDir, 'resource_packs');
 
                 if (!existsSync(behaviorDir) || !existsSync(resourceDir)) {
-                    throw new Error('Builded failed (no behavior or resource directory)');
+                    throw new Error(`Builded failed (no behavior or resource directory ${behaviorDir} or ${resourceDir})`);
                 }
             }
         });
