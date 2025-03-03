@@ -222,10 +222,37 @@ class BuildCommand {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
+            const tsconfigFiles = await glob(`./**/tsconfig.json`, {
+                posix: true,
+                nodir: true,
+                ignore: [path.posix.join('node_modules', '**', 'tsconfig.json'), path.posix.join('**', 'behavior_packs', '**', 'tsconfig.json')],
+            });
+
+            const tsconfigFlag = tsconfigFiles.length > 0;
+            const tsconfig = tsconfigFlag ? path.resolve(tsconfigFiles[0]) : undefined;
+
             const scriptFiles = await glob(`${entry}/**/*.{ts,js}`, {
                 posix: true,
                 nodir: true,
                 ignore: `${entry}/**/*.d.ts`,
+            });
+
+            console.debug('tsconfigFlag: ', tsconfigFlag);
+            console.debug('tsconfig: ', tsconfig);
+            console.debug('tsconfigFiles: ', tsconfigFiles);
+
+            console.debug('esbuildOptions: ', {
+                entryPoints: [...scriptFiles],
+                bundle: false,
+                outdir: outdir,
+                minify: Boolean(!this.dev),
+                sourcemap: Boolean(this.dev),
+                sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
+                platform: 'node',
+                target: 'ESNext',
+                ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
+                format: 'esm',
+                packages: 'external',
             });
 
             await esbuild
@@ -238,7 +265,7 @@ class BuildCommand {
                     sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
                     platform: 'node',
                     target: 'ESNext',
-                    tsconfig: './tsconfig.json',
+                    ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
                     format: 'esm',
                     packages: 'external',
                 })
