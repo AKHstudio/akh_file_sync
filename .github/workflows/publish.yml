@@ -84,12 +84,18 @@ jobs:
               id: get_tag
               run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+            - name: リリースノートを作成
+              run: |
+                  echo "🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀" > RELEASE_NOTE.md
+                  echo "" >> RELEASE_NOTE.md
+                  cat CHANGELOG.md >> RELEASE_NOTE.md
+
             - name: GitHubリリースを作成
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.TAG_NAME }}
                   name: 'Release ${{ env.TAG_NAME }}'
-                  body: '🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀'
+                  body_path: ./RELEASE_NOTE.md
                   draft: false
                   prerelease: false
               env:
