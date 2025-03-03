@@ -40,6 +40,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   ref: main
+                  token: ${{ secrets.GH_PAT }}
 
             - name: pakcage.json のバージョンを確認
               run: cat package.json
@@ -55,11 +56,20 @@ jobs:
 
             - name: ビルド
               run: npm run build
+              continue-on-error: true
 
             - name: npmパブリッシュ
               run: npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              continue-on-error: true
+
+            - name: tagを削除
+              if: failure()
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git push origin --delete ${{ env.TAG_NAME }}
 
     release:
         needs: publish
