@@ -84,6 +84,24 @@ jobs:
               id: get_tag
               run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+            - name: GitHub Changelog Generator をセットアップ
+              run: gem install github_changelog_generator
+
+            - name: Changelog を生成
+              run: |
+                  github_changelog_generator \
+                    --user ${{ github.repository_owner }} \
+                    --project $(echo ${{ github.repository }} | cut -d '/' -f2) \
+                    --token ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 変更をコミット
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add CHANGELOG.md
+                  git commit -m "Update CHANGELOG.md" -m "Update CHANGELOG.md for ${TAG_NAME#v}"
+                  git push origin main
+
             - name: リリースノートを作成
               run: |
                   echo "🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀" > RELEASE_NOTE.md
