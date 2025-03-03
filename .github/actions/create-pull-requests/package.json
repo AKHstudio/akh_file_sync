@@ -19,7 +19,7 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "build": "esbuild src/index.ts --bundle --platform=node --target=ESNext --format=esm --packages=external --minify --outfile=dist/index.js",
+        "build": "esbuild src/index.ts --bundle --platform=node --target=ESNext --format=esm --packages=external --outfile=dist/index.js",
         "start": "node dist/index.js"
     },
     "devDependencies": {
