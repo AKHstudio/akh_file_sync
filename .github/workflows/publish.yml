@@ -116,9 +116,18 @@ jobs:
 
             - name: リリースノートを作成
               run: |
+                  LATEST_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | head -n 1 | cut -d: -f1)
+                  NEXT_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | sed -n '2p' | cut -d: -f1)
+
+                  if [ -z "$NEXT_RELEASE_LINE" ]; then
+                      tail -n +$LATEST_RELEASE_LINE CHANGELOG.md > LATEST_CHANGELOG.md
+                  else
+                      sed -n "${LATEST_RELEASE_LINE},$((NEXT_RELEASE_LINE - 1))p" CHANGELOG.md > LATEST_CHANGELOG.md
+                  fi
+
                   echo "🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀" > RELEASE_NOTE.md
                   echo "" >> RELEASE_NOTE.md
-                  cat CHANGELOG.md >> RELEASE_NOTE.md
+                  cat LATEST_CHANGELOG.md >> RELEASE_NOTE.md
 
             - name: GitHubリリースを作成
               uses: softprops/action-gh-release@v2
