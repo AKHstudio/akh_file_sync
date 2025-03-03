@@ -24,9 +24,9 @@ class DistCommand extends BuildCommand {
         }
         this.setWorldName = options.setWorldName;
 
-        console.debug('type:', this.type);
-        console.debug('setVersion:', this.setVersion);
-        console.debug('setWorldName:', this.setWorldName);
+        // console.debug('type:', this.type);
+        // console.debug('setVersion:', this.setVersion);
+        // console.debug('setWorldName:', this.setWorldName);
     }
 
     private getpackageJsonVersion(): string {
@@ -122,8 +122,8 @@ class DistCommand extends BuildCommand {
         const dat = path.join(world, 'level.dat');
         const worldName = this.setWorldName.replace('{name}', path.basename(process.cwd())).replace('{version}', this.setVersion);
 
-        console.debug('world:', world);
-        console.debug('dat:', dat);
+        // console.debug('world:', world);
+        // console.debug('dat:', dat);
 
         if (!existsSync(dat)) {
             throw new Error(`level.dat not found: ${dat}`);
@@ -137,8 +137,8 @@ class DistCommand extends BuildCommand {
             const build = path.join(env.buildDir, directory);
             const dist = path.join(env.distDir, directory + '-' + this.setVersion);
 
-            console.debug('build:', build);
-            console.debug('dist:', dist);
+            // console.debug('build:', build);
+            // console.debug('dist:', dist);
 
             await cp(build, dist, { recursive: true, force: true }).catch((error) => {
                 console.error(`❌ [${chalk.red('Copy to dist')}]`, chalk.red(`エラーが発生しました:`), error);
@@ -150,8 +150,8 @@ class DistCommand extends BuildCommand {
         const world = path.join(env.worldDir);
         const dist = path.join(env.distDir, 'world' + '-' + this.setVersion);
 
-        console.debug('world:', world);
-        console.debug('dist:', dist);
+        // console.debug('world:', world);
+        // console.debug('dist:', dist);
 
         await cp(world, dist, { recursive: true, force: true }).catch((error) => {
             console.error(`❌ [${chalk.red('Copy world to dist')}]`, chalk.red(`エラーが発生しました:`), error);
