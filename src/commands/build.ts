@@ -27,9 +27,9 @@ class BuildCommand {
             this.directories = this.getAllAddondirectories();
         }
 
-        console.debug('directories: ', this.directories);
-        console.debug('Development: ', this.dev);
-        console.debug('Only: ', this.only);
+        // console.debug('directories: ', this.directories);
+        // console.debug('Development: ', this.dev);
+        // console.debug('Only: ', this.only);
     }
 
     public async execute() {
@@ -237,11 +237,11 @@ class BuildCommand {
                 ignore: `${entry}/**/*.d.ts`,
             });
 
-            console.debug('tsconfigFlag: ', tsconfigFlag);
-            console.debug('tsconfig: ', tsconfig);
-            console.debug('tsconfigFiles: ', tsconfigFiles);
+            // console.debug('tsconfigFlag: ', tsconfigFlag);
+            // console.debug('tsconfig: ', tsconfig);
+            // console.debug('tsconfigFiles: ', tsconfigFiles);
 
-            console.debug('esbuildOptions: ', {
+            // console.debug('esbuildOptions: ', {
                 entryPoints: [...scriptFiles],
                 bundle: false,
                 outdir: outdir,
