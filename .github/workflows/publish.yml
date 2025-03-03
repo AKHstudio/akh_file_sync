@@ -195,29 +195,9 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: プルリクエストを作成
-              uses: actions/github-script@v7
+              run: |
+                  npm start
+              working-directory: .github/actions/create-pull-request
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  script: |
-                      const { GITHUB_TOKEN } = process.env;
-                      const github = require('@actions/github');
-                      const context = github.context;
-
-                      const prTitle = `🚀 Release: ${{ env.TAG_NAME }}`;
-                      const prBody = `This PR updates the \`package.json\` version and \`CHANGELOG.md\` for the new release **${{ env.TAG_NAME }}**.`;
-                      const baseBranch = "main";
-                      const headBranch = `release-${{ env.TAG_NAME }}`;
-
-                      github.rest.pulls.create({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          title: prTitle,
-                          body: prBody,
-                          head: headBranch,
-                          base: baseBranch
-                      }).then(response => {
-                          console.log(`✅ PR created: ${response.data.html_url}`);
-                      }).catch(error => {
-                          console.error(`❌ PR creation failed: ${error.message}`);
-                      });
+                  TAG_NAME: ${{ env.TAG_NAME }}
