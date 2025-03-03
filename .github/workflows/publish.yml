@@ -31,6 +31,7 @@ jobs:
                   git add package.json
                   git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
                   git push origin main
+              continue-on-error: true
 
     publish:
         needs: update-version
