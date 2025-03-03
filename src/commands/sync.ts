@@ -97,27 +97,27 @@ class SyncCommand extends buildCommand {
             const buildDir = path.join(env.buildDir, directory);
 
             if (!existsSync(buildDir)) {
-                throw new Error('Builded failed');
+                throw new Error('Builded failed (no build directory)');
             }
 
             if (this.only === 'behavior') {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
 
                 if (!existsSync(behaviorDir)) {
-                    throw new Error('Builded failed');
+                    throw new Error('Builded failed (no behavior directory)');
                 }
             } else if (this.only === 'resource') {
                 const resourceDir = path.join(buildDir, 'resource_packs');
 
                 if (!existsSync(resourceDir)) {
-                    throw new Error('Builded failed');
+                    throw new Error('Builded failed (no resource directory)');
                 }
             } else {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
                 const resourceDir = path.join(buildDir, 'resource_packs');
 
                 if (!existsSync(behaviorDir) || !existsSync(resourceDir)) {
-                    throw new Error('Builded failed');
+                    throw new Error('Builded failed (no behavior or resource directory)');
                 }
             }
         });
