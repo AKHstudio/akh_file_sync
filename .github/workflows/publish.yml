@@ -26,12 +26,16 @@ jobs:
 
             - name: 変更をコミット & プッシュ
               run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git add package.json
-                  git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
-                  git push origin main
-              continue-on-error: true
+                  if [ -n "$(git diff package.json)" ]; then
+                    git config --global user.name "github-actions[bot]"
+                    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git add package.json
+                    git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
+                    git push origin main
+                  else
+                    echo "package.json に変更はありません 📝"
+                    echo "コミットをスキップします"
+                  fi
 
     publish:
         needs: update-version
@@ -99,11 +103,16 @@ jobs:
 
             - name: 変更をコミット
               run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git add CHANGELOG.md
-                  git commit -m "Update CHANGELOG.md" -m "Update CHANGELOG.md for ${TAG_NAME#v}"
-                  git push origin main
+                  if [ -n "$(git diff CHANGELOG.md)" ]; then
+                      git config --global user.name "github-actions[bot]"
+                      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                      git add CHANGELOG.md
+                      git commit -m "Update CHANGELOG.md" -m "Update CHANGELOG.md for ${TAG_NAME#v}"
+                      git push origin main
+                  else
+                      echo "CHANGELOG.md に変更はありません 📝"
+                      echo "コミットをスキップします"
+                  fi
 
             - name: リリースノートを作成
               run: |
