@@ -229,7 +229,7 @@ jobs:
                   name: 'Release ${{ env.TAG_NAME }}'
                   body_path: ./RELEASE_NOTE.md
                   draft: false
-                  prerelease: ${{ env.BETA_RC_FLAG == 'true' }}
+                  prerelease: ${{ env.BETA_RC_FLAG }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -239,7 +239,7 @@ jobs:
                   node-version: '20'
 
             - name: プルリクエストを作成
-              if: ${{ env.BETA_RC_FLAG == 'false' }}
+              if: ${{ !env.BETA_RC_FLAG }}
               run: |
                   cd .github/actions/create-pull-requests && npm install
                   node ./dist/index.js
