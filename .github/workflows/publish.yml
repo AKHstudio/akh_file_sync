@@ -68,7 +68,14 @@ jobs:
 
             - name: release ブランチをチェックアウト
               run: |
-                  git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
+                  if git ls-remote --heads origin | grep "release-${{ env.TAG_NAME }}"; then
+                    echo "🔄 リモートブランチが存在するため、fetch してチェックアウトします。"
+                    git fetch origin release-${{ env.TAG_NAME }}
+                    git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
+                  else
+                        echo "🚀 リモートに存在しないため、新しいブランチを作成します。"
+                        git checkout -B release-${{ env.TAG_NAME }}
+                  fi
 
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
@@ -118,13 +125,15 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               continue-on-error: true
 
-            - name: tagを削除
+            - name: tagを削除 , ブランチを削除
               if: failure()
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git push origin --delete ${{ env.TAG_NAME }}
                   echo "タグを削除しました: ${{ env.TAG_NAME }}"
+                  git push origin --delete release-${{ env.TAG_NAME }}
+                  echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
                   exit 1
 
     release:
