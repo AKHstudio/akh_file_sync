@@ -110,7 +110,7 @@ jobs:
                           echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
                           echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
-                          npm publish --tag beta --access public
+                          npm publish --tag beta --access public --dry-run
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
@@ -160,7 +160,7 @@ jobs:
             - name: GitHub Changelog Generator をセットアップ
               run: |
                   gem install github_changelog_generator --user-install
-                  echo "$HOME/.gem/ruby/3.2.0/bin" >> $GITHUB_PATH
+                  echo "$(ruby -r rubygems -e 'puts Gem.user_dir')/bin" >> $GITHUB_PATH
 
             - name: Changelog を生成
               run: |
