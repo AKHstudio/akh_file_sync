@@ -236,7 +236,7 @@ jobs:
                   cd .github/actions/create-pull-requests && npm install
                   node ./dist/index.js
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GH_PAT }}
                   TAG_NAME: ${{ env.TAG_NAME }}
 
             - name: エラー発生時にリセット
