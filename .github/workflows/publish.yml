@@ -134,7 +134,6 @@ jobs:
                   fi
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-              continue-on-error: true
 
             - name: tagを削除 , ブランチを削除
               if: failure()
