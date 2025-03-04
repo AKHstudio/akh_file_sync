@@ -67,9 +67,12 @@ jobs:
 
     publish:
         needs: [update-version, get-tag]
+
         env:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         runs-on: ubuntu-latest
+        outputs:
+            BETA_RC_FLAG: ${{ steps.flag.outputs.BETA_RC_FLAG }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -102,6 +105,7 @@ jobs:
 
             - name: タグを判定し、適切な npm publish を実行
               if: success()
+              id: flag
               run: |
                   if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
                       LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
@@ -111,6 +115,7 @@ jobs:
                       else
                           echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
                           npm publish --tag beta --access public --dry-run
+                          echo "BETA_RC_FLAG=true" >> $GITHUB_ENV
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
@@ -120,6 +125,7 @@ jobs:
                       else
                           echo "🚀 Rc バージョンとして公開: npm publish --tag rc"
                           npm publish --tag rc --access public
+                          echo "BETA_RC_FLAG=true" >> $GITHUB_ENV
                       fi 
                   else
                       LATEST=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
@@ -129,6 +135,7 @@ jobs:
                       else
                           echo "🚀 ステーブルバージョンとして公開: npm publish"
                           npm publish --access public
+                          echo "BETA_RC_FLAG=false" >> $GITHUB_ENV
                       fi
                   fi
               env:
@@ -143,7 +150,6 @@ jobs:
                   echo "タグを削除しました: ${{ env.TAG_NAME }}"
                   git push origin --delete release-${{ env.TAG_NAME }}
                   echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
-                  exit 1
 
     release:
         needs: [publish, get-tag]
@@ -151,6 +157,7 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+            BETA_RC_FLAG: ${{ needs.publish.outputs.BETA_RC_FLAG }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -222,7 +229,7 @@ jobs:
                   name: 'Release ${{ env.TAG_NAME }}'
                   body_path: ./RELEASE_NOTE.md
                   draft: false
-                  prerelease: false
+                  prerelease: ${{ env.BETA_RC_FLAG == 'true' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -232,6 +239,7 @@ jobs:
                   node-version: '20'
 
             - name: プルリクエストを作成
+              if: ${{ env.BETA_RC_FLAG == 'false' }}
               run: |
                   cd .github/actions/create-pull-requests && npm install
                   node ./dist/index.js
@@ -249,4 +257,3 @@ jobs:
                   git push origin --delete release-${{ env.TAG_NAME }}
                   echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
                   npm unpublish akhsync@${{ env.TAG_NAME }} --force
-                  exit 1
