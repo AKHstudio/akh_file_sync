@@ -160,6 +160,8 @@ jobs:
             - name: GitHub Changelog Generator をセットアップ
               run: |
                   gem install github_changelog_generator --user-install
+                  gem update github_changelog_generator
+                  gem update faraday async-http-faraday
 
             - name: パスを通す
               run: echo "$HOME/.local/share/gem/ruby/3.2.0/bin" >> $GITHUB_PATH
