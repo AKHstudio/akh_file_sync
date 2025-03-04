@@ -115,7 +115,7 @@ jobs:
                       else
                           echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
                           npm publish --tag beta --access public --dry-run
-                          echo "BETA_RC_FLAG='true'" >> $GITHUB_OUTPUT
+                          echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
@@ -125,7 +125,7 @@ jobs:
                       else
                           echo "🚀 Rc バージョンとして公開: npm publish --tag rc"
                           npm publish --tag rc --access public
-                          echo "BETA_RC_FLAG='true'" >> $GITHUB_OUTPUT
+                          echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
                       fi 
                   else
                       LATEST=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
@@ -135,7 +135,7 @@ jobs:
                       else
                           echo "🚀 ステーブルバージョンとして公開: npm publish"
                           npm publish --access public
-                          echo "BETA_RC_FLAG='false'" >> $GITHUB_OUTPUT
+                          echo "BETA_RC_FLAG=false" >> $GITHUB_OUTPUT
                       fi
                   fi
               env:
