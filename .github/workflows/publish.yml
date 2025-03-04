@@ -149,7 +149,9 @@ jobs:
                   token: ${{ secrets.GH_PAT }}
 
             - name: GitHub Changelog Generator をセットアップ
-              run: gem install github_changelog_generator
+              run: |
+                  gem install github_changelog_generator --user-install
+                  echo "$HOME/.gem/ruby/3.2.0/bin" >> $GITHUB_PATH
 
             - name: Changelog を生成
               run: |
@@ -216,3 +218,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: ${{ env.TAG_NAME }}
+
+            - name: エラー発生時にunpublish
+              if: failure()
+              run: |
+                  npm unpublish akhsync@${{ env.TAG_NAME }} --force
