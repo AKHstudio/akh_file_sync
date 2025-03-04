@@ -95,29 +95,34 @@ class SyncCommand extends buildCommand {
     protected checkBuilded(): void {
         this.directories.forEach((directory) => {
             const buildDir = path.join(env.buildDir, directory);
+            const srcDir = path.join(env.srcDir, directory);
 
             if (!existsSync(buildDir)) {
-                throw new Error('Builded failed');
+                throw new Error(`Builded failed (no build directory ${buildDir})`);
             }
 
             if (this.only === 'behavior') {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
+                const behaviorSrcDir = path.join(srcDir, 'behavior_packs');
 
-                if (!existsSync(behaviorDir)) {
-                    throw new Error('Builded failed');
+                if (!existsSync(behaviorDir) && existsSync(behaviorSrcDir)) {
+                    throw new Error(`Builded failed (no behavior directory ${behaviorDir})`);
                 }
             } else if (this.only === 'resource') {
                 const resourceDir = path.join(buildDir, 'resource_packs');
+                const resourceSrcDir = path.join(srcDir, 'resource_packs');
 
-                if (!existsSync(resourceDir)) {
-                    throw new Error('Builded failed');
+                if (!existsSync(resourceDir) && existsSync(resourceSrcDir)) {
+                    throw new Error(`Builded failed (no resource directory ${resourceDir})`);
                 }
             } else {
                 const behaviorDir = path.join(buildDir, 'behavior_packs');
                 const resourceDir = path.join(buildDir, 'resource_packs');
+                const behaviorSrcDir = path.join(srcDir, 'behavior_packs');
+                const resourceSrcDir = path.join(srcDir, 'resource_packs');
 
-                if (!existsSync(behaviorDir) || !existsSync(resourceDir)) {
-                    throw new Error('Builded failed');
+                if ((!existsSync(behaviorDir) && existsSync(behaviorSrcDir)) || (!existsSync(resourceDir) && existsSync(resourceSrcDir))) {
+                    throw new Error(`Builded failed (no behavior or resource directory ${behaviorDir} or ${resourceDir})`);
                 }
             }
         });
@@ -126,10 +131,13 @@ class SyncCommand extends buildCommand {
     protected async runSync(type: 'behavior' | 'resource') {
         this.directories.forEach((directory) => {
             const buildDir = path.join(env.buildDir, directory, `${type}_packs`);
+            const srcDir = path.join(env.srcDir, directory, `${type}_packs`);
             const syncTargetDir = path.join(env.syncTargetDir, `development_${type}_packs`, `${env.akhsyncFlag}-${directory}`);
 
+            if (!existsSync(srcDir)) return;
+
             cp(buildDir, syncTargetDir, { recursive: true, force: true }).catch((err) => {
-                console.error(`❌ [${chalk.red(`Sync target ${type}`)}]`, chalk.red(`エラーが発生しました:`), err);
+                console.error(`❌ [${chalk.red(`Sync target ${type} ${directory}`)}]`, chalk.red(`エラーが発生しました:`), err);
             });
         });
     }

@@ -6,8 +6,23 @@ on:
             - 'v*' # 例: v1.0.0 のようなタグをプッシュしたときに実行
 
 jobs:
-    update-version:
+    get-tag:
         runs-on: ubuntu-latest
+        outputs:
+            TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
+        steps:
+            - name: タグ名を取得
+              id: tag
+              run: |
+                  TAG_NAME=${GITHUB_REF#refs/tags/}
+                  echo "TAG: ${TAG_NAME}"
+                  echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+
+    update-version:
+        needs: get-tag
+        runs-on: ubuntu-latest
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -15,26 +30,34 @@ jobs:
                   ref: main
                   token: ${{ secrets.GH_PAT }} # Push用のPAT（Personal Access Token）
 
-            - name: タグ名を取得
-              id: get_tag
-              run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+            - name: release ブランチを作成
+              run: |
+                  git checkout -B release-${{ env.TAG_NAME }}
 
             - name: package.json のバージョンを更新
               run: |
                   NEW_VERSION=${TAG_NAME#v}
-                  jq ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
+                  jq --indent 4 ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
+                  echo "📦 package.json のバージョンを更新: $NEW_VERSION" 
+                  cat package.json
 
             - name: 変更をコミット & プッシュ
               run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git add package.json
-                  git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
-                  git push origin main
-              continue-on-error: true
+                  if [ -n "$(git diff package.json)" ]; then
+                    git config --global user.name "github-actions[bot]"
+                    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git add package.json
+                    git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
+                    git push origin release-${{ env.TAG_NAME }}
+                  else
+                    echo "package.json に変更はありません 📝"
+                    echo "コミットをスキップします"
+                  fi
 
     publish:
-        needs: update-version
+        needs: [update-version, get-tag]
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         runs-on: ubuntu-latest
         steps:
             - name: リポジトリをチェックアウト
@@ -43,8 +66,9 @@ jobs:
                   ref: main
                   token: ${{ secrets.GH_PAT }}
 
-            - name: pakcage.json のバージョンを確認
-              run: cat package.json
+            - name: release ブランチをチェックアウト
+              run: |
+                  git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
 
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
@@ -55,12 +79,41 @@ jobs:
             - name: 依存関係のインストール
               run: npm ci
 
-            - name: ビルド
-              run: npm run build
+            - name: リリースビルド
+              run: npm run release
               continue-on-error: true
 
-            - name: npmパブリッシュ
-              run: npm publish --access public
+            - name: タグを判定し、適切な npm publish を実行
+              if: success()
+              run: |
+                  if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
+                      LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
+
+                      if [[ "$LATEST_BETA" == "${TAG_NAME#v}" ]]; then
+                          echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                      else
+                          echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
+                          npm publish --tag beta --access public
+                      fi
+                  elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
+                      LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
+
+                      if [[ "$LATEST_RC" == "${TAG_NAME#v}" ]]; then
+                          echo "🚀 Rc バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                      else
+                          echo "🚀 Rc バージョンとして公開: npm publish --tag rc"
+                          npm publish --tag rc --access public
+                      fi 
+                  else
+                      LATEST=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
+
+                      if [[ "$LATEST" == "${TAG_NAME#v}" ]]; then
+                          echo "🚀 バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                      else
+                          echo "🚀 ステーブルバージョンとして公開: npm publish"
+                          npm publish --access public
+                      fi
+                  fi
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               continue-on-error: true
@@ -71,26 +124,86 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git push origin --delete ${{ env.TAG_NAME }}
+                  echo "タグを削除しました: ${{ env.TAG_NAME }}"
+                  exit 1
 
     release:
-        needs: publish
+        needs: [publish, get-tag]
         runs-on: ubuntu-latest
-
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
+              with:
+                  ref: main
+                  token: ${{ secrets.GH_PAT }}
 
-            - name: タグ名を取得
-              id: get_tag
-              run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+            - name: GitHub Changelog Generator をセットアップ
+              run: gem install github_changelog_generator
+
+            - name: Changelog を生成
+              run: |
+                  github_changelog_generator \
+                    --user ${{ github.repository_owner }} \
+                    --project $(echo ${{ github.repository }} | cut -d '/' -f2) \
+                    --token ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 変更をコミット
+              run: |
+                  if [ -n "$(git diff CHANGELOG.md)" ]; then
+                      git config --global user.name "github-actions[bot]"
+                      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                      git add CHANGELOG.md
+                      git commit -m "Update CHANGELOG.md" -m "Update CHANGELOG.md for ${TAG_NAME#v}"
+                      git push origin main
+                  else
+                      echo "CHANGELOG.md に変更はありません 📝"
+                      echo "コミットをスキップします"
+                  fi
+
+            - name: リリースノートを作成
+              run: |
+                  LATEST_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | head -n 1 | cut -d: -f1)
+                  NEXT_RELEASE_LINE=$(grep -n "^## \[" CHANGELOG.md | sed -n '2p' | cut -d: -f1)
+
+                  echo "LATEST_RELEASE_LINE: $LATEST_RELEASE_LINE"
+                  echo "NEXT_RELEASE_LINE: $NEXT_RELEASE_LINE"
+
+                  if [ -z "$NEXT_RELEASE_LINE" ]; then
+                      tail -n +$LATEST_RELEASE_LINE CHANGELOG.md > LATEST_CHANGELOG.md
+                  else
+                      sed -n "${LATEST_RELEASE_LINE},$((NEXT_RELEASE_LINE - 1))p" CHANGELOG.md > LATEST_CHANGELOG.md
+                  fi
+
+                  echo "🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀" > RELEASE_NOTE.md
+                  echo "" >> RELEASE_NOTE.md
+                  cat LATEST_CHANGELOG.md >> RELEASE_NOTE.md
+
+            - name: リリースノートを確認
+              run: cat RELEASE_NOTE.md
 
             - name: GitHubリリースを作成
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ env.TAG_NAME }}
                   name: 'Release ${{ env.TAG_NAME }}'
-                  body: '🎉 新しいリリース: **${{ env.TAG_NAME }}** が公開されました！ 🚀'
+                  body_path: ./RELEASE_NOTE.md
                   draft: false
                   prerelease: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Node.jsのセットアップ
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: プルリクエストを作成
+              run: |
+                  　npm install
+                    npm start
+              working-directory: .github/actions/create-pull-request
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAG_NAME: ${{ env.TAG_NAME }}

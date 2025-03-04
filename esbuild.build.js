@@ -2,6 +2,10 @@ import { exec } from 'child_process';
 import { error } from 'console';
 import esbuild from 'esbuild';
 
+const args = process.argv.slice(2);
+
+const releaseFlag = args.includes('--release');
+
 const tsc = exec('tsc -p ./tsconfig.json --noEmit', { cwd: process.cwd() });
 tsc.stdout.pipe(process.stdout);
 tsc.stderr.pipe(process.stderr);
@@ -13,7 +17,7 @@ tsc.on('close', (code) => {
                 entryPoints: ['src/**/*.ts'],
                 bundle: true,
                 outdir: 'dist',
-                minify: false,
+                minify: releaseFlag,
                 platform: 'node',
                 target: 'ESNext',
                 tsconfig: './tsconfig.json',
