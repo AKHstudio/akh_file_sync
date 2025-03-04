@@ -32,12 +32,12 @@ jobs:
 
             - name: release ブランチを作成
               run: |
-                  git checkout -b release-${{ env.TAG_NAME }}
+                  git checkout -B release-${{ env.TAG_NAME }}
 
             - name: package.json のバージョンを更新
               run: |
                   NEW_VERSION=${TAG_NAME#v}
-                  jq ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
+                  jq --indent 4 ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
                   echo "📦 package.json のバージョンを更新: $NEW_VERSION" 
                   cat package.json
 
@@ -98,7 +98,7 @@ jobs:
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
 
-                      if [[ "$LATEST_BETA" == "${TAG_NAME#v}" ]]; then
+                      if [[ "$LATEST_RC" == "${TAG_NAME#v}" ]]; then
                           echo "🚀 Rc バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
                           echo "🚀 Rc バージョンとして公開: npm publish --tag rc"
@@ -201,7 +201,8 @@ jobs:
 
             - name: プルリクエストを作成
               run: |
-                  npm start
+                  　npm install
+                    npm start
               working-directory: .github/actions/create-pull-request
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
