@@ -99,7 +99,6 @@ jobs:
 
             - name: リリースビルド
               run: npm run release
-              continue-on-error: true
 
             - name: タグを判定し、適切な npm publish を実行
               if: success()
