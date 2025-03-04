@@ -114,7 +114,7 @@ jobs:
                           echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
                           echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
-                          npm publish --tag beta --access public --dry-run
+                          npm publish --tag beta --access public
                           echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
