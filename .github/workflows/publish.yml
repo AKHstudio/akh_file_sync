@@ -233,7 +233,8 @@ jobs:
 
             - name: プルリクエストを作成
               run: |
-                  node .github/actions/create-pull-requests/dist/index.js
+                  cd .github/actions/create-pull-requests && npm install
+                  node ./dist/index.js
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: ${{ env.TAG_NAME }}
