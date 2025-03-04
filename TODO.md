@@ -43,4 +43,4 @@
 
 -   [ ] `dist`処理のリファクタリング
 
--   [ ] README.md の更新
+-   [x] README.md の更新
