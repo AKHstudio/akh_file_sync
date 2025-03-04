@@ -115,7 +115,7 @@ jobs:
                       else
                           echo "🚀 Beta バージョンとして公開: npm publish --tag beta"
                           npm publish --tag beta --access public --dry-run
-                          echo "BETA_RC_FLAG=true" >> $GITHUB_ENV
+                          echo "BETA_RC_FLAG='true'" >> $GITHUB_OUTPUT
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
@@ -125,7 +125,7 @@ jobs:
                       else
                           echo "🚀 Rc バージョンとして公開: npm publish --tag rc"
                           npm publish --tag rc --access public
-                          echo "BETA_RC_FLAG=true" >> $GITHUB_ENV
+                          echo "BETA_RC_FLAG='true'" >> $GITHUB_OUTPUT
                       fi 
                   else
                       LATEST=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
@@ -135,7 +135,7 @@ jobs:
                       else
                           echo "🚀 ステーブルバージョンとして公開: npm publish"
                           npm publish --access public
-                          echo "BETA_RC_FLAG=false" >> $GITHUB_ENV
+                          echo "BETA_RC_FLAG='false'" >> $GITHUB_OUTPUT
                       fi
                   fi
               env:
@@ -229,7 +229,7 @@ jobs:
                   name: 'Release ${{ env.TAG_NAME }}'
                   body_path: ./RELEASE_NOTE.md
                   draft: false
-                  prerelease: ${{ env.BETA_RC_FLAG }}
+                  prerelease: ${{ env.BETA_RC_FLAG == 'true' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -239,7 +239,7 @@ jobs:
                   node-version: '20'
 
             - name: プルリクエストを作成
-              if: ${{ !env.BETA_RC_FLAG }}
+              if: ${{ env.BETA_RC_FLAG == 'false' }}
               run: |
                   cd .github/actions/create-pull-requests && npm install
                   node ./dist/index.js
