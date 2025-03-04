@@ -228,7 +228,14 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: ${{ env.TAG_NAME }}
 
-            - name: エラー発生時にunpublish
+            - name: エラー発生時にリセット
               if: failure()
               run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git push origin --delete ${{ env.TAG_NAME }}
+                  echo "タグを削除しました: ${{ env.TAG_NAME }}"
+                  git push origin --delete release-${{ env.TAG_NAME }}
+                  echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
                   npm unpublish akhsync@${{ env.TAG_NAME }} --force
+                  exit 1
