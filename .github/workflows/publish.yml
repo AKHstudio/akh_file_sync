@@ -158,6 +158,17 @@ jobs:
                   ref: main
                   token: ${{ secrets.GH_PAT }}
 
+            - name: release ブランチをチェックアウト
+              run: |
+                  if git ls-remote --heads origin | grep "release-${{ env.TAG_NAME }}"; then
+                    echo "🔄 リモートブランチが存在するため、fetch してチェックアウトします。"
+                    git fetch origin release-${{ env.TAG_NAME }}
+                    git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
+                  else
+                        echo "🚀 リモートに存在しないため、新しいブランチを作成します。"
+                        git checkout -B release-${{ env.TAG_NAME }}
+                  fi
+
             - name: GitHub Changelog Generator をセットアップ
               run: |
                   sudo gem install github_changelog_generator
