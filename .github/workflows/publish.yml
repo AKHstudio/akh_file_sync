@@ -149,6 +149,7 @@ jobs:
         needs: [publish, get-tag]
         runs-on: ubuntu-latest
         env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         steps:
             - name: リポジトリをチェックアウト
@@ -159,16 +160,12 @@ jobs:
 
             - name: GitHub Changelog Generator をセットアップ
               run: |
-                  gem install github_changelog_generator --user-install
-                  gem update github_changelog_generator
-                  gem update faraday async-http-faraday
-
-            - name: パスを通す
-              run: echo "$HOME/.local/share/gem/ruby/3.2.0/bin" >> $GITHUB_PATH
+                  sudo gem install github_changelog_generator
+                  sudo gem update github_changelog_generator async-http-faraday faraday
 
             - name: Changelog を生成
               run: |
-                  github_changelog_generator \
+                  sudo github_changelog_generator \
                     --user ${{ github.repository_owner }} \
                     --project $(echo ${{ github.repository }} | cut -d '/' -f2) \
                     --token ${{ secrets.GITHUB_TOKEN }}
