@@ -8,11 +8,11 @@
         "akhsync": "./dist/bin/akhsync.js"
     },
     "scripts": {
-        "build": "node esbuild.build.js",
+        "build": "tsc -p ./tsconfig.json --noEmit && esbuild src/**/*.ts --bundle --platform=node --outdir=dist --target=esnext --tsconfig=./tsconfig.json --format=esm --packages=external",
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
-        "release": "npm run lint:fix & npm run build -- --release"
+        "release": "npm run lint:fix & npm run build -- --minify"
     },
     "repository": {
         "type": "git",
