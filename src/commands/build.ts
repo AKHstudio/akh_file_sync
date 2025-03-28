@@ -222,7 +222,7 @@ class BuildCommand {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
-            const tsconfigFiles = await glob(`./**/tsconfig.json`, {
+            const tsconfigFiles = await glob(`./tsconfig.json`, {
                 posix: true,
                 nodir: true,
                 ignore: [path.posix.join('node_modules', '**', 'tsconfig.json'), path.posix.join('**', 'behavior_packs', '**', 'tsconfig.json')],
@@ -255,19 +255,29 @@ class BuildCommand {
             //     packages: 'external',
             // });
 
+            // prettier-ignore
             await esbuild
                 .build({
                     entryPoints: [...scriptFiles],
-                    bundle: false,
+                    bundle: true,
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
                     sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
-                    platform: 'node',
-                    target: 'ESNext',
+                    platform: "node",
+                    target: "node18",
                     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
                     format: 'esm',
-                    packages: 'external',
+                    external: [
+                        "@minecraft/server",
+                        "@minecraft/server-ui",
+                        "@minecraft/server-admin",
+                        "@minecraft/server-gametest",
+                        "@minecraft/server-net",
+                        "@minecraft/server-common",
+                        "@minecraft/server-editor",
+                        "@minecraft/debug-utilities",
+                    ]
                 })
                 .catch(() => {
                     error('Error building project');
