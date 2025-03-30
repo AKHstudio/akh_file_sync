@@ -59,7 +59,7 @@ class DistCommand extends BuildCommand {
                     task: async () => delay(1000),
                 },
             ],
-            { concurrent: false }
+            { concurrent: false },
         );
 
         await task.run().catch((error) => console.error(`❌ [${chalk.red('Copy to dist')}]`, chalk.red(`エラーが発生しました:`), error));
@@ -88,7 +88,7 @@ class DistCommand extends BuildCommand {
                         task: () => this.zip(path.join(env.distDir, 'world-' + this.setVersion), path.join(env.distDir, 'world' + '-' + this.setVersion + '.mcworld')),
                     },
                 ],
-                { concurrent: false }
+                { concurrent: false },
             );
 
             await task.run().catch((error) => console.error(`❌ [${chalk.red('Copy world to dist')}]`, chalk.red(`エラーが発生しました:`), error));

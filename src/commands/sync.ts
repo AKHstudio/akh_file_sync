@@ -43,7 +43,7 @@ class SyncCommand extends buildCommand {
                         },
                     },
                 ],
-                { concurrent: false }
+                { concurrent: false },
             );
 
             await task
@@ -86,7 +86,7 @@ class SyncCommand extends buildCommand {
                     },
                 },
             ],
-            { concurrent: false }
+            { concurrent: false },
         );
 
         await syncTask.run().catch((error) => console.error(error));

@@ -58,7 +58,7 @@ class BuildCommand {
                                     task: () => this.clearOldSyncedBuildDir(this.only),
                                 },
                             ],
-                            { concurrent: true, rendererOptions: { collapseSubtasks: false } }
+                            { concurrent: true, rendererOptions: { collapseSubtasks: false } },
                         ),
                 },
                 {
@@ -72,7 +72,7 @@ class BuildCommand {
                         ]),
                 },
             ],
-            { concurrent: false }
+            { concurrent: false },
         );
 
         const compile_scripts = new Listr(
@@ -86,7 +86,7 @@ class BuildCommand {
                     task: () => this.compileScripts(),
                 },
             ],
-            { concurrent: true }
+            { concurrent: true },
         );
 
         await clear_copy.run().catch((err) => console.error(err));
