@@ -27,7 +27,7 @@ jobs:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: ${{ github.ref }}
                   token: ${{ secrets.GH_PAT }} # Push用のPAT（Personal Access Token）
 
             - name: release ブランチを作成
@@ -77,7 +77,7 @@ jobs:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: ${{ github.ref }}
                   token: ${{ secrets.GH_PAT }}
 
             - name: release ブランチをチェックアウト
