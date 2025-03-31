@@ -31,7 +31,7 @@ class AsyncCommand extends BuildCommand {
                     },
                 },
             ],
-            { concurrent: true }
+            { concurrent: true },
         );
         await asyncTask.run().catch((err) => console.error(err));
     }
