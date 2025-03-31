@@ -29,8 +29,8 @@ async function readNbt(file: string): Promise<nbt.NBT> {
 
     const { parsed } = await nbt.parse(buffer);
 
-    // // console.debug('metadata:', metadata);
-    // // console.debug('type:', type);
+    // console.debug("🛠️",'metadata:', metadata);
+    // console.debug("🛠️",'type:', type);
 
     return parsed;
 }
