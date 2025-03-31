@@ -85,7 +85,7 @@ jobs:
                   fi
 
     release:
-        needs: [flag, get-tag]
+        needs: [flag, get-tag, update-version]
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,11 +97,6 @@ jobs:
               with:
                   ref: ${{ github.ref }}
                   token: ${{ secrets.GH_PAT }}
-
-            - name: チェックアウト確認
-              run: |
-                  ls -la
-                  ls -la changelog
 
             - name: release ブランチをチェックアウト
               run: |
@@ -124,8 +119,10 @@ jobs:
                     echo "リリースノートを取得できませんでした。"
                     exit 1
                   else
-                    echo "CHANGELOG.md からリリースノートを取得しました。"
+                    echo "./changelog/${TAG_NAME#v}.mdからリリースノートを取得しました。"
+                    echo $RELEASE_NOTES > RELEASE_NOTES.md
                     if ${{ env.BETA_RC_FLAG == 'false' }}; then
+                        echo "" >> CHANGELOG.md
                         echo $RELEASE_NOTES >> CHANGELOG.md
                         echo "リリースノートを CHANGELOG.md に追加しました。"
                     fi
@@ -149,7 +146,7 @@ jobs:
               with:
                   tag_name: ${{ env.TAG_NAME }}
                   name: 'Release ${{ env.TAG_NAME }}'
-                  body_path: ./changelog/${TAG_NAME#v}.md
+                  body_path: RELEASE_NOTES.md
                   draft: false
                   prerelease: ${{ env.BETA_RC_FLAG == 'true' }}
               env:
