@@ -27,9 +27,9 @@ class BuildCommand {
             this.directories = this.getAllAddondirectories();
         }
 
-        // console.debug('directories: ', this.directories);
-        // console.debug('Development: ', this.dev);
-        // console.debug('Only: ', this.only);
+        console.debug('🛠️ ', 'directories: ', this.directories);
+        console.debug('🛠️ ', 'Development: ', this.dev);
+        console.debug('🛠️ ', 'Only: ', this.only);
     }
 
     public async execute() {
@@ -118,7 +118,7 @@ class BuildCommand {
             const rmTargetDir = path.join(DevDirPath, `${env.akhsyncFlag}-${directory}`);
 
             rm(rmTargetDir, { recursive: true }).catch(() => {
-                console.warn('ℹ️', ` [${chalk.green(`Clear target ${type}`)}]`, chalk.yellow(`処理をスキップしました:`), rmTargetDir);
+                console.warn('ℹ️', ` [${chalk.green(`Clear target ${type}`)}]`, chalk.yellow(`処理をスキップしました:`), path.basename(rmTargetDir));
                 console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しないまたはゲームを起動中の可能性があります。`);
             });
         });
@@ -237,11 +237,11 @@ class BuildCommand {
                 ignore: `${entry}/**/*.d.ts`,
             });
 
-            // console.debug('tsconfigFlag: ', tsconfigFlag);
-            // console.debug('tsconfig: ', tsconfig);
-            // console.debug('tsconfigFiles: ', tsconfigFiles);
+            console.debug('🛠️ ', 'tsconfigFlag: ', tsconfigFlag);
+            console.debug('🛠️ ', 'tsconfig: ', tsconfig);
+            console.debug('🛠️ ', 'tsconfigFiles: ', tsconfigFiles);
 
-            // console.debug('esbuildOptions: ', {
+            // console.debug("🛠️",'esbuildOptions: ', {
             //     entryPoints: [...scriptFiles],
             //     bundle: false,
             //     outdir: outdir,
