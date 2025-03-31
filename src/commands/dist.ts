@@ -12,6 +12,7 @@ class DistCommand extends BuildCommand {
     private type: 'world' | 'addon';
     private setVersion: string;
     private setWorldName: string;
+    private setWorldDirectoryName: string;
 
     constructor(directories: string[], options: { setVersion?: string; type: 'world' | 'addon'; setWorldName: string }) {
         super(directories, { development: false, only: undefined });
@@ -23,10 +24,11 @@ class DistCommand extends BuildCommand {
             this.setVersion = this.getpackageJsonVersion();
         }
         this.setWorldName = options.setWorldName;
+        this.setWorldDirectoryName = this.getPackageJsonName();
 
-        // console.debug('type:', this.type);
-        // console.debug('setVersion:', this.setVersion);
-        // console.debug('setWorldName:', this.setWorldName);
+        console.debug('🛠️ ', 'type:', this.type);
+        console.debug('🛠️ ', 'setVersion:', this.setVersion);
+        console.debug('🛠️ ', 'setWorldName:', this.setWorldName);
     }
 
     private getpackageJsonVersion(): string {
@@ -38,6 +40,18 @@ class DistCommand extends BuildCommand {
         } catch (error) {
             console.error(`❌ [${chalk.red('get package.json version')}]`, chalk.red(`エラーが発生しました:`), error);
             return '1.0.0';
+        }
+    }
+
+    private getPackageJsonName(): string {
+        try {
+            const pk = readFileSync('package.json', 'utf-8');
+
+            const json = JSON.parse(pk);
+            return json.name;
+        } catch (error) {
+            console.error(`❌ [${chalk.red('get package.json version')}]`, chalk.red(`エラーが発生しました:`), error);
+            return 'world';
         }
     }
 
@@ -85,7 +99,7 @@ class DistCommand extends BuildCommand {
                     },
                     {
                         title: 'Zip world',
-                        task: () => this.zip(path.join(env.distDir, 'world-' + this.setVersion), path.join(env.distDir, 'world' + '-' + this.setVersion + '.mcworld')),
+                        task: () => this.zip(path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`), path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}` + '.mcworld')),
                     },
                 ],
                 { concurrent: false },
@@ -108,8 +122,9 @@ class DistCommand extends BuildCommand {
 
     protected createmcAddon() {
         this.directories.forEach(async (directory) => {
-            const dist = path.join(env.distDir, directory + '-' + this.setVersion);
-            const dest = path.join(env.distDir, directory + '-' + this.setVersion + '.mcaddon');
+            const addonDirName = `${directory}-${this.setVersion}`;
+            const dist = path.join(env.distDir, addonDirName);
+            const dest = path.join(env.distDir, addonDirName + '.mcaddon');
 
             await this.zip(dist, dest).catch((error) => {
                 console.error(`❌ [${chalk.red('Zip addon')}]`, chalk.red(`エラーが発生しました:`), error);
@@ -118,12 +133,12 @@ class DistCommand extends BuildCommand {
     }
 
     protected async generateLevelDat() {
-        const world = path.join(env.distDir, 'world' + '-' + this.setVersion);
+        const world = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`);
         const dat = path.join(world, 'level.dat');
         const worldName = this.setWorldName.replace('{name}', path.basename(process.cwd())).replace('{version}', this.setVersion);
 
-        // console.debug('world:', world);
-        // console.debug('dat:', dat);
+        console.debug('🛠️ ', 'world:', world);
+        console.debug('🛠️ ', 'dat:', dat);
 
         if (!existsSync(dat)) {
             throw new Error(`level.dat not found: ${dat}`);
@@ -137,8 +152,8 @@ class DistCommand extends BuildCommand {
             const build = path.join(env.buildDir, directory);
             const dist = path.join(env.distDir, directory + '-' + this.setVersion);
 
-            // console.debug('build:', build);
-            // console.debug('dist:', dist);
+            console.debug('🛠️ ', 'build:', build);
+            console.debug('🛠️ ', 'dist:', dist);
 
             await cp(build, dist, { recursive: true, force: true }).catch((error) => {
                 console.error(`❌ [${chalk.red('Copy to dist')}]`, chalk.red(`エラーが発生しました:`), error);
@@ -148,10 +163,10 @@ class DistCommand extends BuildCommand {
 
     protected async copyWorld() {
         const world = path.join(env.worldDir);
-        const dist = path.join(env.distDir, 'world' + '-' + this.setVersion);
+        const dist = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`);
 
-        // console.debug('world:', world);
-        // console.debug('dist:', dist);
+        console.debug('🛠️ ', 'world', world);
+        console.debug('🛠️ ', 'dist:', dist);
 
         await cp(world, dist, { recursive: true, force: true }).catch((error) => {
             console.error(`❌ [${chalk.red('Copy world to dist')}]`, chalk.red(`エラーが発生しました:`), error);
@@ -162,12 +177,16 @@ class DistCommand extends BuildCommand {
         this.directories.forEach(async (directory) => {
             const behavior_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'behavior_packs');
             const resource_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'resource_packs');
-            const worldBehavior_pack = path.join(env.distDir, path.basename(env.worldDir) + '-' + this.setVersion, 'behavior_packs', directory + '-' + this.setVersion);
-            const worldResource_pack = path.join(env.distDir, path.basename(env.worldDir) + '-' + this.setVersion, 'resource_packs', directory + '-' + this.setVersion);
+            const worldBehavior_pack = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`, 'behavior_packs', directory + '-' + this.setVersion);
+            const worldResource_pack = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`, 'resource_packs', directory + '-' + this.setVersion);
 
-            cpSync(behavior_pack, worldBehavior_pack, { recursive: true, force: true });
+            if (existsSync(behavior_pack)) {
+                cpSync(behavior_pack, worldBehavior_pack, { recursive: true, force: true });
+            }
 
-            cpSync(resource_pack, worldResource_pack, { recursive: true, force: true });
+            if (existsSync(resource_pack)) {
+                cpSync(resource_pack, worldResource_pack, { recursive: true, force: true });
+            }
         });
     }
 
@@ -176,16 +195,14 @@ class DistCommand extends BuildCommand {
 
         const archive = archiver('zip', { zlib: { level: 9 } });
         archive.pipe(output);
-        archive.glob('**/*', {
-            cwd: src, // ルートディレクトリを指定
-        });
+        archive.directory(src, false);
 
         await archive.finalize();
 
         output.on('close', function () {
             // zip圧縮完了すると発火する
             const archive_size = archive.pointer();
-            console.log(`complete! mcaddon total size : ${archive_size} bytes`, dest);
+            console.log(`✅ complete! mcaddon total size : ${archive_size} bytes`, path.basename(dest));
         });
     }
 }
