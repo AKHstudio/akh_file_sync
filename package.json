@@ -16,7 +16,7 @@
         "prettier:fix": "prettier --write src/**/*.ts",
         "test": "npm run prettier && npm run lint",
         "test:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm run lint:fix & npm run build -- --minify"
+        "release": "npm test & npm run build -- --pure:console.debug --minify"
     },
     "repository": {
         "type": "git",
