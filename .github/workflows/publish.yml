@@ -101,6 +101,7 @@ jobs:
             - name: チェックアウト確認
               run: |
                   ls -la
+                  ls -la changelog
 
             - name: release ブランチをチェックアウト
               run: |
