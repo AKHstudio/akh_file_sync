@@ -118,7 +118,8 @@ jobs:
               run: |
                   echo "./changelog/${TAG_NAME#v}.md"
                   RELEASE_NOTES=$(cat ./changelog/${TAG_NAME#v}.md)
-                  if [ -e ./changelog/${TAG_NAME#v}.md ]; then
+                  echo ${RELEASE_NOTES}
+                  if [ ! -e ./changelog/${TAG_NAME#v}.md ]; then
                     echo "./changelog/*にリリースノートがありません。"
                     echo "リリースノートを取得できませんでした。"
                     exit 1
