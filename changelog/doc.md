@@ -20,6 +20,22 @@ changelog/1.1.3.md
 
 changelog/1.1.0.md
 
+#### beta版の命名規則
+
+changelog/{バージョン}-beta.{数字}.md の形式で作成する✅ 例:
+
+changelog/1.2.0-beta.1.md
+changelog/1.2.0-beta.2.md
+changelog/1.2.0-beta.3.md
+
+#### rc版の命名規則
+
+changelog/{バージョン}-rc.{数字}.md の形式で作成する✅ 例:
+
+changelog/1.2.0-rc.1.md
+changelog/1.2.0-rc.2.md
+changelog/1.2.0-rc.3.md
+
 ### 2️⃣ ファイルのフォーマット
 
 ## [バージョン] - YYYY-MM-DD
