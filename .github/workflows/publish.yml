@@ -98,6 +98,10 @@ jobs:
                   ref: ${{ github.ref }}
                   token: ${{ secrets.GH_PAT }}
 
+            - name: チェックアウト確認
+              run: |
+                  ls -la
+
             - name: release ブランチをチェックアウト
               run: |
                   if git ls-remote --heads origin | grep "release-${{ env.TAG_NAME }}"; then
