@@ -18,11 +18,31 @@ jobs:
                   echo "TAG: ${TAG_NAME}"
                   echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
 
-    update-version:
+    flag:
         needs: get-tag
         runs-on: ubuntu-latest
         env:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        outputs:
+            BETA_RC_FLAG: ${{ steps.flag.outputs.BETA_RC_FLAG }}
+        steps:
+            - name: タグ名を取得
+              id: flag
+              run: |
+                  if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
+                      echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
+                  elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
+                      echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
+                  else
+                      echo "BETA_RC_FLAG=false" >> $GITHUB_OUTPUT
+                  fi
+
+    update-version:
+        needs: [get-tag, flag]
+        runs-on: ubuntu-latest
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        if: ${{ needs.flag.outputs.BETA_RC_FLAG == 'false' }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -65,27 +85,8 @@ jobs:
                   echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
                   exit 1
 
-    flag:
-        needs: get-tag
-        runs-on: ubuntu-latest
-        env:
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-        outputs:
-            BETA_RC_FLAG: ${{ steps.flag.outputs.BETA_RC_FLAG }}
-        steps:
-            - name: タグ名を取得
-              id: flag
-              run: |
-                  if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
-                      echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
-                  elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
-                      echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
-                  else
-                      echo "BETA_RC_FLAG=false" >> $GITHUB_OUTPUT
-                  fi
-
     release:
-        needs: [flag, get-tag, update-version]
+        needs: [get-tag, flag]
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
