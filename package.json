@@ -22,6 +22,9 @@
         "type": "git",
         "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
     },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
     "keywords": [
         "minecraft",
         "addon",
