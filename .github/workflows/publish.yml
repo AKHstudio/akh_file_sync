@@ -52,7 +52,8 @@ jobs:
 
             - name: release ブランチを作成
               run: |
-                  git checkout -B release-${{ env.TAG_NAME }}
+                  git checkout -b release-${{ env.TAG_NAME }}
+                  git push -u origin release-${{ env.TAG_NAME }}
 
             - name: package.json のバージョンを更新
               run: |
@@ -107,7 +108,8 @@ jobs:
                     git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
                   else
                         echo "🚀 リモートに存在しないため、新しいブランチを作成します。"
-                        git checkout -B release-${{ env.TAG_NAME }}
+                        git checkout -b release-${{ env.TAG_NAME }}
+                        git push -u origin release-${{ env.TAG_NAME }}
                   fi
 
             - name: changelogを取得
@@ -136,7 +138,8 @@ jobs:
                       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
                       git add CHANGELOG.md
                       git commit -m "Update CHANGELOG.md" -m "Update CHANGELOG.md for ${TAG_NAME#v}"
-                      git push origin main
+                      git push origin release-${{ env.TAG_NAME }}
+                      echo "CHANGELOG.md を更新しました。"
                   else
                       echo "CHANGELOG.md に変更はありません 📝"
                       echo "コミットをスキップします"
