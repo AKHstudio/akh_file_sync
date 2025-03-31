@@ -86,7 +86,7 @@ jobs:
                   exit 1
 
     release:
-        needs: [get-tag, flag]
+        needs: [get-tag, flag, update-version]
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -177,7 +177,7 @@ jobs:
                   git push origin --delete release-${{ env.TAG_NAME }}
                   echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
     publish:
-        needs: [release, get-tag, flag]
+        needs: [release, get-tag, flag, update-version]
 
         env:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
