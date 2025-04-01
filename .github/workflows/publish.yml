@@ -198,6 +198,11 @@ jobs:
         env:
             BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
         steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.GH_PAT }}
+
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
               with:
@@ -213,22 +218,12 @@ jobs:
 
     publish:
         needs: [release, create-env]
-        strategy:
-            matrix:
-                publish-type: [beta, rc, stable]
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
             BETA_RC_FLAG: ${{ needs.create-env.outputs.BETA_RC_FLAG }}
             PUBLISH_TYPE: ${{ needs.create-env.outputs.PUBLISH_TYPE }}
         runs-on: ubuntu-latest
         steps:
-            - name: 実行確認
-              run: |
-                  if [[ ! "${{ env.PUBLISH_TYPE }}" == "${{ matrix.publish-type }}" ]]; then
-                        echo "🚫 このジョブは ${PUBLISH_TYPE} タグのためにスキップされました。"
-                        exit 0
-                  fi
-
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
@@ -247,21 +242,34 @@ jobs:
             - name: リリースビルド
               run: npm run release
 
-            - name: タグを判定し、適切な npm publish を実行 ${{ matrix.publish-type }}
+            - name: タグを判定し、適切な npm publish を実行
               if: success()
               run: |
-                  LATEST=$(npm info akhsync dist-tags.${{ matrix.publish-type }} 2>/dev/null || echo "")
+                  if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
+                      LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
 
-                  if [[ "$LATEST" == "${TAG_NAME#v}" ]]; then
-                      echo "🚀 ${{ matrix.publish-type }} バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
-                  else
-                      if [[ "${{ matrix.publish-type }}" == "stable" ]]; then
-                          echo "🚀 スタンダードバージョンとして公開: npm publish --access public"
-                          npm publish --access public
+                      if [[ "$LATEST_BETA" == "${TAG_NAME#v}" ]]; then
+                          echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
-                        echo "🚀 ${{ matrix.publish-type }} バージョンとして公開: npm publish --tag ${{ matrix.publish-type }}"
-                        npm publish --tag ${{ matrix.publish-type }} --access public
+                          echo "🚀 beta タグのために npm publish --tag beta を実行します。"
+                          npm publish --tag beta --access public
                       fi
+                  elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
+                      LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
+                      if [[ "$LATEST_RC" == "${TAG_NAME#v}" ]]; then
+                          echo "🚀 RC バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                      else
+                          echo "🚀 rc タグのために npm publish --tag rc を実行します。"
+                          npm publish --tag rc --access public
+                      fi
+                  else
+                    LATEST_STABLE=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
+                    if [[ "$LATEST_STABLE" == "${TAG_NAME#v}" ]]; then
+                        echo "🚀 スタブルバージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                    else
+                        echo "🚀 スタブルバージョンのために npm publish を実行します。"
+                        npm publish --access public
+                    fi
                   fi
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -306,9 +314,10 @@ jobs:
 
             - name: Draft リリースを削除
               run: |
-                  RELEASE_ID=$(gh release list --repo "${{ github.repository }}" --json id,isDraft --jq '.[] | select(.isDraft == true) | .id')
-                  if [ -n "$RELEASE_ID" ]; then
-                    echo "Draft リリースを削除します: $RELEASE_ID"
+                  RELEASE_TAGNAME=$(gh release list --repo "${{ github.repository }}" --json tagName,isDraft --jq '.[] | select(.isDraft == true) | .tagName')
+                  if [ -n "$RELEASE_TAGNAME" ]; then
+                    echo "Draft リリースを削除します: $RELEASE_TAGNAME"
+                    RELEASE_ID=$(gh release view "$TAG_NAME" --repo "${{ github.repository }}" --json id --jq '.id')
                     gh release delete "$RELEASE_ID" --repo "${{ github.repository }}" --yes
                   else
                     echo "Draft リリースは存在しません。"
