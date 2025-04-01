@@ -29,3 +29,7 @@ TODO.md
 # TypeScript（コンパイル後の.jsだけを公開する場合）
 *.ts
 tsconfig.json
+
+# 圧縮のためチェンジログは除外
+CHANGELOG.md
+changelog/
