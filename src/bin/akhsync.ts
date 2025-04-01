@@ -18,14 +18,14 @@ program.name('akhsync')
         'output the current version'
     )
     .usage("<command> [options]")
-    .description('A simple CLI tool to sync files between two directories')
+    .description('minecraft addon development file sync CLI tool')
     .helpOption('-h, --help', 'output usage information');
 
 // build command
 // prettier-ignore
 program.command("build")
     .usage("[directory...] [options]")
-    .description("Build the project")
+    .description("Build the projects")
     .argument("[directory...]", "The directory to build")
     .helpOption("-h, --help", "output usage build command information")
     .option("-d,--development", "Build the project in development mode" , false)
@@ -43,7 +43,7 @@ program.command("build")
 // prettier-ignore
 program.command("sync")
     .usage("[directory...] [options]")
-    .description("Sync files between two directories")
+    .description("Sync the project with the development directory")
     .argument("[directory...]", "The directory to sync")
     .helpOption("-h, --help", "output usage sync command information")
     .option("-d,--development", "Sync the project in development mode" , false)
@@ -59,12 +59,12 @@ program.command("sync")
 // prettier-ignore
 program.command("async")
     .usage("[directory...]")
-    .description("Async files between two directories")
+    .description("Async the project from the development directory")
     .argument("[directory...]", "The directory to async")
     .helpOption("-h, --help", "output usage async command information")
     .addOption(new Option("-o, --only <type>", "async only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , option) => {
-        console.log(directories , option);
+        console.debug(directories , option);
 
         const Async = new AsyncCommand(directories , option);
         await Async.execute();
@@ -74,13 +74,13 @@ program.command("async")
 // prettier-ignore
 program.command("watch")
     .usage("[directory...] [options]")
-    .description("Watch files between two directories")
+    .description("Watch your project for changes and sync it with your development directory")
     .argument("[directory...]", "The directory to watch")
     .helpOption("-h, --help", "output usage watch command information")
     .option("-d,--development", "Watch the project in development mode" , false)
     .addOption(new Option("-o, --only <type>", "watch only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options) => {
-        console.log(directories , options);
+        console.debug(directories , options);
 
         const watch = new WatchCommand(directories , { development: options.development , build: true, only: options.only });
         await watch.execute();
@@ -90,14 +90,14 @@ program.command("watch")
 // prettier-ignore
 program.command("dist")
     .usage("[directory...] [options]")
-    .description("Dist files between two directories")
+    .description("Dist the project")
     .argument("[directory...]", "The directory to dist")
     .helpOption("-h, --help", "output usage dist command information")
     .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
     .option("--set-version <version>", "Set the version of the dist")
     .option("--set-world-name <name>", "Set the world name of the dist. replace {name} : dirName , {version} : version" , "{name} {version}")
     .action(async (directories : string[] , options) => {
-        // console.log(directories , options);
+        console.debug(directories , options);
 
         const dist = new DistCommand(directories , { setVersion: options.setVersion , type: options.type , setWorldName: options.setWorldName });
         await dist.execute();
@@ -105,15 +105,15 @@ program.command("dist")
 
 // update command
 // prettier-ignore
-// program.command("update")
-//     .description("Update the CLI tool")
-//     .helpOption("-h, --help", "output usage update command information")
-//     .option("-d, --dist" , "Update the CLI tool to the latest version")
-//     .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
-//     .option("--set-version <version>", "Set the version of the dist")
-//     .option("--set-world-name <name>", "Set the world name of the dist. replace {name} : dirName , {version} : version" , "{name} {version}")
-//     .action((_ , options) => {
-//         console.log(options);
-//     });
+program.command("update")
+    .description("Update the script modules")
+    .helpOption("-h, --help", "output usage update command information")
+    .option("--dist" , "Dist the project")
+    .addOption(new Option("-t, --type <types...>", "dist type").choices(["world" , "addon" ]).default(["addon"]))
+    .option("--set-version <version>", "Set the version of the dist")
+    .option("--set-world-name <name>", "Set the world name of the dist. replace {name} : dirName , {version} : version" , "{name} {version}")
+    .action((options) => {
+        console.debug(options);
+    });
 
 program.parse();
