@@ -25,16 +25,20 @@ jobs:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         outputs:
             BETA_RC_FLAG: ${{ steps.flag.outputs.BETA_RC_FLAG }}
+            PUBLISH_TYPE: ${{ steps.flag.outputs.PUBLISH_TYPE }}
         steps:
             - name: タグ名を取得
               id: flag
               run: |
                   if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
                       echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
+                      echo "PUBLISH_TYPE=beta" >> $GITHUB_OUTPUT
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       echo "BETA_RC_FLAG=true" >> $GITHUB_OUTPUT
+                        echo "PUBLISH_TYPE=rc" >> $GITHUB_OUTPUT
                   else
                       echo "BETA_RC_FLAG=false" >> $GITHUB_OUTPUT
+                        echo "PUBLISH_TYPE=stable" >> $GITHUB_OUTPUT
                   fi
 
     update-version:
@@ -201,7 +205,7 @@ jobs:
                     git checkout -b release-${{ env.TAG_NAME }} origin/release-${{ env.TAG_NAME }}
                   else
                         echo "🚀 リモートに存在しないため、新しいブランチを作成します。"
-                        git checkout -B release-${{ env.TAG_NAME }}
+                        git checkout -b release-${{ env.TAG_NAME }}
                   fi
 
             - name: Node.jsのセットアップ
@@ -218,7 +222,6 @@ jobs:
 
             - name: タグを判定し、適切な npm publish を実行
               if: success()
-              id: flag
               run: |
                   if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
                       LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
