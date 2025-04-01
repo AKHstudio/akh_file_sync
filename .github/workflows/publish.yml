@@ -38,7 +38,7 @@ jobs:
                     　echo "PUBLISH_TYPE=rc" >> $GITHUB_OUTPUT
                   else
                       echo "BETA_RC_FLAG=false" >> $GITHUB_OUTPUT
-                    　echo "PUBLISH_TYPE=stable" >> $GITHUB_OUTPUT
+                      echo "PUBLISH_TYPE=stable" >> $GITHUB_OUTPUT
                   fi
 
     create-env:
@@ -279,6 +279,12 @@ jobs:
             BETA_RC_FLAG: ${{ needs.flag.outputs.BETA_RC_FLAG }}
         runs-on: ubuntu-latest
         steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.ref }}
+                  token: ${{ secrets.GH_PAT }}
+
             - name: エラーハンドリング
               run: |
                   echo "エラーが発生しました。"
