@@ -139,7 +139,11 @@ jobs:
                       exit 1
                   fi
                   RELEASE_NOTES=$(cat ./changelog/${TAG_NAME#v}.md)
-                  echo "RELEASE_NOTES=${RELEASE_NOTES}" >> $GITHUB_OUTPUT
+                  {
+                    echo "RELEASE_NOTES<<EOF"
+                    echo "$RELEASE_NOTES"
+                    echo "EOF"
+                  } >> "$GITHUB_OUTPUT"
 
                   echo $RELEASE_NOTES > RELEASE_NOTES.md
 
