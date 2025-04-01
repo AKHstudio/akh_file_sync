@@ -208,7 +208,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: '20'
-                  registry-url: 'https://npm.pkg.github.com/'
+                  registry-url: 'https://registry.npmjs.org/'
 
             - name: 依存関係のインストール
               run: npm ci
@@ -249,7 +249,7 @@ jobs:
                       fi
                   fi
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: tagを削除 , ブランチを削除
               if: failure()
@@ -261,3 +261,5 @@ jobs:
                   git push origin --delete release-${{ env.TAG_NAME }}
                   echo "リリースブランチを削除しました: release-${{ env.TAG_NAME }}"
                   npm deprecate akhsync@${{ env.TAG_NAME }} "このバージョンは非推奨です。"
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

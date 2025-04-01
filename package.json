@@ -1,5 +1,5 @@
 {
-    "name": "@akhstudio/akhsync",
+    "name": "akhsync",
     "version": "1.0.0",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
@@ -21,9 +21,6 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
-    },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
     },
     "keywords": [
         "minecraft",
