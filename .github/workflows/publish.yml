@@ -197,6 +197,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
+            TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
