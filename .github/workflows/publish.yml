@@ -218,7 +218,7 @@ jobs:
                   TAG_NAME: ${{ env.TAG_NAME }}
 
     publish:
-        needs: [release, create-env]
+        needs: [release, create-env, update-version]
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
             BETA_RC_FLAG: ${{ needs.create-env.outputs.BETA_RC_FLAG }}
