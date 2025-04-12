@@ -197,6 +197,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
+            TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -217,7 +218,7 @@ jobs:
                   TAG_NAME: ${{ env.TAG_NAME }}
 
     publish:
-        needs: [release, create-env]
+        needs: [release, create-env, update-version]
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
             BETA_RC_FLAG: ${{ needs.create-env.outputs.BETA_RC_FLAG }}
