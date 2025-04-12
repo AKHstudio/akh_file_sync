@@ -78,11 +78,11 @@ program.command("watch")
     .argument("[directory...]", "The directory to watch")
     .helpOption("-h, --help", "output usage watch command information")
     .option("-d,--development", "Watch the project in development mode" , false)
-    .addOption(new Option("-o, --only <type>", "watch only addon type").choices(["behavior" , "resource"]))
+    // .addOption(new Option("-o, --only <type>", "watch only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options) => {
         console.log(directories , options);
 
-        const watch = new WatchCommand(directories , { development: options.development , build: true, only: options.only });
+        const watch = new WatchCommand(directories , { development: options.development , build: true, only: "behavior" });
         await watch.execute();
     });
 
