@@ -262,7 +262,7 @@ jobs:
                           echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
                           echo "🚀 beta タグのために npm publish --tag beta を実行します。"
-                          npm publish --tag beta --access public --dry-run
+                          npm publish --tag beta --access public
                       fi
                   elif [[ "${{ env.TAG_NAME }}" == *"rc"* ]]; then
                       LATEST_RC=$(npm info akhsync dist-tags.rc 2>/dev/null || echo "")
@@ -270,7 +270,7 @@ jobs:
                           echo "🚀 RC バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                       else
                           echo "🚀 rc タグのために npm publish --tag rc を実行します。"
-                          npm publish --tag rc --access public --dry-run
+                          npm publish --tag rc --access public
                       fi
                   else
                     LATEST_STABLE=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
@@ -278,8 +278,7 @@ jobs:
                         echo "🚀 スタブルバージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
                     else
                         echo "🚀 スタブルバージョンのために npm publish を実行します。"
-                        npm publish --access public --dry-run
-                        exit 1
+                        npm publish --access public
                     fi
                   fi
               env:
