@@ -60,7 +60,6 @@ jobs:
         runs-on: ubuntu-latest
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
-        if: ${{ needs.create-env.outputs.BETA_RC_FLAG == 'false' }}
         outputs:
             BRANCH_NAME: ${{ steps.branch.outputs.BRANCH_NAME }}
         steps:
@@ -72,6 +71,9 @@ jobs:
 
             - name: release ブランチを作成
               run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
                   git checkout -b release-${{ env.TAG_NAME }}
                   git push -u origin release-${{ env.TAG_NAME }}
 
@@ -81,13 +83,12 @@ jobs:
                   BRANCH_NAME=release-${{ env.TAG_NAME }}
                   echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_OUTPUT
 
-    update-version:
+    update-packagejson:
         needs: [create-env, create-branch]
         runs-on: ubuntu-latest
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
             BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-        if: ${{ needs.create-env.outputs.BETA_RC_FLAG == 'false' }}
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
@@ -104,23 +105,24 @@ jobs:
 
             - name: 変更をコミット & プッシュ
               run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
                   if [ -n "$(git diff package.json)" ]; then
-                    git config --global user.name "github-actions[bot]"
-                    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                    git add package.json
-                    git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
-                    git push origin ${{ env.BRANCH_NAME }}
+                   git add package.json
+                   git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
+                   git push origin ${{ env.BRANCH_NAME }}
                   else
-                    echo "package.json に変更はありません 📝"
-                    echo "コミットをスキップします"
+                   echo "package.json に変更はありません 📝"
+                   echo "コミットをスキップします"
                   fi
 
     release:
-        needs: create-env
+        needs: [create-env, create-branch, update-packagejson]
         runs-on: ubuntu-latest
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
+            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
             BETA_RC_FLAG: ${{ needs.create-env.outputs.BETA_RC_FLAG }}
         outputs:
             RELEASE_NOTES: ${{ steps.get-release-notes.outputs.RELEASE_NOTES }}
@@ -128,7 +130,7 @@ jobs:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
-                  ref: ${{ github.ref }}
+                  ref: ${{ env.BRANCH_NAME }}
                   token: ${{ secrets.GH_PAT }}
 
             - name: リリースノートを取得
@@ -180,6 +182,7 @@ jobs:
                       echo "${{ env.RELEASE_NOTES }}" > CHANGELOG.md
                   else
                       echo "CHANGELOG.md が見つかりました。内容を更新します。"
+                      echo "" >> CHANGELOG.md
                       echo "${{ env.RELEASE_NOTES }}" >> CHANGELOG.md
                   fi
 
@@ -187,6 +190,7 @@ jobs:
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
                   git add CHANGELOG.md
                   git commit -m "Update CHANGELOG.md" -m "update changelog for ${TAG_NAME#v}"
                   git push origin ${{ env.BRANCH_NAME }}
@@ -202,33 +206,38 @@ jobs:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
+                  ref: ${{ env.BRANCH_NAME }}
                   token: ${{ secrets.GH_PAT }}
 
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
               with:
                   node-version: '20'
+                  cache: 'npm'
 
             - name: プルリクエストを作成
+              working-directory: .github/actions/create-pull-requests
               run: |
-                  cd .github/actions/create-pull-requests && npm install
-                  node ./dist/index.js
+                  npm install
+                  npm run build
+                  npm start
               env:
                   GITHUB_TOKEN: ${{ secrets.GH_PAT }}
                   TAG_NAME: ${{ env.TAG_NAME }}
 
     publish:
-        needs: [release, create-env, update-version]
+        needs: [release, create-env, create-branch, update-packagejson]
         env:
             TAG_NAME: ${{ needs.create-env.outputs.TAG_NAME }}
             BETA_RC_FLAG: ${{ needs.create-env.outputs.BETA_RC_FLAG }}
+            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
             PUBLISH_TYPE: ${{ needs.create-env.outputs.PUBLISH_TYPE }}
         runs-on: ubuntu-latest
         steps:
             - name: リポジトリをチェックアウト
               uses: actions/checkout@v4
               with:
-                  ref: ${{ github.ref }}
+                  ref: ${{ env.BRANCH_NAME }}
                   token: ${{ secrets.GH_PAT }}
 
             - name: Node.jsのセットアップ
@@ -247,7 +256,7 @@ jobs:
               if: success()
               run: |
                   if [[ "${{ env.TAG_NAME }}" == *"beta"* ]]; then
-                      LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
+                      LATEST_BETA=$(npm info @akhstudio/akhsync dist-tags.beta 2>/dev/null || echo "")
 
                       if [[ "$LATEST_BETA" == "${TAG_NAME#v}" ]]; then
                           echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
@@ -279,13 +288,13 @@ jobs:
               if: failure()
               run: |
                   echo "❌ パブリッシュに失敗しました。パッケージを非推奨に設定します。"
-                  npm deprecate akhsync@${TAG_NAME#v} "このバージョンは非推奨です。"
+                  npm deprecate @akhstudio/akhsync@${TAG_NAME#v} "このバージョンは非推奨です。"
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     error-handling:
         if: failure()
-        needs: [get-tag, flag, create-branch, update-version, release, publish]
+        needs: [get-tag, flag, create-branch, update-packagejson, release, publish]
         env:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
             BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
@@ -307,21 +316,15 @@ jobs:
                   git push origin --delete ${{ env.TAG_NAME }}
                   echo "タグを削除しました: ${{ env.TAG_NAME }}"
 
-                  if ${{ env.BETA_RC_FLAG  == 'false' }}; then
-                      echo "リリースブランチを削除します。"
-                      git push origin --delete ${{ env.BRANCH_NAME }}
-                      echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
-                  fi
+                  git push origin --delete ${{ env.BRANCH_NAME }}
+                  echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
 
             - name: Draft リリースを削除
+              working-directory: .github/actions/delete-draft-release
               run: |
-                  RELEASE_TAGNAME=$(gh release list --repo "${{ github.repository }}" --json tagName,isDraft --jq '.[] | select(.isDraft == true) | .tagName')
-                  if [ -n "$RELEASE_TAGNAME" ]; then
-                    echo "Draft リリースを削除します: $RELEASE_TAGNAME"
-                    RELEASE_ID=$(gh release view "$TAG_NAME" --repo "${{ github.repository }}" --json id --jq '.id')
-                    gh release delete "$RELEASE_ID" --repo "${{ github.repository }}" --yes
-                  else
-                    echo "Draft リリースは存在しません。"
-                  fi
+                  npm install
+                  npm run build
+                  npm start
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAG_NAME: ${{ env.TAG_NAME }}
