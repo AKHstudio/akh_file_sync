@@ -320,7 +320,7 @@ jobs:
                   echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
 
             - name: Draft リリースを削除
-              working-directory: .github/actions/deleate-draft-release
+              working-directory: .github/actions/delete-draft-release
               run: |
                   npm install
                   npm run build

@@ -1,5 +1,5 @@
 {
-    "name": "deleate-draft-release",
+    "name": "delete-draft-release",
     "version": "1.0.0",
     "description": "Action内でDraft Releaseを自動削除するスクリプト",
     "keywords": [
