@@ -1,6 +1,6 @@
 {
     "name": "@akhstudio/akhsync",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
