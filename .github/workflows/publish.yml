@@ -279,6 +279,7 @@ jobs:
                     else
                         echo "🚀 スタブルバージョンのために npm publish を実行します。"
                         npm publish --access public --dry-run
+                        exit 1
                     fi
                   fi
               env:
