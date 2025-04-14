@@ -316,11 +316,8 @@ jobs:
                   git push origin --delete ${{ env.TAG_NAME }}
                   echo "タグを削除しました: ${{ env.TAG_NAME }}"
 
-                  if ${{ env.BETA_RC_FLAG  == 'false' }}; then
-                      echo "リリースブランチを削除します。"
-                      git push origin --delete ${{ env.BRANCH_NAME }}
-                      echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
-                  fi
+                  git push origin --delete ${{ env.BRANCH_NAME }}
+                  echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
 
             - name: Draft リリースを削除
               working-directory: .github/actions/deleate-draft-release
@@ -329,5 +326,5 @@ jobs:
                   npm run build
                   npm start
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: ${{ env.TAG_NAME }}
