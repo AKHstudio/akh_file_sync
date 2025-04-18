@@ -14,9 +14,10 @@
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
         "prettier": "prettier --check src/**/*.ts",
         "prettier:fix": "prettier --write src/**/*.ts",
-        "test": "npm run prettier && npm run lint",
-        "test:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm test & npm run build -- --pure:console.debug --minify"
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.js",
+        "fmt": "npm run prettier && npm run lint",
+        "fmt:fix": "npm run prettier:fix && npm run lint:fix",
+        "release": "npm run build -- --pure:console.debug --minify"
     },
     "repository": {
         "type": "git",
@@ -38,13 +39,22 @@
     "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
     "devDependencies": {
         "@eslint/js": "^9.21.0",
+        "@jest/globals": "^29.7.0",
         "@types/archiver": "^6.0.3",
         "@types/cli-progress": "^3.11.6",
         "@types/glob": "^8.1.0",
+        "@types/jest": "^29.5.14",
         "@types/node": "^22.13.5",
+        "cross-env": "^7.0.3",
+        "dir-compare": "^5.0.0",
         "eslint": "^9.21.0",
+        "execa": "^9.5.2",
         "globals": "^16.0.0",
+        "jest": "^29.7.0",
         "prettier": "^3.5.3",
+        "strip-ansi": "^7.1.0",
+        "ts-jest": "^29.3.2",
+        "ts-node": "^10.9.2",
         "tsx": "^4.19.3",
         "typescript-eslint": "^8.25.0"
     },
