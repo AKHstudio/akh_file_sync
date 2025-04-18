@@ -26,6 +26,13 @@ describe('build command tests', () => {
 
     // テスト開始時に一度実行
     beforeAll(async () => {
+        // akhsyncコマンドの確認
+        const akhsyncResult = await execa('akhsync', ['--version'], { cwd, reject: false });
+        if (akhsyncResult.exitCode !== 0) {
+            await execa('npm', ['run', 'build'], { cwd, reject: false });
+            await execa('npm', ['link'], { cwd, reject: false });
+        }
+
         // output ディレクトリを削除
         rmSync(outputFilePath, { recursive: true, force: true });
 
