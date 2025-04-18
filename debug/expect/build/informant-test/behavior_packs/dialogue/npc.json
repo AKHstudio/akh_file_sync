@@ -1,0 +1,272 @@
+{
+    "format_version": "1.17",
+    "minecraft:npc_dialogue": {
+        "scenes": [
+            {
+                "scene_tag": "AKIsan1",
+                "npc_name": "AKIsan",
+                "text": "やぁ、1つ頼みがあるんだけど...",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "受ける",
+                        "commands": [
+                            "/scriptevent mission:AKIRequestStart なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "AKIsan2",
+                "npc_name": "AKIsan",
+                "text": "さっき脱衣所にエメラルドを落としちゃったんだよね...\n持ってきてくれない？",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "いいよ",
+                        "commands": [
+                            "/tag @initiator add AttackAllow",
+                            "/tag @initiator add OnAKIRequest",
+                            "/dialogue change @e[name=AKIsan,type=npc] AKIsan5 @a[tag=!OnAKIRequest]",
+                            "/dialogue open @e[name=AKIsan,type=npc] @initiator AKIsan3",
+                            "/summon informant:npc_item 33.10 -59.00 40.26 ~ ~ aki_drop",
+                            "/dialogue change @e[name=AKIsan,type=npc] AKIsan3 @initiator" 
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "AKIsan3",
+                "npc_name": "AKIsan",
+                "text": "脱衣所のエメラルド\n持ってきてくれた？",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "持ってきたよ！！",
+                        "commands": [
+                            "/scriptevent mission:AKIRequestStop なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "AKIsan4",
+                "npc_name": "AKIsan",
+                "text": "エメラルドだぁやった！\n持ってきてくれた人ありがとう！",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name":"どう致しまして！",
+                        "commands": [
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "AKIsan5",
+                "npc_name": "AKIsan",
+                "text": "§c先にお願いを聞いた人がいます",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name":"先を越されたようだ",
+                        "commands": [
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Harupon1",
+                "npc_name": "Harupon",
+                "text": "君今暇でしょ手伝わせてあげる",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "受ける",
+                        "commands": [
+                            "/scriptevent mission:HaruponRequestStart なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Harupon2",
+                "npc_name": "Harupon",
+                "text": "この家の入口にラピスラズリ落としちゃった\n持ってきて",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "いいよ",
+                        "commands": [
+                            "/tag @initiator add AttackAllow",
+                            "/tag @initiator add OnHaruponRequest",
+                            "/dialogue change @e[name=Harupon,type=npc] Harupon5 @a[tag=!OnHaruponRequest]",
+                            "/dialogue open @e[name=Harupon,type=npc] @initiator Harupon3",
+                            "/summon informant:npc_item -43.07 -59 49.42 ~ ~ harupon_drop",
+                            "/dialogue change @e[name=Harupon,type=npc] Harupon3 @initiator" 
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Harupon3",
+                "npc_name": "Harupon",
+                "text": "家の入口のラピスラズリ\n持ってきた？",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "持ってきたよ！！",
+                        "commands": [
+                            "/scriptevent mission:HaruponRequestStop なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Harupon4",
+                "npc_name": "Harupon",
+                "text": "ありがとう",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "どう致しまして！",
+                        "commands": [
+                            
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Harupon5",
+                "npc_name": "Harupon",
+                "text": "§c先にお願いを聞いた人がいます",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name":"先を越されたようだ",
+                        "commands": [
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Takokun1",
+                "npc_name": "Takokun",
+                "text": "やぁ、お願したいことがある",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "受ける",
+                        "commands": [
+                            "/scriptevent mission:TakoRequestStart なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Takokun2",
+                "npc_name": "Takokun",
+                "text": "この家の1番大きい赤色の葉っぱの木の下にダイアモンドを落としちゃったんだ...\n取ってきてくれない？",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "いいよ",
+                        "commands": [
+                            "/tag @initiator add AttackAllow",
+                            "/tag @initiator add OnTakoRequest",
+                            "/dialogue change @e[name=Takokun,type=npc] Takokun5 @a[tag=!OnTakoRequest]",
+                            "/dialogue open @e[name=Takokun,type=npc] @initiator Takokun3", 
+                            "/summon informant:npc_item 89.34 -56.94 58.49 ~ ~ tako_drop",
+                            "/dialogue change @e[name=Takokun,type=npc] Takokun3 @initiator" 
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Takokun3",
+                "npc_name": "Takokun",
+                "text": "1番大きい木の下のダイアモンド\n持ってきてくれた？？？！",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "持ってきたよ！！",
+                        "commands": [
+                            "/scriptevent mission:TakoRequestStop なし"
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Takokun4",
+                "npc_name": "Takokun",
+                "text": "ありがとう！お礼に...\nチャットを確認してください！",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name": "どう致しまして！",
+                        "commands": [
+                        ]
+                    }
+                ]
+            },
+            {
+                "scene_tag": "Takokun5",
+                "npc_name": "Takokun",
+                "text": "§c先にお願いを聞いた人がいます",
+                "on_open_commands": [
+                ],
+                "on_close_commands": [
+                ],
+                "buttons": [
+                    {
+                        "name":"先を越されたようだ",
+                        "commands": [
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

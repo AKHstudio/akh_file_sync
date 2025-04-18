@@ -1,0 +1,281 @@
+{
+    "namespace": "hud",
+
+    "mob_effects_renderer": {
+        "ignored": true
+    },
+
+    "hunger_renderer": {
+        "ignored": true
+    },
+
+    // "hud_takokun": {
+    //     "type": "image",
+    //     "texture": "textures/items/takodayo_armor.png",
+    //     "anchor_from": "right_middle",
+    //     "anchor_to": "right_middle",
+    //     "size": [64, 64],
+    //     "offset": [0, 4]
+    // },
+
+    //defaultのtitle(表示条件を追加)
+    "hud_title_text": {
+        "type": "stack_panel",
+        "orientation": "vertical",
+        "offset": [0, -19],
+        "layer": 1,
+        "alpha": "@hud.anim_title_text_alpha_in",
+        "propagate_alpha": true,
+        "controls": [
+            {
+                "title_frame": {
+                    "type": "panel",
+                    "size": ["100%", "100%cm"],
+                    "controls": [
+                        {
+                            "title_background": {
+                                "type": "image",
+                                "size": ["100%sm + 30px", "100%sm + 6px"],
+                                "texture": "$defolt_hud_img_path",
+                                "alpha": "@hud.anim_title_background_alpha_in"
+                            }
+                        },
+                        {
+                            "title": {
+                                "type": "label",
+                                "anchor_from": "top_middle",
+                                "anchor_to": "top_middle",
+                                "color": "$title_command_text_color",
+                                "text": "#text",
+                                "layer": 1,
+                                "localize": false,
+                                "font_size": "extra_large",
+                                "variables": [
+                                    {
+                                        "requires": "(not $title_shadow)",
+                                        "$show_shadow": false
+                                    },
+                                    {
+                                        "requires": "$title_shadow",
+                                        "$show_shadow": true
+                                    }
+                                ],
+                                "shadow": "$show_shadow",
+                                "text_alignment": "center",
+                                "offset": [0, 6],
+                                "bindings": [
+                                    {
+                                        "binding_name": "#hud_title_text_string",
+                                        "binding_name_override": "#text",
+                                        "binding_type": "global"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "bindings": [
+                        {
+                            "binding_name": "#hud_title_text_string"
+                        },
+                        {
+                            "binding_type": "view",
+                            "source_property_name": "$defolt_hud_text_if",
+                            "target_property_name": "#visible"
+                        }
+                    ]
+                }
+            },
+            {
+                "subtitle_frame": {
+                    "type": "panel",
+                    "size": ["100%", "100%cm"],
+                    "controls": [
+                        {
+                            "subtitle_background": {
+                                "type": "image",
+                                "size": ["100%sm + 20px", "100%sm + 5px"],
+                                "offset": [0, 16],
+                                "texture": "textures/ui/hud_tip_text_background",
+                                "variables": [
+                                    {
+                                        "requires": "$subtitle_initially_visible",
+                                        "$subtitle_bg": "@hud.anim_title_background_alpha_in"
+                                    },
+                                    {
+                                        "requires": "(not $subtitle_initially_visible)",
+                                        "$subtitle_bg": "@hud.anim_subtitle_background_alpha_in"
+                                    }
+                                ],
+                                "alpha": "$subtitle_bg"
+                            }
+                        },
+                        {
+                            "subtitle": {
+                                "type": "label",
+                                "anchor_from": "top_middle",
+                                "anchor_to": "top_middle",
+                                "color": "$title_command_text_color",
+                                "text": "#text",
+                                "layer": 31,
+                                "localize": false,
+                                "font_size": "large",
+                                "variables": [
+                                    {
+                                        "requires": "$subtitle_initially_visible",
+                                        "$anim_type": 1.0
+                                    },
+                                    {
+                                        "requires": "(not $subtitle_initially_visible)",
+                                        "$anim_type": "@hud.anim_subtitle_text_alpha_in"
+                                    },
+                                    {
+                                        "requires": "(not $title_shadow)",
+                                        "$show_shadow": false
+                                    },
+                                    {
+                                        "requires": "$title_shadow",
+                                        "$show_shadow": true
+                                    }
+                                ],
+                                "shadow": "$show_shadow",
+                                "alpha": "$anim_type",
+                                "text_alignment": "center",
+                                "offset": [1, 19],
+                                "bindings": [
+                                    {
+                                        "binding_name": "#hud_subtitle_text_string",
+                                        "binding_name_override": "#text",
+                                        "binding_type": "global"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+
+    //緊急速報のtitle(hud_title_text.title_frameを継承)
+    "hud_title_urgent_alert@hud.hud_title_text.title_frame": {
+        "type": "panel",
+        "size": ["100%", "100%cm"],
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "offset": [0, 10],
+        "alpha": "@hud.anim_title_text_alpha_in",
+        //"propagate_alpha": true, //フェードアウト
+        "controls": [
+            {
+                "title": {
+                    "type": "label",
+                    "anchor_from": "top_middle",
+                    "anchor_to": "top_middle",
+                    "text": "#text",
+                    "font_scale_factor": 2,
+                    "bindings": [
+                        {
+                            "binding_name": "#hud_title_text_string",
+                            "binding_name_override": "#text",
+                            "binding_type": "global"
+                        }
+                    ]
+                }
+            }
+        ],
+        "bindings": [
+            {
+                "binding_name": "#hud_title_text_string"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "$alert_hud_text_if",
+                "target_property_name": "#visible"
+            }
+        ]
+    },
+
+    //defaultのactionbar(表示条件を追加)
+    "hud_actionbar_text": {
+        "$text": "$actionbar_text",
+        "type": "image",
+        "size": ["100%c + 12px", "100%c + 5px"],
+        "offset": [0, "50%-68px"],
+        "texture": "textures/ui/hud_tip_text_background",
+        "alpha": "@hud.anim_actionbar_text_background_alpha_out",
+        "visible": "(($text - $if_timer_text) = $text)",
+        "controls": [
+            {
+                "actionbar_message": {
+                    "type": "label",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "color": "$tool_tip_text",
+                    "layer": 31,
+                    "text": "$text",
+                    "localize": false,
+                    "alpha": "@hud.anim_actionbar_text_alpha_out"
+                }
+            }
+        ]
+    },
+
+    //タイマーのactionbar(位置を変更、表示条件を追加)
+    "timer_hud_actionbar@hud_actionbar_text": {
+        "$text": "$actionbar_text",
+        "type": "image",
+        "anchor_from": "bottom_right",
+        "anchor_to": "bottom_right",
+        "offset": [-30, -20],
+        "visible": "( not (($text - $if_timer_text) = $text))",
+        "controls": [
+            {
+                "actionbar_message_timer": {
+                    "type": "label",
+                    "text": "$text",
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            }
+        ]
+    },
+
+    //hud_title_text_factoryへの追加
+    "hud_title_urgent_alert_area": {
+        "type": "panel",
+        "factory": {
+            "name": "hud_title_text_factory",
+            "control_ids": {
+                "hud_title_text": "hud_title_urgent_alert@hud.hud_title_urgent_alert"
+            }
+        }
+    },
+
+    //hud_actionbar_text_factoryへの追加
+    "timer_hud_actionbar_area": {
+        "type": "panel",
+        "factory": {
+            "name": "hud_actionbar_text_factory",
+            "control_ids": {
+                "hud_actionbar_text": "timer_hud_actionbar@hud.timer_hud_actionbar"
+            }
+        }
+    },
+
+    //追加要素ををまとめる
+    "hud_elements_panel": {
+        "type": "panel",
+        "controls": [{ "hud_title_urgent_alert_area@hud.hud_title_urgent_alert_area": {} }, { "timer_hud_actionbar_area@hud.timer_hud_actionbar_area": {} }]
+    },
+
+    //root_panelに追加
+    "root_panel": {
+        "modifications": [
+            {
+                "array_name": "controls",
+                "operation": "insert_front",
+                "value": [{ "hud_elements_panel@hud.hud_elements_panel": {} }]
+            }
+        ]
+    }
+}

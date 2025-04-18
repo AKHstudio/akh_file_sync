@@ -1,0 +1,768 @@
+{
+    "resource_pack_name": "vanilla",
+    "texture_name": "atlas.items",
+    "texture_data": {
+        "game_start": {
+            "textures": "textures/items/game_start"
+        },
+        "game_stop": {
+            "textures": "textures/items/game_stop"
+        },
+        "game_option": {
+            "textures": "textures/items/game_option"
+        },
+        "red_white_helmet": {
+            "textures": "textures/items/red_white_helmet"
+        },
+        "red_white_leggings": {
+            "textures": "textures/items/red_white_leggings"
+        },
+        "red_white_boots": {
+            "textures": "textures/items/red_white_boots"
+        },
+        "red_rose_helmet": {
+            "textures": "textures/items/red_rose_helmet"
+        },
+        "forcedtermination": {
+            "textures": "textures/items/forcedtermination"
+        },
+        "red_rose_leggings": {
+            "textures": "textures/items/red_rose_leggings"
+        },
+        "red_rose_boots": {
+            "textures": "textures/items/red_rose_boots"
+        },
+        "blue_lemon_helmet": {
+            "textures": "textures/items/blue_lemon_helmet"
+        },
+        "blue_lemon_leggings": {
+            "textures": "textures/items/blue_lemon_leggings"
+        },
+        "blue_lemon_boots": {
+            "textures": "textures/items/blue_lemon_boots"
+        },
+        "blue_sky_helmet": {
+            "textures": "textures/items/blue_sky_helmet"
+        },
+        "blue_sky_leggings": {
+            "textures": "textures/items/blue_sky_leggings"
+        },
+        "blue_sky_boots": {
+            "textures": "textures/items/blue_sky_boots"
+        },
+        "blue_black_helmet": {
+            "textures": "textures/items/blue_black_helmet"
+        },
+        "blue_black_leggings": {
+            "textures": "textures/items/blue_black_leggings"
+        },
+        "blue_black_boots": {
+            "textures": "textures/items/blue_black_boots"
+        },
+        "blue_gray_helmet": {
+            "textures": "textures/items/blue_gray_helmet"
+        },
+        "blue_gray_leggings": {
+            "textures": "textures/items/blue_gray_leggings"
+        },
+        "blue_gray_boots": {
+            "textures": "textures/items/blue_gray_boots"
+        },
+        "blue_green_helmet": {
+            "textures": "textures/items/blue_green_helmet"
+        },
+        "blue_green_leggings": {
+            "textures": "textures/items/blue_green_leggings"
+        },
+        "blue_green_boots": {
+            "textures": "textures/items/blue_green_boots"
+        },
+        "blue_cyan_helmet": {
+            "textures": "textures/items/blue_cyan_helmet"
+        },
+        "blue_cyan_leggings": {
+            "textures": "textures/items/blue_cyan_leggings"
+        },
+        "blue_cyan_boots": {
+            "textures": "textures/items/blue_cyan_boots"
+        },
+        "blue_lime_helmet": {
+            "textures": "textures/items/blue_lime_helmet"
+        },
+        "blue_lime_leggings": {
+            "textures": "textures/items/blue_lime_leggings"
+        },
+        "blue_lime_boots": {
+            "textures": "textures/items/blue_lime_boots"
+        },
+        "blue_purple_helmet": {
+            "textures": "textures/items/blue_purple_helmet"
+        },
+        "blue_purple_leggings": {
+            "textures": "textures/items/blue_purple_leggings"
+        },
+        "blue_purple_boots": {
+            "textures": "textures/items/blue_purple_boots"
+        },
+        "blue_yellow_helmet": {
+            "textures": "textures/items/blue_yellow_helmet"
+        },
+        "blue_yellow_leggings": {
+            "textures": "textures/items/blue_yellow_leggings"
+        },
+        "blue_yellow_boots": {
+            "textures": "textures/items/blue_yellow_boots"
+        },
+        "red_gray_helmet": {
+            "textures": "textures/items/red_gray_helmet"
+        },
+        "red_gray_leggings": {
+            "textures": "textures/items/red_gray_leggings"
+        },
+        "red_gray_boots": {
+            "textures": "textures/items/red_gray_boots"
+        },
+        "red_black_helmet": {
+            "textures": "textures/items/red_black_helmet"
+        },
+        "red_black_leggings": {
+            "textures": "textures/items/red_black_leggings"
+        },
+        "red_black_boots": {
+            "textures": "textures/items/red_black_boots"
+        },
+        "red_lemon_helmet": {
+            "textures": "textures/items/red_lemon_helmet"
+        },
+        "red_lemon_leggings": {
+            "textures": "textures/items/red_lemon_leggings"
+        },
+        "red_lemon_boots": {
+            "textures": "textures/items/red_lemon_boots"
+        },
+        "red_pink_helmet": {
+            "textures": "textures/items/red_pink_helmet"
+        },
+        "red_pink_leggings": {
+            "textures": "textures/items/red_pink_leggings"
+        },
+        "red_pink_boots": {
+            "textures": "textures/items/red_pink_boots"
+        },
+        "red_lime_helmet": {
+            "textures": "textures/items/red_lime_helmet"
+        },
+        "red_lime_leggings": {
+            "textures": "textures/items/red_lime_leggings"
+        },
+        "red_lime_boots": {
+            "textures": "textures/items/red_lime_boots"
+        },
+        "blue_pink_helmet": {
+            "textures": "textures/items/blue_pink_helmet"
+        },
+        "blue_pink_leggings": {
+            "textures": "textures/items/blue_pink_leggings"
+        },
+        "blue_pink_boots": {
+            "textures": "textures/items/blue_pink_boots"
+        },
+        "purple_cyan_helmet": {
+            "textures": "textures/items/purple_cyan_helmet"
+        },
+        "purple_cyan_leggings": {
+            "textures": "textures/items/purple_cyan_leggings"
+        },
+        "purple_cyan_boots": {
+            "textures": "textures/items/purple_cyan_boots"
+        },
+        "green_cyan_helmet": {
+            "textures": "textures/items/green_cyan_helmet"
+        },
+        "green_cyan_leggings": {
+            "textures": "textures/items/green_cyan_leggings"
+        },
+        "green_cyan_boots": {
+            "textures": "textures/items/green_cyan_boots"
+        },
+        "green_white_helmet": {
+            "textures": "textures/items/green_white_helmet"
+        },
+        "green_white_leggings": {
+            "textures": "textures/items/green_white_leggings"
+        },
+        "green_white_boots": {
+            "textures": "textures/items/green_white_boots"
+        },
+        "green_green_helmet": {
+            "textures": "textures/items/green_green_helmet"
+        },
+        "green_green_leggings": {
+            "textures": "textures/items/green_green_leggings"
+        },
+        "green_green_boots": {
+            "textures": "textures/items/green_green_boots"
+        },
+        "green_black_helmet": {
+            "textures": "textures/items/green_black_helmet"
+        },
+        "green_black_leggings": {
+            "textures": "textures/items/green_black_leggings"
+        },
+        "green_black_boots": {
+            "textures": "textures/items/green_black_boots"
+        },
+        "green_gray_helmet": {
+            "textures": "textures/items/green_gray_helmet"
+        },
+        "green_gray_leggings": {
+            "textures": "textures/items/green_gray_leggings"
+        },
+        "green_gray_boots": {
+            "textures": "textures/items/green_gray_boots"
+        },
+        "green_lime_helmet": {
+            "textures": "textures/items/green_lime_helmet"
+        },
+        "green_lime_leggings": {
+            "textures": "textures/items/green_lime_leggings"
+        },
+        "green_lime_boots": {
+            "textures": "textures/items/green_lime_boots"
+        },
+        "yellow_white_helmet": {
+            "textures": "textures/items/yellow_white_helmet"
+        },
+        "yellow_white_leggings": {
+            "textures": "textures/items/yellow_white_leggings"
+        },
+        "yellow_white_boots": {
+            "textures": "textures/items/yellow_white_boots"
+        },
+        "yellow_yellow_helmet": {
+            "textures": "textures/items/yellow_yellow_helmet"
+        },
+        "yellow_yellow_leggings": {
+            "textures": "textures/items/yellow_yellow_leggings"
+        },
+        "yellow_yellow_boots": {
+            "textures": "textures/items/yellow_yellow_boots"
+        },
+        "yellow_black_helmet": {
+            "textures": "textures/items/yellow_black_helmet"
+        },
+        "yellow_black_leggings": {
+            "textures": "textures/items/yellow_black_leggings"
+        },
+        "yellow_black_boots": {
+            "textures": "textures/items/yellow_black_boots"
+        },
+        "yellow_gray_helmet": {
+            "textures": "textures/items/yellow_gray_helmet"
+        },
+        "yellow_gray_leggings": {
+            "textures": "textures/items/yellow_gray_leggings"
+        },
+        "yellow_gray_boots": {
+            "textures": "textures/items/yellow_gray_boots"
+        },
+        "yellow_lemon_helmet": {
+            "textures": "textures/items/yellow_lemon_helmet"
+        },
+        "yellow_lemon_leggings": {
+            "textures": "textures/items/yellow_lemon_leggings"
+        },
+        "yellow_lemon_boots": {
+            "textures": "textures/items/yellow_lemon_boots"
+        },
+        "pink_green_helmet": {
+            "textures": "textures/items/pink_green_helmet"
+        },
+        "pink_green_leggings": {
+            "textures": "textures/items/pink_green_leggings"
+        },
+        "pink_green_boots": {
+            "textures": "textures/items/pink_green_boots"
+        },
+        "purple_green_helmet": {
+            "textures": "textures/items/purple_green_helmet"
+        },
+        "purple_green_leggings": {
+            "textures": "textures/items/purple_green_leggings"
+        },
+        "purple_green_boots": {
+            "textures": "textures/items/purple_green_boots"
+        },
+        "purple_yellow_helmet": {
+            "textures": "textures/items/purple_yellow_helmet"
+        },
+        "purple_yellow_leggings": {
+            "textures": "textures/items/purple_yellow_leggings"
+        },
+        "purple_yellow_boots": {
+            "textures": "textures/items/purple_yellow_boots"
+        },
+        "yellow_cyan_helmet": {
+            "textures": "textures/items/yellow_cyan_helmet"
+        },
+        "yellow_cyan_leggings": {
+            "textures": "textures/items/yellow_cyan_leggings"
+        },
+        "yellow_cyan_boots": {
+            "textures": "textures/items/yellow_cyan_boots"
+        },
+        "blue_orange_helmet": {
+            "textures": "textures/items/blue_orange_helmet"
+        },
+        "blue_orange_leggings": {
+            "textures": "textures/items/blue_orange_leggings"
+        },
+        "blue_orange_boots": {
+            "textures": "textures/items/blue_orange_boots"
+        },
+        "blue_blue_helmet": {
+            "textures": "textures/items/blue_blue_helmet"
+        },
+        "blue_blue_leggings": {
+            "textures": "textures/items/blue_blue_leggings"
+        },
+        "blue_blue_boots": {
+            "textures": "textures/items/blue_blue_boots"
+        },
+        "green_yellow_helmet": {
+            "textures": "textures/items/green_yellow_helmet"
+        },
+        "green_yellow_leggings": {
+            "textures": "textures/items/green_yellow_leggings"
+        },
+        "green_yellow_boots": {
+            "textures": "textures/items/green_yellow_boots"
+        },
+        "cyan_orange_helmet": {
+            "textures": "textures/items/cyan_orange_helmet"
+        },
+        "cyan_orange_leggings": {
+            "textures": "textures/items/cyan_orange_leggings"
+        },
+        "cyan_orange_boots": {
+            "textures": "textures/items/cyan_orange_boots"
+        },
+        "orange_green_helmet": {
+            "textures": "textures/items/orange_green_helmet"
+        },
+        "orange_green_leggings": {
+            "textures": "textures/items/orange_green_leggings"
+        },
+        "orange_green_boots": {
+            "textures": "textures/items/orange_green_boots"
+        },
+        "red_cyan_helmet": {
+            "textures": "textures/items/red_cyan_helmet"
+        },
+        "red_cyan_leggings": {
+            "textures": "textures/items/red_cyan_leggings"
+        },
+        "red_cyan_boots": {
+            "textures": "textures/items/red_cyan_boots"
+        },
+        "red_red_helmet": {
+            "textures": "textures/items/red_red_helmet"
+        },
+        "red_red_leggings": {
+            "textures": "textures/items/red_red_leggings"
+        },
+        "red_red_boots": {
+            "textures": "textures/items/red_red_boots"
+        },
+        "red_green_helmet": {
+            "textures": "textures/items/red_green_helmet"
+        },
+        "red_green_leggings": {
+            "textures": "textures/items/red_green_leggings"
+        },
+        "red_green_boots": {
+            "textures": "textures/items/red_green_boots"
+        },
+        "red_green_helmet2": {
+            "textures": "textures/items/red_green_helmet2"
+        },
+        "red_green_leggings2": {
+            "textures": "textures/items/red_green_leggings2"
+        },
+        "red_green_boots2": {
+            "textures": "textures/items/red_green_boots2"
+        },
+        "red_yellow_helmet": {
+            "textures": "textures/items/red_yellow_helmet"
+        },
+        "red_yellow_leggings": {
+            "textures": "textures/items/red_yellow_leggings"
+        },
+        "red_yellow_boots": {
+            "textures": "textures/items/red_yellow_boots"
+        },
+        "white_pink_helmet": {
+            "textures": "textures/items/white_pink_helmet"
+        },
+        "white_pink_leggings": {
+            "textures": "textures/items/white_pink_leggings"
+        },
+        "white_pink_boots": {
+            "textures": "textures/items/white_pink_boots"
+        },
+        "white_purple_helmet": {
+            "textures": "textures/items/white_purple_helmet"
+        },
+        "white_purple_leggings": {
+            "textures": "textures/items/white_purple_leggings"
+        },
+        "white_purple_boots": {
+            "textures": "textures/items/white_purple_boots"
+        },
+        "orange_white_helmet": {
+            "textures": "textures/items/orange_white_helmet"
+        },
+        "orange_white_leggings": {
+            "textures": "textures/items/orange_white_leggings"
+        },
+        "orange_white_boots": {
+            "textures": "textures/items/orange_white_boots"
+        },
+        "blue_white_helmet": {
+            "textures": "textures/items/blue_white_helmet"
+        },
+        "blue_white_leggings": {
+            "textures": "textures/items/blue_white_leggings"
+        },
+        "blue_white_boots": {
+            "textures": "textures/items/blue_white_boots"
+        },
+        "red_purple_helmet": {
+            "textures": "textures/items/red_purple_helmet"
+        },
+        "red_purple_leggings": {
+            "textures": "textures/items/red_purple_leggings"
+        },
+        "red_purple_boots": {
+            "textures": "textures/items/red_purple_boots"
+        },
+        "cabbage": {
+            "textures": "textures/items/cabbage"
+        },
+        "give_up": {
+            "textures": "textures/items/give_up"
+        },
+        "akisan_armor": {
+            "textures": "textures/items/akisan_armor"
+        },
+        "takodayo_armor": {
+            "textures": "textures/items/takodayo_armor"
+        },
+        "harupon_armor": {
+            "textures": "textures/items/harupon_armor"
+        },
+        "n00_armor": {
+            "textures": "textures/items/00_armor"
+        },
+        "n01_armor": {
+            "textures": "textures/items/01_armor"
+        },
+        "n02_armor": {
+            "textures": "textures/items/02_armor"
+        },
+        "n03_armor": {
+            "textures": "textures/items/03_armor"
+        },
+        "n04_armor": {
+            "textures": "textures/items/04_armor"
+        },
+        "n05_armor": {
+            "textures": "textures/items/05_armor"
+        },
+        "n06_armor": {
+            "textures": "textures/items/06_armor"
+        },
+        "n07_armor": {
+            "textures": "textures/items/07_armor"
+        },
+        "n08_armor": {
+            "textures": "textures/items/08_armor"
+        },
+        "n09_armor": {
+            "textures": "textures/items/09_armor"
+        },
+        "n10_armor": {
+            "textures": "textures/items/10_armor"
+        },
+        "n11_armor": {
+            "textures": "textures/items/11_armor"
+        },
+        "n12_armor": {
+            "textures": "textures/items/12_armor"
+        },
+        "n13_armor": {
+            "textures": "textures/items/13_armor"
+        },
+        "n14_armor": {
+            "textures": "textures/items/14_armor"
+        },
+        "n15_armor": {
+            "textures": "textures/items/15_armor"
+        },
+        "n16_armor": {
+            "textures": "textures/items/16_armor"
+        },
+        "n17_armor": {
+            "textures": "textures/items/17_armor"
+        },
+        "n18_armor": {
+            "textures": "textures/items/18_armor"
+        },
+        "n19_armor": {
+            "textures": "textures/items/19_armor"
+        },
+        "n20_armor": {
+            "textures": "textures/items/20_armor"
+        },
+        "n21_armor": {
+            "textures": "textures/items/21_armor"
+        },
+        "n22_armor": {
+            "textures": "textures/items/22_armor"
+        },
+        "n23_armor": {
+            "textures": "textures/items/23_armor"
+        },
+        "n24_armor": {
+            "textures": "textures/items/24_armor"
+        },
+        "n25_armor": {
+            "textures": "textures/items/25_armor"
+        },
+        "n26_armor": {
+            "textures": "textures/items/26_armor"
+        },
+        "n27_armor": {
+            "textures": "textures/items/27_armor"
+        },
+        "n28_armor": {
+            "textures": "textures/items/28_armor"
+        },
+        "n29_armor": {
+            "textures": "textures/items/29_armor"
+        },
+        "n30_armor": {
+            "textures": "textures/items/30_armor"
+        },
+        "n31_armor": {
+            "textures": "textures/items/31_armor"
+        },
+        "n32_armor": {
+            "textures": "textures/items/32_armor"
+        },
+        "n33_armor": {
+            "textures": "textures/items/33_armor"
+        },
+        "n34_armor": {
+            "textures": "textures/items/34_armor"
+        },
+        "n35_armor": {
+            "textures": "textures/items/35_armor"
+        },
+        "n36_armor": {
+            "textures": "textures/items/36_armor"
+        },
+        "n37_armor": {
+            "textures": "textures/items/37_armor"
+        },
+        "n38_armor": {
+            "textures": "textures/items/38_armor"
+        },
+        "n39_armor": {
+            "textures": "textures/items/39_armor"
+        },
+        "n40_armor": {
+            "textures": "textures/items/40_armor"
+        },
+        "n41_armor": {
+            "textures": "textures/items/41_armor"
+        },
+        "n42_armor": {
+            "textures": "textures/items/42_armor"
+        },
+        "n43_armor": {
+            "textures": "textures/items/43_armor"
+        },
+        "n44_armor": {
+            "textures": "textures/items/44_armor"
+        },
+        "n45_armor": {
+            "textures": "textures/items/45_armor"
+        },
+        "n46_armor": {
+            "textures": "textures/items/46_armor"
+        },
+        "n47_armor": {
+            "textures": "textures/items/47_armor"
+        },
+        "n48_armor": {
+            "textures": "textures/items/48_armor"
+        },
+        "n49_armor": {
+            "textures": "textures/items/49_armor"
+        },
+        "n50_armor": {
+            "textures": "textures/items/50_armor"
+        },
+        "n51_armor": {
+            "textures": "textures/items/51_armor"
+        },
+        "n52_armor": {
+            "textures": "textures/items/52_armor"
+        },
+        "n53_armor": {
+            "textures": "textures/items/53_armor"
+        },
+        "n54_armor": {
+            "textures": "textures/items/54_armor"
+        },
+        "n55_armor": {
+            "textures": "textures/items/55_armor"
+        },
+        "n56_armor": {
+            "textures": "textures/items/56_armor"
+        },
+        "n57_armor": {
+            "textures": "textures/items/57_armor"
+        },
+        "n58_armor": {
+            "textures": "textures/items/58_armor"
+        },
+        "n59_armor": {
+            "textures": "textures/items/59_armor"
+        },
+        "n60_armor": {
+            "textures": "textures/items/60_armor"
+        },
+        "n61_armor": {
+            "textures": "textures/items/61_armor"
+        },
+        "n62_armor": {
+            "textures": "textures/items/62_armor"
+        },
+        "n63_armor": {
+            "textures": "textures/items/63_armor"
+        },
+        "n64_armor": {
+            "textures": "textures/items/64_armor"
+        },
+        "n65_armor": {
+            "textures": "textures/items/65_armor"
+        },
+        "n66_armor": {
+            "textures": "textures/items/66_armor"
+        },
+        "n67_armor": {
+            "textures": "textures/items/67_armor"
+        },
+        "n68_armor": {
+            "textures": "textures/items/68_armor"
+        },
+        "n69_armor": {
+            "textures": "textures/items/69_armor"
+        },
+        "n70_armor": {
+            "textures": "textures/items/70_armor"
+        },
+        "n71_armor": {
+            "textures": "textures/items/71_armor"
+        },
+        "n72_armor": {
+            "textures": "textures/items/72_armor"
+        },
+        "n73_armor": {
+            "textures": "textures/items/73_armor"
+        },
+        "n74_armor": {
+            "textures": "textures/items/74_armor"
+        },
+        "n75_armor": {
+            "textures": "textures/items/75_armor"
+        },
+        "n76_armor": {
+            "textures": "textures/items/76_armor"
+        },
+        "n77_armor": {
+            "textures": "textures/items/77_armor"
+        },
+        "n78_armor": {
+            "textures": "textures/items/78_armor"
+        },
+        "n79_armor": {
+            "textures": "textures/items/79_armor"
+        },
+        "n80_armor": {
+            "textures": "textures/items/80_armor"
+        },
+        "n81_armor": {
+            "textures": "textures/items/81_armor"
+        },
+        "n82_armor": {
+            "textures": "textures/items/82_armor"
+        },
+        "n83_armor": {
+            "textures": "textures/items/83_armor"
+        },
+        "n84_armor": {
+            "textures": "textures/items/84_armor"
+        },
+        "n85_armor": {
+            "textures": "textures/items/85_armor"
+        },
+        "n86_armor": {
+            "textures": "textures/items/86_armor"
+        },
+        "n87_armor": {
+            "textures": "textures/items/87_armor"
+        },
+        "n88_armor": {
+            "textures": "textures/items/88_armor"
+        },
+        "n89_armor": {
+            "textures": "textures/items/89_armor"
+        },
+        "n90_armor": {
+            "textures": "textures/items/90_armor"
+        },
+        "n91_armor": {
+            "textures": "textures/items/91_armor"
+        },
+        "n92_armor": {
+            "textures": "textures/items/92_armor"
+        },
+        "n93_armor": {
+            "textures": "textures/items/93_armor"
+        },
+        "n94_armor": {
+            "textures": "textures/items/94_armor"
+        },
+        "n95_armor": {
+            "textures": "textures/items/95_armor"
+        },
+        "n96_armor": {
+            "textures": "textures/items/96_armor"
+        },
+        "n97_armor": {
+            "textures": "textures/items/97_armor"
+        },
+        "n98_armor": {
+            "textures": "textures/items/98_armor"
+        },
+        "n99_armor": {
+            "textures": "textures/items/99_armor"
+        },
+        "phone": {
+            "textures": "textures/items/phone"
+        }
+    }
+}

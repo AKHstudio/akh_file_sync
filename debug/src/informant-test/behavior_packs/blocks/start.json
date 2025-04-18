@@ -1,0 +1,20 @@
+{
+    "format_version": "1.21.20",
+    "minecraft:block": {
+        "description": {
+            "identifier": "informant:start"
+        },
+        "components": {
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:display_name": "上に乗っていると参加",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "start",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:friction": 0.5,
+            "minecraft:map_color": "#00FF64"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "informant:snail",
+      "materials": { "default": "snail" },
+      "textures": {
+        "normal": "textures/entity/normal_snail",
+        "happy": "textures/entity/happy_snail",
+        "sad": "textures/entity/sad_snail",
+        "sleep": "textures/entity/sleep_snail",
+        "angry": "textures/entity/angry_snail"
+      },
+      "geometry": {
+        "default": "geometry.snail"
+      },
+      "animations": {
+        "walk": "animation.snail.walk",
+        "angry": "animation.snail.angry"
+      },
+      "animation_controllers": [
+        { "snail": "controller.animation.snail" }
+      ],
+      "render_controllers": [ "controller.render.snail" ]
+    }
+  }
+}

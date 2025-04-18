@@ -1,0 +1,49 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.player_teleport2": {
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "comma": "(1.0)"
+                        }
+                    ]
+                },
+                "comma": {
+                    "on_entry": [
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-1 ~ red_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-1 ~ red_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-1 ~ red_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-2 ~ red_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-2 ~ red_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches 10.. if block ~ ~-2 ~ red_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-1 ~ blue_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-1 ~ blue_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-1 ~ blue_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-2 ~ blue_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-2 ~ blue_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches 10.. if block ~ ~-2 ~ blue_concrete run tp @s -1 -55 179 90 0",
+                        "/execute as @a[tag=redjoin2] at @s unless block ~ ~-1 ~ red_concrete run tag @s remove redjoin2",
+                        "/execute as @a[tag=redjoin2] at @s unless block ~ ~-2 ~ red_concrete run tag @s remove redjoin2",
+                        "/execute as @a[tag=bluejoin2] at @s unless block ~ ~-1 ~ blue_concrete run tag @s remove bluejoin2",
+                        "/execute as @a[tag=bluejoin2] at @s unless block ~ ~-2 ~ blue_concrete run tag @s remove bluejoin2",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches ..9 if block ~ ~-1 ~ red_concrete run tag @s add redjoin2",
+                        "/execute if score gamemode config matches 20 as @a[tag=!redjoin2] at @s if score redteam2 joincount matches ..9 if block ~ ~-2 ~ red_concrete run tag @s add redjoin2",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches ..9 if block ~ ~-1 ~ blue_concrete run tag @s add bluejoin2",
+                        "/execute if score gamemode config matches 20 as @a[tag=!bluejoin2] at @s if score blueteam2 joincount matches ..9 if block ~ ~-2 ~ blue_concrete run tag @s add bluejoin2",
+                        "/scoreboard players set redteam2 joincount 0",
+                        "/scoreboard players set blueteam2 joincount 0",
+                        "/execute if score gamemode config matches 20 as @a[tag=redjoin2] run scoreboard players add redteam2 joincount 1",
+                        "/execute if score gamemode config matches 20 as @a[tag=bluejoin2] run scoreboard players add blueteam2 joincount 1"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "(1.0)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

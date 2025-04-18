@@ -1,0 +1,15 @@
+{
+    "format_version": "1.21.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "informant:give_up"
+        },
+        "components": {
+            "minecraft:icon": "give_up",
+            "minecraft:max_stack_size": 1,
+            "minecraft:display_name": {
+                "value": "ゲームを§g降参§fする\n§r§7誤作動防止のため\n§7ジャンプ長押ししながらアイテムを使用ボタンで発動"
+            }
+        }
+    }
+}

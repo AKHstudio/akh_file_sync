@@ -1,0 +1,20 @@
+{
+    "name": "informant",
+    "version": "2.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@minecraft/debug-utilities": "^1.0.0-beta.1.21.70-stable",
+        "@minecraft/math": "^2.2.1",
+        "@minecraft/server": "^1.18.0-beta.1.21.61-stable",
+        "@minecraft/server-ui": "^1.4.0-beta.1.21.61-stable",
+        "@minecraft/vanilla-data": "^1.21.70",
+        "typescript": "^5.3.3"
+    }
+}

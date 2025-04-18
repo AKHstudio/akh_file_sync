@@ -1,0 +1,269 @@
+{
+    "format_version": "1.16.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "informant:snail",
+            "is_spawnable": true,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "redUse": {
+                "minecraft:behavior.nearest_attackable_target": {
+                    "priority": 2,
+                    "entity_types": [
+                        {
+                            "filters": {
+                                "all_of": [
+                                    {
+                                        "test": "is_family",
+                                        "subject": "other",
+                                        "value": "player"
+                                    },
+                                    {
+                                        "test": "has_tag",
+                                        "subject": "other",
+                                        "operator": "!=",
+                                        "value": "red_team"
+                                    }
+                                ]
+                            },
+                            "max_dist": 100
+                        }
+                    ]
+                }
+            },
+            "blueUse": {
+                "minecraft:behavior.nearest_attackable_target": {
+                    "priority": 2,
+                    "entity_types": [
+                        {
+                            "filters": {
+                                "all_of": [
+                                    {
+                                        "test": "is_family",
+                                        "subject": "other",
+                                        "value": "player"
+                                    },
+                                    {
+                                        "test": "has_tag",
+                                        "subject": "other",
+                                        "operator": "!=",
+                                        "value": "blue_team"
+                                    }
+                                ]
+                            },
+                            "max_dist": 100
+                        }
+                    ]
+                }
+            },
+            "greenUse": {
+                "minecraft:behavior.nearest_attackable_target": {
+                    "priority": 2,
+                    "entity_types": [
+                        {
+                            "filters": {
+                                "all_of": [
+                                    {
+                                        "test": "is_family",
+                                        "subject": "other",
+                                        "value": "player"
+                                    },
+                                    {
+                                        "test": "has_tag",
+                                        "subject": "other",
+                                        "operator": "!=",
+                                        "value": "green_team"
+                                    }
+                                ]
+                            },
+                            "max_dist": 100
+                        }
+                    ]
+                }
+            },
+            "yellowUse": {
+                "minecraft:behavior.nearest_attackable_target": {
+                    "priority": 2,
+                    "entity_types": [
+                        {
+                            "filters": {
+                                "all_of": [
+                                    {
+                                        "test": "is_family",
+                                        "subject": "other",
+                                        "value": "player"
+                                    },
+                                    {
+                                        "test": "has_tag",
+                                        "subject": "other",
+                                        "operator": "!=",
+                                        "value": "yellow_team"
+                                    }
+                                ]
+                            },
+                            "max_dist": 100
+                        }
+                    ]
+                }
+            },
+            "hasAI": {
+                "minecraft:movement": {
+                    "value": 0.41
+                },
+                "minecraft:attack": {
+                    "damage": 3.999
+                }
+            }
+        },
+        "components": {
+            "minecraft:is_hidden_when_invisible": {},
+            "minecraft:collision_box": {
+                "width": 2.5,
+                "height": 4
+            },
+            "minecraft:scale": {
+                "value": 0.25
+            },
+            "minecraft:nameable": {},
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "cause": "all",
+                        "deals_damage": false
+                    }
+                ]
+            },
+            "minecraft:environment_sensor": {
+                "triggers": [
+                    {
+                        "event": "hasAI",
+                        "target": "self",
+                        "filters": {
+                            "test": "has_tag",
+                            "value": "hasAI"
+                        }
+                    }
+                ]
+            },
+            "minecraft:navigation.walk": {
+                "can_pass_doors": true,
+                "can_open_doors": true,
+                "can_sink": false,
+                "can_breach": true,
+                "can_swim": true,
+                "is_amphibious": true,
+                "can_path_over_water": true
+            },
+            "minecraft:movement.basic": {},
+            "minecraft:jump.static": {},
+            "minecraft:can_climb": {},
+            "minecraft:behavior.open_door": {
+                "close_door_after": true
+            },
+            "minecraft:type_family": {
+                "family": ["snail", "monster", "mob", "tako_monster"]
+            },
+            "minecraft:loot": {
+                "table": "loot_tables/entities/slime.json"
+            },
+            "minecraft:health": {
+                "value": 15,
+                "max": 15
+            },
+            "minecraft:movement": {
+                "value": 0
+            },
+            "minecraft:attack": {
+                "damage": 0
+            },
+            "minecraft:tameable": {
+                "probability": 1,
+                "tame_items": "informant:cabbage"
+            },
+            "minecraft:behavior.nearest_attackable_target": {
+                "priority": 2,
+                "entity_types": [
+                    {
+                        "filters": {
+                            "all_of": [
+                                {
+                                    "test": "is_family",
+                                    "subject": "other",
+                                    "value": "player"
+                                }
+                            ]
+                        },
+                        "max_dist": 100
+                    }
+                ]
+            },
+            "minecraft:behavior.melee_attack": {
+                "priority": 4,
+                "speed_multiplier": 1
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 6,
+                "look_distance": 60,
+                "probability": 0.5
+            },
+            "minecraft:behavior.random_stroll": {
+                "priority": 7,
+                "speed_multiplier": 0.8
+            },
+            "minecraft:behavior.random_look_around": {
+                "priority": 8
+            },
+            "minecraft:physics": {},
+            "minecraft:pushable": {
+                "is_pushable": true,
+                "is_pushable_by_piston": true
+            },
+            "minecraft:conditional_bandwidth_optimization": {},
+            "minecraft:leashable": {
+                "hard_distance": 10.0
+            }
+        },
+
+        "events": {
+            "hasAI": {
+                "add": {
+                    "component_groups": ["hasAI"]
+                }
+            },
+            "redUse": {
+                "add": {
+                    "component_groups": ["redUse"]
+                },
+                "remove": {
+                    "component_groups": ["blueUse", "greenUse", "yellowUse"]
+                }
+            },
+            "blueUse": {
+                "add": {
+                    "component_groups": ["blueUse"]
+                },
+                "remove": {
+                    "component_groups": ["redUse", "greenUse", "yellowUse"]
+                }
+            },
+            "greenUse": {
+                "add": {
+                    "component_groups": ["greenUse"]
+                },
+                "remove": {
+                    "component_groups": ["redUse", "blueUse", "yellowUse"]
+                }
+            },
+            "yellowUse": {
+                "add": {
+                    "component_groups": ["yellowUse"]
+                },
+                "remove": {
+                    "component_groups": ["redUse", "greenUse", "blueUse"]
+                }
+            }
+        }
+    }
+}

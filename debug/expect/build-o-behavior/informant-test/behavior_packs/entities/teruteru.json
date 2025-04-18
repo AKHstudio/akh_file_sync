@@ -1,0 +1,354 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "informant:teruteru",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "defo": {
+        "minecraft:variant": {
+          "value": 0
+        }
+      },
+      "angry": {
+        "minecraft:variant": {
+          "value": 1
+        }
+      },
+      "night": {
+        "minecraft:variant": {
+          "value": 2
+        }
+      },
+      "aki": {
+        "minecraft:variant": {
+          "value": 3
+        }
+      }
+    },
+
+    "components": {
+      "minecraft:is_hidden_when_invisible": {
+      },
+      "minecraft:breathable": {
+        "total_supply": 15000,
+        "suffocate_time": 0,
+        "breathes_solids": true,
+        "breathes_lava": true,
+        "breathes_water": true
+      },
+      "minecraft:collision_box": {
+        "width": 0.4,
+        "height": 0.4
+      },
+      "minecraft:scale":{
+        "value": 1.8
+      },
+      "minecraft:nameable": {
+        "allow_name_tag_renaming": true,
+        "always_show": false,
+        "name_actions": {
+          "name_filter": "akisan0725",
+          "on_named": {
+            "event": "aki",
+            "target": "self"
+          }
+        }
+      },
+      "minecraft:navigation.float": {
+        "can_path_over_water": true
+      },
+      "minecraft:behavior.float_wander": {
+        "priority": 2,
+        "must_reach": true
+      },
+      "minecraft:environment_sensor": {
+        "triggers": [
+          {
+            "event": "angry",
+            "filters": {
+              "test": "has_target",
+              "value": true
+            }
+          },
+          {
+            "event": "night",
+            "filters": {
+              "all_of":{
+                "all_of": [
+                  {
+                    "test": "has_target",
+                    "value": false
+                  },
+                  {
+                    "test": "is_daytime",
+                    "value": false
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "event": "aki",
+            "filters": {
+              "all_of":{
+                "all_of": [
+                  {
+                    "test": "has_target",
+                    "value": false
+                  },
+                  {
+                    "test": "is_daytime",
+                    "value": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "event": "defo",
+            "filters": {
+              "all_of":{
+                "all_of": [
+                  {
+                    "test": "has_target",
+                    "value": false
+                  },
+                  {
+                    "test": "is_daytime",
+                    "value": true
+                  },
+                  {
+                    "test": "has_nametag",
+                    "value": false
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "minecraft:can_fly": {
+      },
+      "minecraft:damage_sensor": {
+        "triggers": [
+          {
+          "cause": "fall",
+          "deals_damage": false
+          },
+          {
+            "cause": "fire",
+            "deals_damage": false
+          },
+          {
+            "cause": "lava",
+            "deals_damage": false
+          },
+          {
+            "cause": "lightning",
+            "deals_damage": false
+          },
+          {
+            "cause": "magic",
+            "deals_damage": false
+          },
+          {
+            "cause": "block_explosion",
+            "deals_damage": false
+          },
+          {
+            "cause": "entity_explosion",
+            "deals_damage": false
+          }
+        ]
+      },
+      "minecraft:fire_immune": {
+      },
+      "minecraft:type_family": {
+        "family": [ "teruteru", "monster", "mob", "tako_monster" ]
+      },
+      "minecraft:shooter": {
+        "def": "minecraft:fireball"
+      },
+      "minecraft:loot": {
+        "table": "loot_tables/entities/teruteru.json"
+      },
+      "minecraft:movement.fly": {
+      },
+      "minecraft:health": {
+        "value": 10,
+        "max": 10
+      },
+      "minecraft:movement": {
+        "value": 0.01
+      },
+      "minecraft:behavior.float": {
+        "priority": 0
+      },
+      "minecraft:behavior.ranged_attack": {
+        "priority": 3,
+        "burst_shots": 7,
+        "burst_interval": 0.2,
+        "attack_radius": 64,
+        "charge_shoot_trigger": 2,
+        "charge_charged_trigger": 1
+      },
+      "minecraft:behavior.summon_entity": {
+        "priority": 1,
+
+        "summon_choices": [
+          {
+            "min_activation_range": 0.0,
+            "max_activation_range": 6.0,
+            "cooldown_time": 3.0,
+            "weight": 3,
+            "cast_duration": 1.0,
+            "particle_color": "#ff000099",
+            "start_sound_event": "beacon.power",
+            "sequence": [
+              {
+                "shape": "circle",
+                "target": "self",
+                "base_delay": 0.5,
+                "delay_per_summon": 0.25,
+                "entity_type": "minecraft:tnt",
+                "num_entities_spawned": 10,
+                "size": 2,
+                "entity_lifespan": -1,
+                "sound_event": "beacon.deactivate"
+              }
+            ]
+          },
+          {
+            "max_activation_range": 48,
+            "min_activation_range": 24,
+            "weight": 3,
+            "cooldown_time": 3.0,
+            "cast_duration": 1.0,
+            "particle_color": "#ffff0099",
+            "start_sound_event": "beacon.power",
+            "sequence": [
+              {
+                "shape": "line",
+                "target": "self",
+                "base_delay": 0.5,
+                "delay_per_summon": 0.05,
+                "num_entities_spawned": 32,
+                "entity_type": "minecraft:lightning_bolt",
+                "size": 1,
+                "entity_lifespan": 1.1
+              }
+            ]
+          },
+          {
+            "weight": 3,
+            "max_activation_range": 24,
+            "min_activation_range": 0.6,
+            "cooldown_time": 3.0,
+            "cast_duration": 1.0,
+            "particle_color": "#00ffff99",
+            "sequence": [
+              {
+                "shape": "circle",
+                "target": "self",
+                "base_delay": 1.0,
+                "delay_per_summon": 1,
+                "num_entities_spawned": 3,
+                "entity_type": "informant:snail",
+                "size": 10.0,
+                "sound_event": "beacon.power",
+                "entity_lifespan": 10
+              }
+            ]
+          }
+        ]
+      },
+      "minecraft:follow_range": {
+        "value": 64,
+        "max": 64
+      },
+      "minecraft:behavior.hurt_by_target": {
+        "priority": 2        
+      },
+      "minecraft:behavior.look_at_player": {
+        "priority": 8,
+        "look_distance": 10.0,
+        "probability": 0.02
+      },
+      "minecraft:behavior.random_look_around": {
+        "priority": 9
+      },
+      "minecraft:physics": {
+      },
+      "minecraft:pushable": {
+        "is_pushable": true,
+        "is_pushable_by_piston": true
+      },
+      "minecraft:conditional_bandwidth_optimization": {
+      }
+    },
+
+
+    "events": {
+      "defo": {
+        "add": {
+          "component_groups": [
+            "defo"
+          ]
+        },
+        "remove": {
+          "component_groups": [
+            "angry",
+            "night",
+            "aki"
+          ]
+        }
+      },
+      "angry": {
+        "add": {
+          "component_groups": [
+            "angry"
+          ]
+        },
+        "remove": {
+          "component_groups": [
+            "defo",
+            "night",
+            "aki"
+          ]
+        }
+      },
+      "night": {
+        "add": {
+          "component_groups": [
+            "night"
+          ]
+        },
+        "remove": {
+          "component_groups": [
+            "angry",
+            "defo",
+            "aki"
+          ]
+        }
+      },
+      "aki": {
+        "add": {
+          "component_groups": [
+            "aki"
+          ]
+        },
+        "remove": {
+          "component_groups": [
+            "angry",
+            "night",
+            "defo"
+          ]
+        }
+      }
+    }
+  }
+}

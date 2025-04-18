@@ -1,0 +1,54 @@
+{
+    "format_version": "1.16.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "informant:transparent_snail",
+            "is_spawnable": true,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "components": {
+            "minecraft:is_hidden_when_invisible": {},
+            "minecraft:collision_box": {
+                "width": 2.5,
+                "height": 4
+            },
+            "minecraft:scale": {
+                "value": 0.25
+            },
+            "minecraft:nameable": {},
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "cause": "all",
+                        "deals_damage": false
+                    }
+                ]
+            },
+            "minecraft:type_family": {
+                "family": ["snail", "monster", "mob", "tako_monster"]
+            },
+            "minecraft:health": {
+                "value": 15,
+                "max": 15
+            },
+            "minecraft:movement": {
+                "value": 0
+            },
+            "minecraft:attack": {
+                "damage": 0
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 1,
+                "look_distance": 60,
+                "probability": 50
+            },
+            "minecraft:physics": {},
+            "minecraft:pushable": {
+                "is_pushable": false,
+                "is_pushable_by_piston": false
+            },
+            "minecraft:conditional_bandwidth_optimization": {}
+        }
+    }
+}

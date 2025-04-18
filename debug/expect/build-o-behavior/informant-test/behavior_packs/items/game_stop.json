@@ -1,0 +1,20 @@
+{
+    "format_version": "1.21.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "informant:game_stop"
+        },
+        "components": {
+            "minecraft:icon": "game_stop",
+            "minecraft:max_stack_size": 1,
+            "minecraft:display_name": {
+                "value": "§c§lゲームを一時停止する\n§r§7アイテムを使用ボタンで発動"
+            },
+            "minecraft:custom_components": ["informant:stop"],
+            "minecraft:cooldown": {
+                "category": "attack",
+                "duration": 120
+            }
+        }
+    }
+}

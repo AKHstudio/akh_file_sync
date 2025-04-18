@@ -1,0 +1,45 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.always": {
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "comma": "(1.0)"
+                        }
+                    ]
+                },
+                "comma": {
+                    "on_entry": [
+                        "/execute if score timer minutes matches 25 if score timer seconds matches 0 run gamerule dodaylightcycle false",
+                        "/execute if score timer minutes matches 20 if score timer seconds matches 0 run gamerule dodaylightcycle true",
+                        "/execute if score timer minutes matches 10 if score timer seconds matches 0 run gamerule dodaylightcycle false",
+                        "/execute if score timer minutes matches 5 if score timer seconds matches 0 run gamerule dodaylightcycle true",
+                        "/execute if score timer minutes matches 0 if score timer seconds matches 1 run title @a reset",
+                        "/execute as @e[type=informant:timebar] at @s run tp @s @p[tag=InGame]",
+                        "/execute as @a at @s if block ~ ~-3 ~ ochre_froglight run tag @s add NoClear",
+                        "/execute as @a[tag=NoClear] at @s if block ~ ~-3 ~ pearlescent_froglight run tp @s ~ ~ ~-2",
+                        "/execute as @a[tag=NoClear] at @s unless block ~ ~-3 ~ ochre_froglight unless block ~ ~-3 ~ pearlescent_froglight run tag @s remove NoClear",
+                        "/effect @a saturation 1 255 true",
+                        "/execute as @e[type=informant:npc_item,x=32,y=-59,z=41,r=10] at @s run tp @s ~ ~ ~ facing @a[tag=OnAKIRequest]",
+                        "/execute as @e[type=informant:npc_item,x=89,y=-57,z=57,r=10] at @s run tp @s ~ ~ ~ facing @a[tag=OnTakoRequest]",
+                        "/execute as @e[type=informant:npc_item,x=-45,y=-60,z=49,r=10] at @s run tp @s ~ ~ ~ facing @a[tag=OnHaruponRequest]",
+                        "/tag @a[x=20,y=-59,z=179,r=5] remove spectator",
+                        "/tp @a[x=20,y=-55,z=179,r=1] 20 -59 179 90 22.5",
+                        "/tag @a[tag=!owner,x=18,y=-61,z=169,dx=4,dy=4] add dne",
+                        "/tp @a[tag=dne] 20 -59 179 90 22.5",
+                        "/tellraw @a[tag=dne] {\"rawtext\":[{\"text\":\"§cこのエリアに入れるのはオーナーのみです\"}]}",
+                        "/playsound note.bass @a[tag=dne]",
+                        "/tag @a remove dne"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "(1.0)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,73 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.player_teleport4": {
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "comma": "(1.0)"
+                        }
+                    ]
+                },
+                "comma": {
+                    "on_entry": [
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-1 ~ red_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-1 ~ red_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-1 ~ red_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-2 ~ red_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-2 ~ red_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches 5.. if block ~ ~-2 ~ red_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-1 ~ blue_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-1 ~ blue_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-1 ~ blue_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-2 ~ blue_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-2 ~ blue_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches 5.. if block ~ ~-2 ~ blue_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-1 ~ green_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-1 ~ green_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-1 ~ green_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-2 ~ green_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-2 ~ green_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches 5.. if block ~ ~-2 ~ green_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-1 ~ yellow_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-1 ~ yellow_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-1 ~ yellow_concrete run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-2 ~ yellow_concrete run playsound note.bass @s",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-2 ~ yellow_concrete run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches 5.. if block ~ ~-2 ~ yellow_concrete run tp @s -1 -55 179 90 0",
+                        "/execute as @a[tag=redjoin4] at @s unless block ~ ~-1 ~ red_concrete run tag @s remove redjoin4",
+                        "/execute as @a[tag=redjoin4] at @s unless block ~ ~-2 ~ red_concrete run tag @s remove redjoin4",
+                        "/execute as @a[tag=bluejoin4] at @s unless block ~ ~-1 ~ blue_concrete run tag @s remove bluejoin4",
+                        "/execute as @a[tag=bluejoin4] at @s unless block ~ ~-2 ~ blue_concrete run tag @s remove bluejoin4",
+                        "/execute as @a[tag=yellowjoin4] at @s unless block ~ ~-1 ~ yellow_concrete run tag @s remove yellowjoin4",
+                        "/execute as @a[tag=yellowjoin4] at @s unless block ~ ~-2 ~ yellow_concrete run tag @s remove yellowjoin4",
+                        "/execute as @a[tag=greenjoin4] at @s unless block ~ ~-1 ~ green_concrete run tag @s remove greenjoin4",
+                        "/execute as @a[tag=greenjoin4] at @s unless block ~ ~-2 ~ green_concrete run tag @s remove greenjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches ..4 if block ~ ~-1 ~ red_concrete run tag @s add redjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!redjoin4] at @s if score redteam4 joincount matches ..4 if block ~ ~-2 ~ red_concrete run tag @s add redjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches ..4 if block ~ ~-1 ~ blue_concrete run tag @s add bluejoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!bluejoin4] at @s if score blueteam4 joincount matches ..4 if block ~ ~-2 ~ blue_concrete run tag @s add bluejoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches ..4 if block ~ ~-1 ~ green_concrete run tag @s add greenjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!greenjoin4] at @s if score greenteam4 joincount matches ..4 if block ~ ~-2 ~ green_concrete run tag @s add greenjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches ..4 if block ~ ~-1 ~ yellow_concrete run tag @s add yellowjoin4",
+                        "/execute if score gamemode config matches 40 as @a[tag=!yellowjoin4] at @s if score yellowteam4 joincount matches ..4 if block ~ ~-2 ~ yellow_concrete run tag @s add yellowjoin4",
+                        "/scoreboard players set redteam4 joincount 0",
+                        "/scoreboard players set blueteam4 joincount 0",
+                        "/scoreboard players set greenteam4 joincount 0",
+                        "/scoreboard players set yellowteam4 joincount 0",
+                        "/execute if score gamemode config matches 40 as @a[tag=redjoin4] run scoreboard players add redteam4 joincount 1",
+                        "/execute if score gamemode config matches 40 as @a[tag=bluejoin4] run scoreboard players add blueteam4 joincount 1",
+                        "/execute if score gamemode config matches 40 as @a[tag=yellowjoin4] run scoreboard players add yellowteam4 joincount 1",
+                        "/execute if score gamemode config matches 40 as @a[tag=greenjoin4] run scoreboard players add greenteam4 joincount 1"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "(1.0)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

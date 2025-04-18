@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "informant:teruteru",
+      "materials": {
+         "teru": "teruteru",
+         "night_teru": "night_teruteru" 
+      },
+      "textures": {
+        "defo": "textures/entity/defo_teru",
+        "angry": "textures/entity/angry_teru",
+        "night": "textures/entity/night_teru",
+        "aki": "textures/entity/aki_teru"
+      },
+      "geometry": {
+        "default": "geometry.teruteru"
+      },
+      "animations": {
+        "walks": "animation.teruteru.walks"
+      },
+      "animation_controllers": [
+        { "teruteru": "controller.animation.teruteru" }
+      ],
+      "render_controllers": [ "controller.render.teruteru" ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "informant:moji",
+      "materials": { "default": "moji" },
+      "textures": {
+        "default": "textures/entity/moji"
+      },
+      "geometry": {
+        "default": "geometry.moji"
+      },
+      "render_controllers": [ "controller.render.moji" ]
+    }
+  }
+}

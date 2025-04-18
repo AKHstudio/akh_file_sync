@@ -1,0 +1,27 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "密告中用のリソースパック 1.0.0-development by tako1dayo AKIsan0725",
+        "name": "informant",
+        "uuid": "4c0e0571-233e-4b4f-be4e-c89a18c7265c",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 21, 20]
+    },
+    "modules": [
+        {
+            "description": "informant resource pack",
+            "type": "resources",
+            "uuid": "8a520fcd-7265-4372-a5bf-9c119afca5b3",
+            "version": [1, 0, 0]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "55a1dadc-63cb-4845-9752-15601eec0df0",
+            "version": [1, 0, 0]
+        }
+    ],
+    "metadata": {
+        "authors": ["AKIsan0725", "tako1dayo"]
+    }
+}

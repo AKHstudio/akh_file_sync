@@ -1,0 +1,27 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.npc_item": {
+      "initial_state": "npc_item",
+      "states": {
+        "npc_item": {
+          "transitions": [
+            {
+              "turns": "query.has_collision"
+            }
+          ]
+        },
+        "turns": {
+          "animations": [
+            "turns"
+          ],
+          "transitions": [
+            {
+              "npc_item": "(1.0)"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

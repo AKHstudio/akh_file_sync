@@ -1,0 +1,26 @@
+{
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:written_book",
+                    "functions": [
+                        {
+                            "function": "set_book_contents",
+                            "author": "AKIsandesu",
+                            "title": "§l§o1う4ぇ2～gい",
+                            "pages": [
+                                "{\"rawtext\":[{\"text\":\"あいうえお\na\ue102あ\"}]}",
+                                "{\"rawtext\":[{\"selector\":\"@s\"}]}",
+                                "{\"rawtext\":[{\"score\":{\"objective\":\"teleport_r\",\"name\":\"player2\"}}]}",
+                                "{\"rawtext\":[{\"translate\":\"build.tooHigh\"}]}"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

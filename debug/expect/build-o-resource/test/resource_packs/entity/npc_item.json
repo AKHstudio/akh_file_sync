@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "informant:npc_item",
+      "materials": {
+         "default": "npc_item"
+      },
+      "textures": {
+        "aki_drop": "textures/entity/aki_drop",
+        "tako_drop": "textures/entity/tako_drop",
+        "harupon_drop": "textures/entity/harupon_drop"
+      },
+      "geometry": {
+        "aki_drop": "geometry.aki_drop",
+        "tako_drop": "geometry.tako_drop",
+        "harupon_drop": "geometry.harupon_drop"
+      },
+      "animations": {
+        "turns": "animation.npc_item.turns"
+      },
+      "animation_controllers": [
+        { "npc_item": "controller.animation.npc_item" }
+      ],
+      "render_controllers": [ "controller.render.npc_item" ]
+    }
+  }
+}

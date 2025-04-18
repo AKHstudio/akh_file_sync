@@ -1,0 +1,29 @@
+{
+    "format_version": "1.21.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "informant:red_green_leggings2",
+            "menu_category": {
+                "category": "equipment"
+            }
+        },
+        "components": {
+            "minecraft:icon": "red_green_leggings2",
+            "minecraft:creative_category": {
+                "parent": "itemGroup.name.leggings"
+            },
+            "minecraft:max_stack_size": 1,
+            "minecraft:wearable": {
+                "slot": "slot.armor.legs",
+                "protection": 0
+            },
+            "minecraft:display_name": {
+                "value": "§4赤§7と§2緑§7のズボン"
+            },
+            "minecraft:enchantable": {
+                "value": 30,
+                "slot": "armor_legs"
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "密告中用のビヘイビアー 1.0.0-development by tako1dayo AKIsan0725",
+        "name": "informant",
+        "uuid": "55a1dadc-63cb-4845-9752-15601eec0df0",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 21, 20]
+    },
+    "modules": [
+        {
+            "description": "informant behavior pack",
+            "type": "data",
+            "uuid": "937981ef-aa83-4dbe-a4a0-9d17c7068ad1",
+            "version": [1, 0, 0]
+        },
+        {
+            "description": "script",
+            "language": "javascript",
+            "type": "script",
+            "uuid": "7f7d6806-5190-47bc-b0b7-13e6d9ab2b42",
+            "version": [1, 0, 0],
+            "entry": "scripts/setup.js"
+        }
+    ],
+    "metadata": {
+        "authors": ["tako1dayo", "AKIsan0725"]
+    },
+    "dependencies": [
+        {
+            "uuid": "4c0e0571-233e-4b4f-be4e-c89a18c7265c",
+            "version": [1, 0, 0]
+        },
+        {
+            "module_name": "@minecraft/server",
+            "version": "1.17.0-beta"
+        },
+        {
+            "module_name": "@minecraft/server-ui",
+            "version": "1.4.0-beta"
+        },
+        {
+            "module_name": "@minecraft/debug-utilities",
+            "version": "1.0.0-beta"
+        }
+    ]
+}

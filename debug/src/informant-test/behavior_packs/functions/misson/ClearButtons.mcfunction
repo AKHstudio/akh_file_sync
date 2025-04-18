@@ -1,0 +1,11 @@
+setblock -32 -60 -35 air
+setblock -35 -59 55 air
+setblock -36 -59 78 air
+setblock 3 -59 77 air
+setblock 36 -59 76 air
+setblock 89 -56 59 air
+setblock 92 -60 -22 air
+setblock  46 -59 18 air
+setblock 26 -58 36 air
+setblock 29 -50 16 air
+setblock 65 -57 39 air

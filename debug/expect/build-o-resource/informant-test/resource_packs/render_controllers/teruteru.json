@@ -1,0 +1,18 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.teruteru": {
+      "arrays": {
+        "textures": {
+          "Array.skins": [ "Texture.defo", "Texture.angry", "Texture.night", "Texture.aki" ]
+        },
+        "materials": {
+          "Array.materials": [ "Material.night_teru", "Material.teru" ]
+        }
+      },
+      "geometry": "Geometry.default",
+      "materials": [ { "*": "Array.materials[query.time_of_day >= 0.25 && query.time_of_day <=0.75]" } ],
+      "textures": [ "Array.skins[query.variant]" ]
+    }
+  }
+}

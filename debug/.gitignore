@@ -1,0 +1,8 @@
+build
+dist
+output
+
+!expect/build
+!expect/dist
+!output/build
+!output/dist

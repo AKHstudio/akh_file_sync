@@ -1,0 +1,28 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:fog_settings": {
+        "description": {
+            "identifier": "informant:fog_kiri_10_verystrong"
+        },
+        "distance": {
+            "air": {
+                "render_distance_type": "fixed",
+                "fog_color": "#FFFFFF",
+                "fog_start": 5,
+                "fog_end": 10
+            },
+            "water": {
+                "render_distance_type": "fixed",
+                "fog_color": "#FFFFFF",
+                "fog_start": 5,
+                "fog_end": 10
+            },
+            "weather": {
+                "render_distance_type": "fixed",
+                "fog_color": "#FFFFFF",
+                "fog_start": 5,
+                "fog_end": 10
+            }
+        }
+    }
+}

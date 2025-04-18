@@ -1,0 +1,37 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.player_teleport3": {
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "comma": "(1.0)"
+                        }
+                    ]
+                },
+                "comma": {
+                    "on_entry": [
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-3 ~ diamond_ore run playsound note.bass @s",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-3 ~ diamond_ore run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-3 ~ diamond_ore run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-4 ~ diamond_ore run playsound note.bass @s",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-4 ~ diamond_ore run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches 20.. if block ~ ~-4 ~ diamond_ore run tp @s -1 -55 179 90 0",
+                        "/execute as @a[tag=random2join] at @s unless block ~ ~-3 ~ diamond_ore run tag @s remove random2join",
+                        "/execute as @a[tag=random2join] at @s unless block ~ ~-4 ~ diamond_ore run tag @s remove random2join",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches ..19 if block ~ ~-3 ~ diamond_ore run tag @s add random2join",
+                        "/execute if score gamemode config matches 21 as @a[tag=!random2join] at @s if score random2team joincount matches ..19 if block ~ ~-4 ~ diamond_ore run tag @s add random2join",
+                        "/scoreboard players set random2team joincount 0",
+                        "/execute if score gamemode config matches 21 as @a[tag=random2join] run scoreboard players add random2team joincount 1"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "(1.0)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

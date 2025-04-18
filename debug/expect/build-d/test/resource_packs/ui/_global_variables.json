@@ -1,0 +1,11 @@
+{
+    "$tako_hud_img_path": "textures/items/takodayo_armor.png",
+    "$defolt_hud_img_path": "textures/ui/hud_tip_text_background",
+    "$if_urgent_alert_hud_text": "緊急速報",
+    "$if_misson_alert_hud_text": "警告",
+    "$defolt_hud_text_if": "(((#hud_title_text_string - $if_urgent_alert_hud_text) = #hud_title_text_string) and ((#hud_title_text_string - $if_misson_alert_hud_text) = #hud_title_text_string))",
+    "$alert_hud_text_if": "(( not ((#hud_title_text_string - $if_urgent_alert_hud_text) = #hud_title_text_string)) or ( not ((#hud_title_text_string - $if_misson_alert_hud_text) = #hud_title_text_string)))",
+    "$if_timer_text": "残り",
+    "$defolt_actionbar_if": "($actionbar_text - $if_timer_text = $actionbar_text)",
+    "$actionbar_timer_if": "( not ($actionbar_text - $if_timer_text = $actionbar_text))"
+}

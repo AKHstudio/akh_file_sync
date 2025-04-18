@@ -1,0 +1,16 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "informant:timebar",
+            "materials": { "default": "timebar" },
+            "textures": {
+                "default": "textures/entity/timebar"
+            },
+            "geometry": {
+                "default": "geometry.timebar"
+            },
+            "render_controllers": ["controller.render.timebar"]
+        }
+    }
+}

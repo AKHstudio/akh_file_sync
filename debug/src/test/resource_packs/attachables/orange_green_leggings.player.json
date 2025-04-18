@@ -1,0 +1,32 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "informant:orange_green_leggings.player",
+      "item": {
+        "informant:orange_green_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/color_armor/orange_green_armor",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.colorarmorplayerleggings"
+      },
+      "scripts": {
+        "parent_setup": "variable.leg_layer_visible = 0.0;",
+        "animate": [
+          "offset"
+        ]
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      },
+      "render_controllers": ["controller.render.armor"]
+    }
+  }
+}

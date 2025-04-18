@@ -1,0 +1,20 @@
+{
+    "format_version": "1.21.20",
+    "minecraft:block": {
+        "description": {
+            "identifier": "informant:spectator"
+        },
+        "components": {
+            "minecraft:geometry": "minecraft:geometry.full_block",
+            "minecraft:display_name": "上に乗っていると観戦",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "spectator",
+                    "render_method": "opaque"
+                }
+            },
+            "minecraft:friction": 0.5,
+            "minecraft:map_color": "#6464FF"
+        }
+    }
+}

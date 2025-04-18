@@ -1,0 +1,104 @@
+{
+    "format_version": "1.14.0",
+    "sound_definitions": {
+        "mail": {
+            "__use_legacy_max_distance": true,
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/SoundEffect/mail3",
+                    "stream": true,
+                    "volume": 1.0
+                }
+            ]
+        },
+        "gameover": {
+            "__use_legacy_max_distance": true,
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/SoundEffect/gameover",
+                    "stream": true,
+                    "volume": 1.0
+                }
+            ]
+        },
+        "news03": {
+            "__use_legacy_max_distance": true,
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/SoundEffect/News-Alert03-1",
+                    "stream": true,
+                    "volume": 1.0
+                }
+            ]
+        },
+        "news04": {
+            "__use_legacy_max_distance": true,
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/SoundEffect/News-Alert04-1",
+                    "stream": true,
+                    "volume": 1.0
+                }
+            ]
+        },
+        "warning": {
+            "__use_legacy_max_distance": true,
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/SoundEffect/Warning",
+                    "stream": true,
+                    "volume": 1.0
+                }
+            ]
+        },
+        "raid.horn": {
+            "__use_legacy_max_distance": true,
+            "category": "neutral",
+            "max_distance": null,
+            "min_distance": null,
+            "sounds": [
+                {
+                    "is3D": false,
+                    "load_on_low_memory": true,
+                    "name": "sounds/event/raid/raidhorn_01",
+                    "volume": 1.0
+                },
+                {
+                    "is3D": false,
+                    "name": "sounds/event/raid/raidhorn_02",
+                    "volume": 1.0
+                },
+                {
+                    "is3D": false,
+                    "name": "sounds/event/raid/raidhorn_03",
+                    "volume": 1.0
+                },
+                {
+                    "is3D": false,
+                    "name": "sounds/event/raid/raidhorn_04",
+                    "volume": 1.0
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,261 @@
+{
+    "format_version": "1.17.20",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "informant:timebar",
+            "is_spawnable": true,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "large": {
+                "minecraft:boss": {
+                    "hud_range": 125,
+                    "name": "§eワールドロード完了率",
+                    "should_darken_sky": false
+                },
+                "minecraft:health": {
+                    "value": 113,
+                    "max": 113
+                }
+            },
+            "worldloadFinish": {
+                "minecraft:boss": {
+                    "hud_range": 125,
+                    "name": "§a完了！",
+                    "should_darken_sky": false
+                },
+                "minecraft:health": {
+                    "value": 113,
+                    "max": 113
+                }
+            },
+            "small": {
+                "minecraft:boss": {
+                    "name": "§c投票締め切りまで",
+                    "should_darken_sky": false,
+                    "hud_range": 2
+                },
+                "minecraft:health": {
+                    "value": 20,
+                    "max": 20
+                }
+            },
+            "beacon": {
+                "minecraft:boss": {
+                    "name": "§bアクセストークン認証完了率",
+                    "should_darken_sky": false,
+                    "hud_range": 4
+                },
+                "minecraft:health": {
+                    "value": 65,
+                    "max": 65
+                }
+            },
+            "beaconclear": {
+                "minecraft:boss": {
+                    "name": "§a認証完了！",
+                    "should_darken_sky": false,
+                    "hud_range": 4
+                },
+                "minecraft:health": {
+                    "value": 65,
+                    "max": 65
+                }
+            }
+        },
+        "components": {
+            "minecraft:nameable": {
+                "allow_name_tag_renaming": true,
+                "always_show": false
+            },
+            "minecraft:collision_box": {
+                "width": 0,
+                "height": 0
+            },
+            "minecraft:health": {
+                "value": 20,
+                "max": 20
+            },
+            "minecraft:type_family": {
+                "family": ["timebar"]
+            },
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "cause": "entity_attack",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "fall",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "fire",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "drowning",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "lava",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "magma",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "contact",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "falling_block",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "void",
+                        "deals_damage": false
+                    },
+                    {
+                        "cause": "fire_tick",
+                        "deals_damage": false
+                    }
+                ]
+            },
+            "minecraft:environment_sensor": {
+                "triggers": [
+                    {
+                        "event": "worldloadFinish",
+                        "target": "self",
+                        "filters": {
+                            "test": "has_tag",
+                            "value": "worldloadFinish"
+                        }
+                    },
+                    {
+                        "event": "large",
+                        "target": "self",
+                        "filters": [
+                            {
+                                "test": "has_tag",
+                                "value": "large"
+                            },
+                            {
+                                "test": "has_tag",
+                                "operator": "!=",
+                                "value": "worldloadFinish"
+                            }
+                        ]
+                    },
+                    {
+                        "event": "small",
+                        "target": "self",
+                        "filters": [
+                            {
+                                "test": "has_tag",
+                                "operator": "!=",
+                                "value": "large"
+                            },
+                            {
+                                "test": "has_tag",
+                                "operator": "!=",
+                                "value": "worldloadFinish"
+                            },
+                            {
+                                "test": "has_tag",
+                                "operator": "!=",
+                                "value": "FourBeacons"
+                            }
+                        ]
+                    },
+                    {
+                        "event": "beacon",
+                        "target": "self",
+                        "filters": [
+                            {
+                                "test": "has_tag",
+                                "value": "FourBeacons"
+                            },
+                            {
+                                "test": "has_tag",
+                                "operator": "!=",
+                                "value": "clearBeacons"
+                            }
+                        ]
+                    },
+                    {
+                        "event": "beaconclear",
+                        "target": "self",
+                        "filters": [
+                            {
+                                "test": "has_tag",
+                                "value": "FourBeacons"
+                            },
+                            {
+                                "test": "has_tag",
+                                "value": "clearBeacons"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "minecraft:boss": {
+                "name": "§c投票締め切りまで",
+                "should_darken_sky": false,
+                "hud_range": 2
+            },
+            "minecraft:physics": {
+                "has_gravity": false,
+                "has_collision": false
+            },
+            "minecraft:pushable": {
+                "is_pushable": false,
+                "is_pushable_by_piston": false
+            }
+        },
+        "events": {
+            "worldloadFinish": {
+                "add": {
+                    "component_groups": ["worldloadFinish"]
+                },
+                "remove": {
+                    "component_groups": ["small", "large", "beacon", "beaconclear"]
+                }
+            },
+            "large": {
+                "add": {
+                    "component_groups": ["large"]
+                },
+                "remove": {
+                    "component_groups": ["small", "worldloadFinish", "beacon", "beaconclear"]
+                }
+            },
+            "small": {
+                "add": {
+                    "component_groups": ["small"]
+                },
+                "remove": {
+                    "component_groups": ["large", "worldloadFinish", "beacon", "beaconclear"]
+                }
+            },
+            "beacon": {
+                "add": {
+                    "component_groups": ["beacon"]
+                },
+                "remove": {
+                    "component_groups": ["large", "worldloadFinish", "small", "beaconclear"]
+                }
+            },
+            "beaconclear": {
+                "add": {
+                    "component_groups": ["beaconclear"]
+                },
+                "remove": {
+                    "component_groups": ["large", "worldloadFinish", "small", "beacon"]
+                }
+            }
+        }
+    }
+}

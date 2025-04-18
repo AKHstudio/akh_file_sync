@@ -1,0 +1,18 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.npc_item": {
+      "arrays": {
+        "textures": {
+          "Array.skins": [ "Texture.aki_drop", "Texture.tako_drop", "Texture.harupon_drop" ]
+        },
+        "geometries": {
+          "Array.geos": [ "Geometry.aki_drop", "Geometry.tako_drop", "Geometry.harupon_drop" ]
+        }
+      },
+      "geometry": "Array.geos[query.variant]",
+      "materials": [ { "*": "Material.default" } ],
+      "textures": [ "Array.skins[query.variant]" ]
+    }
+  }
+}

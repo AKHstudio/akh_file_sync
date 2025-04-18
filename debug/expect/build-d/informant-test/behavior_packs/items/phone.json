@@ -1,0 +1,15 @@
+{
+    "format_version": "1.21.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "informant:phone"
+        },
+        "components": {
+            "minecraft:icon": "phone",
+            "minecraft:max_stack_size": 1,
+            "minecraft:display_name": {
+                "value": "§e§lスマホ\n§r§7アイテムを使用ボタンで発動"
+            }
+        }
+    }
+}

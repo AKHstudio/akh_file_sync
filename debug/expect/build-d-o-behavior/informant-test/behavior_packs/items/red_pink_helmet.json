@@ -1,0 +1,29 @@
+{
+    "format_version": "1.21.10",
+    "minecraft:item": {
+        "description": {
+            "identifier": "informant:red_pink_helmet",
+            "menu_category": {
+                "category": "equipment"
+            }
+        },
+        "components": {
+            "minecraft:icon": "red_pink_helmet",
+            "minecraft:creative_category": {
+                "parent": "itemGroup.name.helmet"
+            },
+            "minecraft:max_stack_size": 1,
+            "minecraft:wearable": {
+                "slot": "slot.armor.head",
+                "protection": 0
+            },
+            "minecraft:display_name": {
+                "value": "§4赤§7と§d桃色§7の帽子"
+            },
+            "minecraft:enchantable": {
+                "value": 30,
+                "slot": "armor_head"
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.player_teleport5": {
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "comma": "(1.0)"
+                        }
+                    ]
+                },
+                "comma": {
+                    "on_entry": [
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-3 ~ fletching_table run playsound note.bass @s",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-3 ~ fletching_table run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-3 ~ fletching_table run tp @s -1 -55 179 90 0",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-4 ~ fletching_table run playsound note.bass @s",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-4 ~ fletching_table run title @s actionbar §c定員オーバーです",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches 20.. if block ~ ~-4 ~ fletching_table run tp @s -1 -55 179 90 0",
+                        "/execute as @a[tag=random4join] at @s unless block ~ ~-3 ~ fletching_table run tag @s remove random4join",
+                        "/execute as @a[tag=random4join] at @s unless block ~ ~-4 ~ fletching_table run tag @s remove random4join",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches ..19 if block ~ ~-3 ~ fletching_table run tag @s add random4join",
+                        "/execute if score gamemode config matches 41 as @a[tag=!random4join] at @s if score random4team joincount matches ..19 if block ~ ~-4 ~ fletching_table run tag @s add random4join",
+                        "/scoreboard players set random4team joincount 0",
+                        "/execute if score gamemode config matches 41 as @a[tag=random4join] run scoreboard players add random4team joincount 1"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "(1.0)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

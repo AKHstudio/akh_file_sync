@@ -1,0 +1,27 @@
+{
+    "format_version": "1.19.30",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "informant:moji",
+            "is_spawnable": true,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "components": {
+            "minecraft:damage_sensor": {
+                "triggers": {
+                  "cause": "all",
+                  "deals_damage": false
+                }
+            },
+            "minecraft:nameable": {
+                "always_show": true,
+                "allow_name_tag_renaming": true
+            },
+            "minecraft:physics": {
+                "has_gravity": false,
+                "has_collision": false
+            }
+        }
+    }
+}

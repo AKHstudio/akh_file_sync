@@ -1,0 +1,12 @@
+{
+  "materials": {
+    "version": "1.0.0",
+    "moji:entity_alphatest": {},
+    "snail:entity_alphatest": {},
+    "transparent_snail:entity_alphablend": {},
+    "teruteru:entity_alphatest": {},
+    "night_teruteru:entity_emissive_alpha": {},
+    "npc_item:entity_alphatest": {},
+    "timebar:entity_alphatest": {}
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/informant-test/behavior_packs/scripts/test.ts"],
+  "sourceRoot": "C:\\Users\\takof\\Desktop\\akh_file_sync\\debug\\src\\informant-test\\behavior_packs\\scripts",
+  "sourcesContent": ["export function test() {\r\n    // This is a test function\r\n    console.log('Test function executed');\r\n    return 'Test function executed';\r\n}\r\n"],
+  "mappings": ";AAAO,SAAS,OAAO;AAEnB,UAAQ,IAAI,wBAAwB;AACpC,SAAO;AACX;",
+  "names": []
+}

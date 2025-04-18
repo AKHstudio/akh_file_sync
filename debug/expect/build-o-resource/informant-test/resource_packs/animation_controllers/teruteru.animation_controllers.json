@@ -1,0 +1,27 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.teruteru": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "transitions": [
+            {
+              "walks": "(1.0)"
+            }
+          ]
+        },
+        "walks": {
+          "animations": [
+            "walks"
+          ],
+          "transitions": [
+            {
+              "default": "(1.0)"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
