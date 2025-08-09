@@ -255,6 +255,84 @@ class BuildCommand {
             //     packages: 'external',
             // });
 
+            interface IncludeOnlyOptions {
+                /**
+                 * 含める（バンドルする）パスのパターンの配列
+                 * 例: ['~/*', '@/*', './internal/*']
+                 */
+                include: string[];
+            }
+
+            /**
+             * 指定したパスパターンのみをバンドルに含めるesbuildプラグイン
+             */
+            const includeOnlyPlugin = (options: IncludeOnlyOptions): esbuild.Plugin => {
+                return {
+                    name: 'include-only',
+                    setup(build: esbuild.PluginBuild) {
+                        const { include } = options;
+
+                        // パターンを正規表現に変換
+                        const includeRegexes = include.map((pattern) => {
+                            // glob パターンを正規表現に変換
+                            const regexPattern = pattern
+                                .replace(/\*/g, '.*') // * を .* に変換
+                                .replace(/\?/g, '.') // ? を . に変換
+                                .replace(/\//g, '\\/'); // / をエスケープ
+
+                            return new RegExp(`^${regexPattern}`);
+                        });
+
+                        console.debug('🛠️ ', 'Include regexes:', includeRegexes);
+
+                        // インポートパスの解決をフック
+                        build.onResolve({ filter: /.*/ }, (args) => {
+                            const importPath = args.path;
+                            // console.debug('🛠️ ', 'Resolving import path:', importPath);
+                            const importer = args.importer;
+                            // console.debug('🛠️ ', 'Importer:', importer);
+
+                            // エントリーポイントは常にバンドルに含める
+                            if (args.kind === 'entry-point') {
+                                return; // デフォルトの解決に委ねる
+                            }
+
+                            // 含めるパターンにマッチするかチェック
+                            const shouldInclude = includeRegexes.some((regex) => regex.test(importPath));
+                            // importerにnode_modules/@minecraft/mathが含まれている場合は、バンドルに残す
+                            if (/node_modules[/\\]@minecraft[/\\]math/.test(importer)) {
+                                return;
+                            }
+
+                            if (shouldInclude) {
+                                // その他のパスはそのまま処理を続行
+                                return;
+                            }
+
+                            console.debug('🛠️ ', 'Skipping import path:', importPath);
+
+                            if (!importPath.startsWith('.') && !importPath.startsWith('@')) {
+                                // 呼び出し元ファイルのディレクトリ
+                                const importerDir = path.dirname(importer);
+
+                                // 相対パスとして組み直す
+                                const fullPath = path.relative(importerDir, importPath).replace(/\\/g, '/'); // WindowsのパスをPOSIX形式に変換
+
+                                console.debug('🛠️ ', 'Including import path:', fullPath);
+
+                                return { path: fullPath, external: true }; // 絶対パスを返す
+                            }
+
+                            // 含めないパターンの場合は external として扱う
+                            return {
+                                path: importPath,
+                                external: true,
+                            };
+                        });
+                    },
+                };
+            };
+
             // prettier-ignore
             await esbuild
                 .build({
@@ -263,7 +341,7 @@ class BuildCommand {
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
-                    sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
+                    sourceRoot: path.join("src", directory, 'behavior_packs', 'scripts'),
                     platform: "node",
                     target: "node18",
                     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
@@ -277,6 +355,11 @@ class BuildCommand {
                         "@minecraft/server-common",
                         "@minecraft/server-editor",
                         "@minecraft/debug-utilities",
+                    ],
+                    plugins :[
+                        includeOnlyPlugin({
+                            include: ["@minecraft/vanilla-data" , "@minecraft/math"]
+                        }),
                     ]
                 })
                 .catch(() => {
