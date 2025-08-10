@@ -74,13 +74,14 @@ class SyncCommand extends buildCommand {
                 },
                 {
                     title: 'Syncing',
-                    task: () => {
+                    task: async () => {
                         if (this.only === 'behavior') {
                             this.runSync('behavior');
                         } else if (this.only === 'resource') {
                             this.runSync('resource');
                         } else {
                             this.runSync('behavior');
+                            await delay(1000);
                             this.runSync('resource');
                         }
                     },
@@ -130,11 +131,16 @@ class SyncCommand extends buildCommand {
 
     protected async runSync(type: 'behavior' | 'resource') {
         this.directories.forEach((directory) => {
+            console.debug(`🛠️ [${chalk.yellow(`Sync target ${type} ${directory}`)}]`, chalk.yellow(`ビルドディレクトリ: ${path.join(env.buildDir, directory, `${type}_packs`)}`));
+
             const buildDir = path.join(env.buildDir, directory, `${type}_packs`);
             const srcDir = path.join(env.srcDir, directory, `${type}_packs`);
             const syncTargetDir = path.join(env.syncTargetDir, `development_${type}_packs`, `${env.akhsyncFlag}-${directory}`);
 
-            if (!existsSync(srcDir)) return;
+            if (!existsSync(srcDir)) {
+                console.debug(`🛠️ [${chalk.yellow(`Sync target ${type} ${directory}`)}]`, chalk.yellow(`ソースディレクトリが存在しません: ${srcDir}`));
+                return;
+            }
 
             cp(buildDir, syncTargetDir, { recursive: true, force: true }).catch((err) => {
                 console.error(`❌ [${chalk.red(`Sync target ${type} ${directory}`)}]`, chalk.red(`エラーが発生しました:`), err);
