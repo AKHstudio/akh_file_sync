@@ -309,7 +309,7 @@ class BuildCommand {
                                 return;
                             }
 
-                            console.debug('🛠️ ', 'Skipping import path:', importPath);
+                            // console.debug('🛠️ ', 'Skipping import path:', importPath);
 
                             if (!importPath.startsWith('.') && !importPath.startsWith('@')) {
                                 // 呼び出し元ファイルのディレクトリ
@@ -318,7 +318,7 @@ class BuildCommand {
                                 // 相対パスとして組み直す
                                 const fullPath = path.relative(importerDir, importPath).replace(/\\/g, '/'); // WindowsのパスをPOSIX形式に変換
 
-                                console.debug('🛠️ ', 'Including import path:', fullPath);
+                                // console.debug('🛠️ ', 'Including import path:', fullPath);
 
                                 return { path: fullPath, external: true }; // 絶対パスを返す
                             }
