@@ -1,14 +1,17 @@
-import * as env from '@/index.js';
+import path from 'path';
+import { exit } from 'process';
+import { error } from 'console';
 import { rmSync } from 'fs';
 import { cp, mkdir, rm } from 'fs/promises';
+
 import chalk from 'chalk';
-import path from 'path';
 import { glob, globSync } from 'glob';
-import { exit } from 'process';
-import checkDirectoryExists from '@/helpers/checkDirectoryExists.js';
-import { error } from 'console';
 import esbuild from 'esbuild';
 import { Listr } from 'listr2';
+
+import * as env from '@/index.js';
+import checkDirectoryExists from '@/helpers/checkDirectoryExists.js';
+import { tsPathsPlugin } from '@/helpers/esbuild/ts-paths.js';
 
 class BuildCommand {
     protected directories: string[];
@@ -222,7 +225,7 @@ class BuildCommand {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
-            const tsconfigFiles = await glob(`./tsconfig.json`, {
+            const tsconfigFiles = await glob(path.join(process.cwd(), 'tsconfig.json'), {
                 posix: true,
                 nodir: true,
                 ignore: [path.posix.join('node_modules', '**', 'tsconfig.json'), path.posix.join('**', 'behavior_packs', '**', 'tsconfig.json')],
@@ -255,89 +258,11 @@ class BuildCommand {
             //     packages: 'external',
             // });
 
-            interface IncludeOnlyOptions {
-                /**
-                 * 含める（バンドルする）パスのパターンの配列
-                 * 例: ['~/*', '@/*', './internal/*']
-                 */
-                include: string[];
-            }
-
-            /**
-             * 指定したパスパターンのみをバンドルに含めるesbuildプラグイン
-             */
-            const includeOnlyPlugin = (options: IncludeOnlyOptions): esbuild.Plugin => {
-                return {
-                    name: 'include-only',
-                    setup(build: esbuild.PluginBuild) {
-                        const { include } = options;
-
-                        // パターンを正規表現に変換
-                        const includeRegexes = include.map((pattern) => {
-                            // glob パターンを正規表現に変換
-                            const regexPattern = pattern
-                                .replace(/\*/g, '.*') // * を .* に変換
-                                .replace(/\?/g, '.') // ? を . に変換
-                                .replace(/\//g, '\\/'); // / をエスケープ
-
-                            return new RegExp(`^${regexPattern}`);
-                        });
-
-                        console.debug('🛠️ ', 'Include regexes:', includeRegexes);
-
-                        // インポートパスの解決をフック
-                        build.onResolve({ filter: /.*/ }, (args) => {
-                            const importPath = args.path;
-                            // console.debug('🛠️ ', 'Resolving import path:', importPath);
-                            const importer = args.importer;
-                            // console.debug('🛠️ ', 'Importer:', importer);
-
-                            // エントリーポイントは常にバンドルに含める
-                            if (args.kind === 'entry-point') {
-                                return; // デフォルトの解決に委ねる
-                            }
-
-                            // 含めるパターンにマッチするかチェック
-                            const shouldInclude = includeRegexes.some((regex) => regex.test(importPath));
-                            // importerにnode_modules/@minecraft/mathが含まれている場合は、バンドルに残す
-                            if (/node_modules[/\\]@minecraft[/\\]math/.test(importer)) {
-                                return;
-                            }
-
-                            if (shouldInclude) {
-                                // その他のパスはそのまま処理を続行
-                                return;
-                            }
-
-                            // console.debug('🛠️ ', 'Skipping import path:', importPath);
-
-                            if (!importPath.startsWith('.') && !importPath.startsWith('@')) {
-                                // 呼び出し元ファイルのディレクトリ
-                                const importerDir = path.dirname(importer);
-
-                                // 相対パスとして組み直す
-                                const fullPath = path.relative(importerDir, importPath).replace(/\\/g, '/'); // WindowsのパスをPOSIX形式に変換
-
-                                // console.debug('🛠️ ', 'Including import path:', fullPath);
-
-                                return { path: fullPath, external: true }; // 絶対パスを返す
-                            }
-
-                            // 含めないパターンの場合は external として扱う
-                            return {
-                                path: importPath,
-                                external: true,
-                            };
-                        });
-                    },
-                };
-            };
-
             // prettier-ignore
             await esbuild
                 .build({
                     entryPoints: [...scriptFiles],
-                    bundle: true,
+                    bundle: true, // 通常のインポートはバンドルしない
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
@@ -356,14 +281,17 @@ class BuildCommand {
                         "@minecraft/server-editor",
                         "@minecraft/debug-utilities",
                     ],
-                    plugins :[
-                        includeOnlyPlugin({
-                            include: ["@minecraft/vanilla-data" , "@minecraft/math"]
-                        }),
+                    plugins: [
+                        tsPathsPlugin({
+                            tsconfig: tsconfig ? tsconfig : './tsconfig.json',
+                            debug: true,
+                            resolveToRelative: true,
+                            excludes: ['@minecraft/*'],
+                        })
                     ]
                 })
-                .catch(() => {
-                    error('Error building project');
+                .catch((e : unknown) => {
+                    error('Error building project' , e);
                     process.exit(1);
                 });
         });
