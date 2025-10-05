@@ -1,7 +1,9 @@
-import SyncCommand from '@/commands/sync.js';
-import chokidar from 'chokidar';
 import path from 'path';
+
+import chokidar from 'chokidar';
+
 import * as env from '@/index.js';
+import SyncCommand from '@/commands/sync.js';
 
 class WatchCommand extends SyncCommand {
     private watchDirectories: string[];

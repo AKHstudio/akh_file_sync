@@ -1,10 +1,12 @@
-import buildCommand from '@/commands/build.js';
-import { delay, Listr } from 'listr2';
-import * as env from '@/index.js';
-import { existsSync } from 'fs';
 import path from 'path';
-import chalk from 'chalk';
+import { existsSync } from 'fs';
 import { cp } from 'fs/promises';
+
+import chalk from 'chalk';
+import { delay, Listr } from 'listr2';
+
+import * as env from '@/index.js';
+import buildCommand from '@/commands/build.js';
 
 class SyncCommand extends buildCommand {
     private build: boolean;

@@ -1,5 +1,6 @@
-import BuildCommand from '@/commands/build.js';
 import { Listr } from 'listr2';
+
+import BuildCommand from '@/commands/build.js';
 
 class AsyncCommand extends BuildCommand {
     protected directories: string[];
