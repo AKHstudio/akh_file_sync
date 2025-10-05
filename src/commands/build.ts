@@ -16,14 +16,16 @@ import { tsPathsPlugin } from '@/helpers/esbuild/ts-paths.js';
 class BuildCommand {
     protected directories: string[];
     protected dev: boolean;
+    protected debug: boolean;
     protected only: 'behavior' | 'resource' | undefined;
 
     /**
      *  build command class
      */
-    constructor(directories: string[], options: { development: boolean; only: 'behavior' | 'resource' | undefined }) {
+    constructor(directories: string[], options: { development: boolean; debug: boolean; only: 'behavior' | 'resource' | undefined }) {
         this.directories = directories;
         this.dev = options.development;
+        this.debug = options.debug;
         this.only = options.only;
 
         if (this.directories.length === 0) {
@@ -284,7 +286,7 @@ class BuildCommand {
                     plugins: [
                         tsPathsPlugin({
                             tsconfig: tsconfig ? tsconfig : './tsconfig.json',
-                            debug: true,
+                            debug: this.debug,
                             resolveToRelative: true,
                             excludes: ['@minecraft/*'],
                         })

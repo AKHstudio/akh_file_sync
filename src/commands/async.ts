@@ -6,7 +6,7 @@ class AsyncCommand extends BuildCommand {
     protected directories: string[];
 
     constructor(directories: string[], options: { only: 'behavior' | 'resource' | undefined }) {
-        super(directories, { development: false, only: options.only });
+        super(directories, { development: false, debug: false, only: options.only });
 
         this.directories = directories;
 

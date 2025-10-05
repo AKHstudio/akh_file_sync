@@ -17,7 +17,7 @@ class DistCommand extends BuildCommand {
     private setWorldDirectoryName: string;
 
     constructor(directories: string[], options: { setVersion?: string; type: 'world' | 'addon'; setWorldName: string }) {
-        super(directories, { development: false, only: undefined });
+        super(directories, { development: false, debug: false, only: undefined });
 
         this.type = options.type;
         if (options.setVersion) {

@@ -11,7 +11,7 @@ import buildCommand from '@/commands/build.js';
 class SyncCommand extends buildCommand {
     private build: boolean;
 
-    constructor(directories: string[], options: { development: boolean; build: boolean; only: 'behavior' | 'resource' | undefined }) {
+    constructor(directories: string[], options: { development: boolean; debug: boolean; build: boolean; only: 'behavior' | 'resource' | undefined }) {
         super(directories, options);
 
         if (this.directories.length === 0) {

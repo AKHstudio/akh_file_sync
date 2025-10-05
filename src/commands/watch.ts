@@ -10,7 +10,7 @@ class WatchCommand extends SyncCommand {
     private watchDelay: number = 2000; // Delay in milliseconds
     private isWatchDelaying: boolean = false;
 
-    constructor(directories: string[], options: { development: boolean; build: boolean; only: 'behavior' | 'resource' | undefined }) {
+    constructor(directories: string[], options: { development: boolean; debug: boolean; build: boolean; only: 'behavior' | 'resource' | undefined }) {
         super(directories, options);
 
         this.watchDirectories = this.directories.map((directory) => path.join(env.srcDir, directory));
