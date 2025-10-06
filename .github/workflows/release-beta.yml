@@ -1,0 +1,143 @@
+name: Release Beta
+
+on:
+    push:
+        tags:
+            - 'v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+' # v1.0.0-beta.1 形式
+
+jobs:
+    get-tag:
+        runs-on: ubuntu-latest
+        outputs:
+            TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
+        steps:
+            - name: タグ名を取得
+              id: tag
+              run: |
+                  TAG_NAME=${GITHUB_REF#refs/tags/}
+                  echo "TAG: ${TAG_NAME}"
+                  echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+
+    release:
+        needs: get-tag
+        runs-on: ubuntu-latest
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        outputs:
+            RELEASE_NOTES: ${{ steps.get-release-notes.outputs.RELEASE_NOTES }}
+        steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.ref }}
+                  token: ${{ secrets.GH_PAT }}
+
+            - name: リリースノートを取得
+              id: get-release-notes
+              run: |
+                  if [ ! -f ./changelog/${TAG_NAME#v}.md ]; then
+                      echo "リリースノートが見つかりません: ./changelog/${TAG_NAME#v}.md"
+                      exit 1
+                  fi
+                  RELEASE_NOTES=$(cat ./changelog/${TAG_NAME#v}.md)
+                  {
+                    echo "RELEASE_NOTES<<EOF"
+                    echo "$RELEASE_NOTES"
+                    echo "EOF"
+                  } >> "$GITHUB_OUTPUT"
+
+                  echo "$RELEASE_NOTES" > RELEASE_NOTES.md
+
+            - name: GitHubリリースを作成 (Beta)
+              if: success()
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ env.TAG_NAME }}
+                  name: 'Release ${{ env.TAG_NAME }} (Beta)'
+                  body_path: RELEASE_NOTES.md
+                  draft: false
+                  prerelease: true
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    publish:
+        needs: [release, get-tag]
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.ref }}
+                  token: ${{ secrets.GH_PAT }}
+
+            - name: Node.jsのセットアップ
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  registry-url: 'https://registry.npmjs.org/'
+
+            - name: 依存関係のインストール
+              run: npm ci
+
+            - name: リリースビルド
+              run: npm run release
+
+            - name: npm publish --tag beta を実行
+              if: success()
+              run: |
+                  LATEST_BETA=$(npm info akhsync dist-tags.beta 2>/dev/null || echo "")
+
+                  if [[ "$LATEST_BETA" == "${TAG_NAME#v}" ]]; then
+                      echo "🚀 Beta バージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
+                  else
+                      echo "🚀 beta タグのために npm publish --tag beta を実行します。"
+                      npm publish --tag beta --access public
+                  fi
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: パッケージを非推奨に設定
+              if: failure()
+              run: |
+                  echo "❌ パブリッシュに失敗しました。パッケージを非推奨に設定します。"
+                  npm deprecate akhsync@${TAG_NAME#v} "このバージョンは非推奨です。"
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    error-handling:
+        if: failure()
+        needs: [get-tag, release, publish]
+        env:
+            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: リポジトリをチェックアウト
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.ref }}
+                  token: ${{ secrets.GH_PAT }}
+
+            - name: エラーハンドリング
+              run: |
+                  echo "エラーが発生しました。"
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+                  git push origin --delete ${{ env.TAG_NAME }}
+                  echo "タグを削除しました: ${{ env.TAG_NAME }}"
+
+            - name: Draft リリースを削除
+              run: |
+                  RELEASE_TAGNAME=$(gh release list --repo "${{ github.repository }}" --json tagName,isDraft --jq '.[] | select(.isDraft == true) | .tagName')
+                  if [ -n "$RELEASE_TAGNAME" ]; then
+                    echo "Draft リリースを削除します: $RELEASE_TAGNAME"
+                    RELEASE_ID=$(gh release view "$TAG_NAME" --repo "${{ github.repository }}" --json id --jq '.id')
+                    gh release delete "$RELEASE_ID" --repo "${{ github.repository }}" --yes
+                  else
+                    echo "Draft リリースは存在しません。"
+                  fi
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
