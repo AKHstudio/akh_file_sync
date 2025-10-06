@@ -73,6 +73,13 @@ jobs:
                   ref: ${{ github.ref }}
                   token: ${{ secrets.GH_PAT }}
 
+            - name: package.json のバージョンを一時的に更新
+              run: |
+                  NEW_VERSION=${TAG_NAME#v}
+                  jq --indent 4 ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
+                  echo "📦 package.json のバージョンを一時的に更新: $NEW_VERSION" 
+                  cat package.json
+
             - name: Node.jsのセットアップ
               uses: actions/setup-node@v4
               with:
