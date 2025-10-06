@@ -1,26 +1,31 @@
-import * as env from '@/index.js';
+import path from 'path';
+import { exit } from 'process';
+import { error } from 'console';
 import { rmSync } from 'fs';
 import { cp, mkdir, rm } from 'fs/promises';
+
 import chalk from 'chalk';
-import path from 'path';
 import { glob, globSync } from 'glob';
-import { exit } from 'process';
-import checkDirectoryExists from '@/helpers/checkDirectoryExists.js';
-import { error } from 'console';
 import esbuild from 'esbuild';
 import { Listr } from 'listr2';
+
+import * as env from '@/index.js';
+import checkDirectoryExists from '@/helpers/checkDirectoryExists.js';
+import { tsPathsPlugin } from '@/helpers/esbuild/ts-paths.js';
 
 class BuildCommand {
     protected directories: string[];
     protected dev: boolean;
+    protected debug: boolean;
     protected only: 'behavior' | 'resource' | undefined;
 
     /**
      *  build command class
      */
-    constructor(directories: string[], options: { development: boolean; only: 'behavior' | 'resource' | undefined }) {
+    constructor(directories: string[], options: { development: boolean; debug: boolean; only: 'behavior' | 'resource' | undefined }) {
         this.directories = directories;
         this.dev = options.development;
+        this.debug = options.debug;
         this.only = options.only;
 
         if (this.directories.length === 0) {
@@ -222,7 +227,7 @@ class BuildCommand {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
-            const tsconfigFiles = await glob(`./tsconfig.json`, {
+            const tsconfigFiles = await glob(path.join(process.cwd(), 'tsconfig.json'), {
                 posix: true,
                 nodir: true,
                 ignore: [path.posix.join('node_modules', '**', 'tsconfig.json'), path.posix.join('**', 'behavior_packs', '**', 'tsconfig.json')],
@@ -259,11 +264,11 @@ class BuildCommand {
             await esbuild
                 .build({
                     entryPoints: [...scriptFiles],
-                    bundle: true,
+                    bundle: true, // 通常のインポートはバンドルしない
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
-                    sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
+                    sourceRoot: path.join("src", directory, 'behavior_packs', 'scripts'),
                     platform: "node",
                     target: "node18",
                     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
@@ -277,10 +282,18 @@ class BuildCommand {
                         "@minecraft/server-common",
                         "@minecraft/server-editor",
                         "@minecraft/debug-utilities",
+                    ],
+                    plugins: [
+                        tsPathsPlugin({
+                            tsconfig: tsconfig ? tsconfig : './tsconfig.json',
+                            debug: this.debug,
+                            resolveToRelative: true,
+                            excludes: ['@minecraft/*'],
+                        })
                     ]
                 })
-                .catch(() => {
-                    error('Error building project');
+                .catch((e : unknown) => {
+                    error('Error building project' , e);
                     process.exit(1);
                 });
         });

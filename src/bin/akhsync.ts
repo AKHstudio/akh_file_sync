@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command, Option } from 'commander';
+
 import packageJson from '../../package.json';
 import BuildCommand from '@/commands/build.js';
 import SyncCommand from '@/commands/sync.js';
@@ -29,6 +30,7 @@ program.command("build")
     .argument("[directory...]", "The directory to build")
     .helpOption("-h, --help", "output usage build command information")
     .option("-d,--development", "Build the project in development mode" , false)
+    .option("--debug", "Build the project in debug mode" , false)
     .addOption(new Option("-o, --only <type>", "build only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options) => {
         // console.log(directories , options);
@@ -47,6 +49,7 @@ program.command("sync")
     .argument("[directory...]", "The directory to sync")
     .helpOption("-h, --help", "output usage sync command information")
     .option("-d,--development", "Sync the project in development mode" , false)
+    .option("--debug", "Sync the project in debug mode" , false)
     .option("--no-build", "Do not build the project before syncing")
     .addOption(new Option("-o, --only <type>", "sync only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options ) => {
@@ -78,11 +81,12 @@ program.command("watch")
     .argument("[directory...]", "The directory to watch")
     .helpOption("-h, --help", "output usage watch command information")
     .option("-d,--development", "Watch the project in development mode" , false)
+    .option("--debug", "Watch the project in debug mode" , false)
     // .addOption(new Option("-o, --only <type>", "watch only addon type").choices(["behavior" , "resource"]))
     .action(async (directories : string[] , options) => {
         console.log(directories , options);
 
-        const watch = new WatchCommand(directories , { development: options.development , build: true, only: "behavior" });
+        const watch = new WatchCommand(directories , { development: options.development , debug: options.debug , build: true, only: "behavior" });
         await watch.execute();
     });
 

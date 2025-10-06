@@ -1,6 +1,6 @@
 {
     "name": "@akhstudio/akhsync",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
@@ -59,6 +59,7 @@
         "listr2": "^8.2.5",
         "prismarine-nbt": "^2.7.0",
         "prompts": "^2.4.2",
+        "strip-json-comments": "^5.0.3",
         "typescript": "^5.7.3"
     }
 }

@@ -1,12 +1,14 @@
+import { cpSync, createWriteStream, existsSync, readFileSync } from 'fs';
+import { cp } from 'fs/promises';
+import path from 'path';
+
+import archiver from 'archiver';
+import chalk from 'chalk';
+import { delay, Listr } from 'listr2';
+
 import BuildCommand from '@/commands/build.js';
 import geneleteNbt from '@/helpers/NBT.js';
 import * as env from '@/index.js';
-import chalk from 'chalk';
-import { cpSync, createWriteStream, existsSync, readFileSync } from 'fs';
-import { cp } from 'fs/promises';
-import { delay, Listr } from 'listr2';
-import path from 'path';
-import archiver from 'archiver';
 
 class DistCommand extends BuildCommand {
     private type: 'world' | 'addon';
@@ -15,7 +17,7 @@ class DistCommand extends BuildCommand {
     private setWorldDirectoryName: string;
 
     constructor(directories: string[], options: { setVersion?: string; type: 'world' | 'addon'; setWorldName: string }) {
-        super(directories, { development: false, only: undefined });
+        super(directories, { development: false, debug: false, only: undefined });
 
         this.type = options.type;
         if (options.setVersion) {
