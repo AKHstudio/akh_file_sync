@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sync コマンド - akhsync ドキュメント</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">⚡ akhsync</a>
+            <div class="header-links">
+                <a href="../index.html" class="header-link">ホーム</a>
+                <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <a href="../index.html" class="nav-link">ホーム</a>
+        <a href="../installation.html" class="nav-link">インストール方法</a>
+        <a href="../quickstart.html" class="nav-link">クイックスタートガイド</a>
+        <a href="../index.html#commands" class="nav-link">コマンド一覧</a>
+        <a href="build.html" class="nav-link sub-link">build コマンド</a>
+        <a href="sync.html" class="nav-link sub-link active">sync コマンド</a>
+        <a href="async.html" class="nav-link sub-link">async コマンド</a>
+        <a href="../index.html#watch" class="nav-link sub-link">watch コマンド</a>
+        <a href="../index.html#dist" class="nav-link sub-link">dist コマンド</a>
+        <a href="../index.html#development" class="nav-link">開発用ドキュメント</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>🔄 akhsync sync</h1>
+            <p>アドオンを開発環境に同期するコマンド</p>
+        </div>
+
+        <section class="content-section">
+            <h2>概要</h2>
+            <p>アドオンのソースコードを <code>development_{type}_packs</code> に同期します。</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Process</h2>
+            <p>syncコマンドは以下のプロセスで実行されます：</p>
+            <ol style="list-style: decimal; padding-left: 2rem; color: var(--text-secondary);">
+                <li style="padding: 0.5rem 0;">指定されたアドオンディレクトリをビルドします（<code>--no-build</code> オプションが指定された場合はスキップされます）。</li>
+                <li style="padding: 0.5rem 0;">前回の同期ファイルを <code>development_{type}_packs</code> から削除します。</li>
+                <li style="padding: 0.5rem 0;">ビルド結果を <code>development_{type}_packs</code> にコピーします。</li>
+                <li style="padding: 0.5rem 0;">同期が完了したことを通知します。</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2>Usage</h2>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync [directories...] [options]</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Arguments</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>引数</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>directories...</code></td>
+                            <td>同期対象のアドオンのディレクトリ名を指定します。指定しない場合はすべてのアドオンが同期されます。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Options</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>オプション</th>
+                            <th>説明</th>
+                            <th>デフォルト</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-d, --development</code></td>
+                            <td>開発モードでビルドを行います。ソースマップが生成され、コードの最適化が無効になります。</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>--debug</code></td>
+                            <td>デバッグモードでビルドを行います。詳細なログが出力されます。</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>--no-build</code></td>
+                            <td>ビルドを行わずに同期のみを実行します。</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-o, --only &lt;type&gt;</code></td>
+                            <td>指定したタイプ（behavior または resource）の同期のみ行います。指定しない場合は両方同期されます。</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-h, --help</code></td>
+                            <td>コマンドのヘルプを表示します。</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Examples</h2>
+            
+            <h3>通常同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync</span></code>
+            </div>
+
+            <h3>開発モードで同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync --development</span></code>
+            </div>
+
+            <h3>デバッグモードで同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync --debug</span></code>
+            </div>
+
+            <h3>ビルドをスキップして同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync --no-build</span></code>
+            </div>
+
+            <h3>特定のアドオンを指定して同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync informant test-addon</span></code>
+            </div>
+
+            <h3>特定のタイプのみ同期</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync sync --only behavior</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>よくある使用例</h2>
+            <div class="info-box">
+                <p><strong>💡 開発時のワークフロー</strong><br>
+                開発中は <code>--development</code> オプションを使用することで、Minecraftで即座にテストできます。<code>--no-build</code> オプションは、既にビルド済みのファイルを素早く同期したい場合に便利です。</p>
+            </div>
+        </section>
+
+        <div class="navigation-buttons">
+            <a href="build.html" class="nav-button">
+                <div>
+                    <div class="nav-button-label">← 前へ</div>
+                    <div class="nav-button-title">build コマンド</div>
+                </div>
+            </a>
+            <a href="async.html" class="nav-button next">
+                <div>
+                    <div class="nav-button-label">次へ →</div>
+                    <div class="nav-button-title">async コマンド</div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+    <script src="../index.js"></script>
+</body>
+</html>

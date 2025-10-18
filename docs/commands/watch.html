@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>watch コマンド - akhsync ドキュメント</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">⚡ akhsync</a>
+            <div class="header-links">
+                <a href="../index.html" class="header-link">ホーム</a>
+                <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <a href="../index.html" class="nav-link">ホーム</a>
+        <a href="../installation.html" class="nav-link">インストール方法</a>
+        <a href="../quickstart.html" class="nav-link">クイックスタートガイド</a>
+        <a href="../index.html#commands" class="nav-link">コマンド一覧</a>
+        <a href="build.html" class="nav-link sub-link">build コマンド</a>
+        <a href="sync.html" class="nav-link sub-link">sync コマンド</a>
+        <a href="async.html" class="nav-link sub-link">async コマンド</a>
+        <a href="watch.html" class="nav-link sub-link active">watch コマンド</a>
+        <a href="dist.html" class="nav-link sub-link">dist コマンド</a>
+        <a href="../index.html#development" class="nav-link">開発用ドキュメント</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>👀 akhsync watch</h1>
+            <p>ファイルの変更を監視して自動ビルド・同期</p>
+        </div>
+
+        <section class="content-section">
+            <h2>概要</h2>
+            <p>アドオンのbehaviorディレクトリの変更を監視し、変更があった場合に自動的にビルドと同期を行います。</p>
+
+            <div class="alert alert-warning">
+                <div class="alert-title">⚠️ WARNING</div>
+                <div class="alert-content">
+                    <p>監視中は連続でファイルを変更した場合、意図しない動作を引き起こす可能性があります。監視を停止するには、<code>Ctrl + C</code> を押してください。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Usage</h2>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync watch [directories...] [options]</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Arguments</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>引数</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>directories...</code></td>
+                            <td>監視対象のアドオンのディレクトリ名を指定します。指定しない場合はすべてのアドオンが監視されます。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Options</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>オプション</th>
+                            <th>説明</th>
+                            <th>デフォルト</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-d, --development</code></td>
+                            <td>開発モードでビルドと同期を行います。ソースマップが生成され、コードの最適化が無効になります。</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>--debug</code></td>
+                            <td>デバッグモードでビルドと同期を行います。詳細なログが出力されます。</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-h, --help</code></td>
+                            <td>コマンドのヘルプを表示します。</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Examples</h2>
+            
+            <h3>通常監視</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync watch</span></code>
+            </div>
+
+            <h3>開発モードで監視</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync watch --development</span></code>
+            </div>
+
+            <h3>デバッグモードで監視</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync watch --debug</span></code>
+            </div>
+
+            <h3>特定のアドオンを指定して監視</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync watch informant test-addon</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>よくある使用例</h2>
+            <div class="info-box">
+                <p><strong>💡 開発時の効率化</strong><br>
+                開発中は <code>watch --development</code> を実行しておくことで、ファイルを保存するたびに自動的にMinecraftに反映されます。これにより、手動でビルドや同期を実行する手間が省けます。</p>
+            </div>
+
+            <div class="alert alert-tip">
+                <div class="alert-title">💡 TIP</div>
+                <div class="alert-content">
+                    <p>監視を停止する場合は、ターミナルで <code>Ctrl + C</code（Windows/Linux）または <code>Cmd + C</code>（Mac）を押してください。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="navigation-buttons">
+            <a href="async.html" class="nav-button">
+                <div>
+                    <div class="nav-button-label">← 前へ</div>
+                    <div class="nav-button-title">async コマンド</div>
+                </div>
+            </a>
+            <a href="dist.html" class="nav-button next">
+                <div>
+                    <div class="nav-button-label">次へ →</div>
+                    <div class="nav-button-title">dist コマンド</div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+    <script src="../index.js"></script>
+</body>
+</html>
