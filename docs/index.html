@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>akhsync ドキュメント</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <a href="index.html" class="logo">⚡ akhsync</a>
+                <div class="header-links">
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                    <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <a href="index.html" class="nav-link active">ホーム</a>
+            <a href="installation.html" class="nav-link">インストール方法</a>
+            <a href="quickstart.html" class="nav-link">クイックスタートガイド</a>
+            <a href="#commands" class="nav-link">コマンド一覧</a>
+            <a href="./commands/build.html" class="nav-link sub-link">build コマンド</a>
+            <a href="#sync" class="nav-link sub-link">sync コマンド</a>
+            <a href="#async" class="nav-link sub-link">async コマンド</a>
+            <a href="#watch" class="nav-link sub-link">watch コマンド</a>
+            <a href="#dist" class="nav-link sub-link">dist コマンド</a>
+            <a href="#development" class="nav-link">開発用ドキュメント</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <div class="hero">
+                <h1>🎮 akhsync ドキュメント</h1>
+                <p>Minecraft Bedrock Edition アドオン開発のための強力なCLIライブラリ</p>
+            </div>
+
+            <!-- Welcome Section -->
+            <section class="content-section" id="home">
+                <h2>Welcome to akhsync</h2>
+                <p>akhsync は、AKHStudio によって作成された、Minecraft Bedrock Edition 用のアドオンを開発するためのCLIライブラリです。</p>
+
+                <div class="info-box">
+                    <p>
+                        <strong>🚀 開発プロセスを効率化</strong><br />
+                        ファイルの同期や管理が容易になり、アドオン開発が大幅にスピードアップします。
+                    </p>
+                </div>
+            </section>
+
+            <!-- What is akhsync Section -->
+            <section class="content-section">
+                <h2>What is akhsync?</h2>
+                <p>akhsync は、Minecraft Bedrock Edition のアドオン開発を支援するための強力なCLIライブラリです。このライブラリを使用することで、ファイルの同期や管理が容易になり、開発プロセスが大幅に効率化されます。</p>
+
+                <h3>主な機能</h3>
+                <ul>
+                    <li><span class="badge">TypeScript</span>完全なTypeScriptサポート</li>
+                    <li><span class="badge secondary">Debug</span>Minecraft Bedrock Debuggerとの統合</li>
+                    <li>ファイルの自動同期とビルド</li>
+                    <li>リアルタイムでの変更監視</li>
+                    <li>配布用パッケージの簡単生成</li>
+                </ul>
+            </section>
+
+            <!-- Quick Links Section -->
+            <section class="content-section">
+                <h2>Quick Links</h2>
+                <div class="quick-links">
+                    <a href="installation.html" class="quick-link-card">
+                        <h3>📦 インストール</h3>
+                        <p>akhsyncの導入方法</p>
+                    </a>
+                    <a href="quickstart.html" class="quick-link-card">
+                        <h3>🚀 クイックスタート</h3>
+                        <p>すぐに始めるためのガイド</p>
+                    </a>
+                    <a href="#commands" class="quick-link-card">
+                        <h3>⌨️ コマンド一覧</h3>
+                        <p>利用可能なコマンド</p>
+                    </a>
+                    <a href="#development" class="quick-link-card">
+                        <h3>🛠️ 開発ドキュメント</h3>
+                        <p>詳細な開発情報</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Commands Overview -->
+            <section class="content-section" id="commands">
+                <h2>コマンド一覧</h2>
+                <p>akhsyncは以下のコマンドを提供しています。各コマンドをクリックすると詳細ページに移動します。</p>
+
+                <div class="quick-links">
+                    <a href="./commands/build.html" class="quick-link-card">
+                        <h3>🔨 build</h3>
+                        <p>アドオンをビルドします</p>
+                    </a>
+                    <a href="#sync" class="quick-link-card">
+                        <h3>🔄 sync</h3>
+                        <p>ファイルを同期します</p>
+                    </a>
+                    <a href="#async" class="quick-link-card">
+                        <h3>⚡ async</h3>
+                        <p>非同期処理を実行します</p>
+                    </a>
+                    <a href="#watch" class="quick-link-card">
+                        <h3>👀 watch</h3>
+                        <p>ファイルの変更を監視します</p>
+                    </a>
+                    <a href="#dist" class="quick-link-card">
+                        <h3>📦 dist</h3>
+                        <p>配布用パッケージを作成します</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Links Section -->
+            <section class="content-section" id="development">
+                <h2>リソース & フィードバック</h2>
+                <p>akhsyncの詳細情報やフィードバックは以下のリンクからアクセスできます。</p>
+
+                <div style="margin-top: 1.5rem">
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="link-button" target="_blank"> 📂 GitHub Repository </a>
+                    <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="link-button" target="_blank"> 📦 npm Package </a>
+                    <a href="https://github.com/AKHstudio/akh_file_sync/issues" class="link-button secondary" target="_blank"> 🐛 Issue Report </a>
+                </div>
+
+                <div class="info-box" style="margin-top: 2rem">
+                    <p>
+                        <strong>📢 バグ報告やフィードバック</strong><br />
+                        GitHubリポジトリの<a href="https://github.com/AKHstudio/akh_file_sync/issues" target="_blank" style="color: var(--primary-color); font-weight: 600">Issuesセクション</a>で受け付けています。お気軽にご報告ください。
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+        <script src="index.js"></script>
+    </body>
+</html>

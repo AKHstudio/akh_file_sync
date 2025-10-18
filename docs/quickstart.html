@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>クイックスタートガイド - akhsync ドキュメント</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <a href="index.html" class="logo">⚡ akhsync</a>
+                <div class="header-links">
+                    <a href="index.html" class="header-link">ホーム</a>
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                    <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+                </div>
+            </div>
+        </header>
+
+        <nav class="sidebar" id="sidebar">
+            <a href="index.html" class="nav-link">ホーム</a>
+            <a href="installation.html" class="nav-link">インストール方法</a>
+            <a href="quickstart.html" class="nav-link active">クイックスタートガイド</a>
+            <a href="index.html#commands" class="nav-link">コマンド一覧</a>
+            <a href="commands/build.html" class="nav-link sub-link">build コマンド</a>
+            <a href="index.html#sync" class="nav-link sub-link">sync コマンド</a>
+            <a href="index.html#async" class="nav-link sub-link">async コマンド</a>
+            <a href="index.html#watch" class="nav-link sub-link">watch コマンド</a>
+            <a href="index.html#dist" class="nav-link sub-link">dist コマンド</a>
+            <a href="index.html#development" class="nav-link">開発用ドキュメント</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>🚀 クイックスタートガイド</h1>
+                <p>akhsyncを使ったアドオン開発をすぐに始める</p>
+            </div>
+
+            <section class="content-section">
+                <h2>1. npm の初期化</h2>
+                <p>まず、新しいプロジェクトを初期化します：</p>
+
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm init your_project_name -y</span></code>
+                </div>
+
+                <p>このコマンドで <code>package.json</code> が自動的に作成されます。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>2. ファイル構造の作成</h2>
+                <p>アドオン開発プロジェクトのルートディレクトリ構造は以下のようになります：</p>
+
+                <!--prettier-ignore-->
+                <div class="file-tree">your_project_root
+    |-- src/ <span class="comment">(開発用ソースコード)</span>
+        |-- addon1/
+            |-- behavior_packs/
+            |   |-- scripts/
+            |       |-- main.js
+            |-- resource_packs/
+        |-- addon2/ <span class="comment">(複数のアドオンを開発する場合 - オプション)</span>
+            |-- behavior_packs/
+            |   |-- scripts/
+            |       |-- main.ts
+            |-- resource_packs/
+    |-- world/ <span class="comment">(ビルド用のワールドデータ - オプション)</span>
+    |-- tsconfig.json <span class="comment">(TypeScriptを使用する場合のみ)</span>
+    |-- package.json</div>
+
+                <p>この構造に従ってディレクトリとファイルを作成してください。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>3. 必要なライブラリのインストール</h2>
+                <p>使用したいバージョンに応じて <code>@minecraft</code> ライブラリをインストールします。</p>
+
+                <p>バージョン一覧：</p>
+                <ul style="list-style: disc; padding-left: 2rem">
+                    <li><a href="https://www.npmjs.com/package/@minecraft/server?activeTab=versions" target="_blank">@minecraft/server</a></li>
+                    <li><a href="https://www.npmjs.com/package/@minecraft/server-ui?activeTab=versions" target="_blank">@minecraft/server-ui</a></li>
+                </ul>
+
+                <p>以下は最新の安定版をインストールする例です。</p>
+
+                <h3>akhsync</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm install @akhstudio/akhsync@latest --save-dev</span></code>
+                </div>
+
+                <h3>@minecraft/server</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm install @minecraft/server@latest --save-dev</span></code>
+                </div>
+
+                <h3>@minecraft/server-ui (UI を使用する場合)</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm install @minecraft/server-ui@latest --save-dev</span></code>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>3.1 TypeScript を使用する場合は tsconfig.json を作成 (オプション)</h2>
+
+                <div class="alert alert-important">
+                    <div class="alert-title">⚠️ IMPORTANT</div>
+                    <div class="alert-content">
+                        <p>TypeScript を使用しない場合、このステップは不要です。</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-note">
+                    <div class="alert-title">📌 NOTE</div>
+                    <div class="alert-content">
+                        <p><code>@minecraft/math</code> モジュールを使用する場合は、<code>paths</code> オプションを適宜調整してください。</p>
+                        <p>以下の設定は例です。プロジェクトに合わせて調整してください。</p>
+                    </div>
+                </div>
+
+                <!--prettier-ignore-->
+                <div class="code-block" data-lang="json">
+                <code>{
+    <span class="key">"compilerOptions"</span>: {
+        <span class="key">"target"</span>: <span class="string">"ES2020"</span>,
+        <span class="key">"module"</span>: <span class="string">"esnext"</span>,
+        <span class="key">"moduleResolution"</span>: <span class="string">"bundler"</span>,
+        <span class="key">"baseUrl"</span>: <span class="string">"./"</span>,
+        <span class="key">"paths"</span>: {
+            <span class="string">"@minecraft/math"</span>: [<span class="string">"node_modules/@minecraft/math/dist/minecraft-math.d.ts"</span>]
+        },
+        <span class="key">"resolvePackageJsonImports"</span>: true,
+        <span class="key">"allowJs"</span>: true,
+        <span class="key">"noEmit"</span>: true,
+        <span class="key">"esModuleInterop"</span>: true,
+        <span class="key">"forceConsistentCasingInFileNames"</span>: true,
+        <span class="key">"strict"</span>: true,
+        <span class="key">"skipLibCheck"</span>: true
+    },
+    <span class="key">"include"</span>: [<span class="string">"**/scripts/**/*"</span>],
+    <span class="key">"exclude"</span>: [<span class="string">"node_modules"</span>, <span class="string">"build"</span>, <span class="string">"dist"</span>]
+}</code>
+            </div>
+            </section>
+
+            <section class="content-section">
+                <h2>4. package.json にスクリプトを追加</h2>
+                <p><code>package.json</code> の <code>scripts</code> セクションに以下を追加します：</p>
+
+                <!--prettier-ignore-->
+                <div class="code-block" data-lang="json">
+                <code>{
+    <span class="key">"scripts"</span>: {
+        <span class="key">"build"</span>: <span class="string">"akhsync build"</span>,
+        <span class="key">"sync"</span>: <span class="string">"akhsync sync"</span>,
+        <span class="key">"async"</span>: <span class="string">"akhsync async"</span>,
+        <span class="key">"watch"</span>: <span class="string">"akhsync watch"</span>,
+        <span class="key">"dist"</span>: <span class="string">"akhsync dist"</span>
+    }
+}</code>
+            </div>
+
+                <div class="alert alert-tip">
+                    <div class="alert-title">💡 TIP</div>
+                    <div class="alert-content">
+                        <p>追加のオプションを指定したい場合は、<code>--</code> の後に追加してください。</p>
+                    </div>
+                </div>
+
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm run build -- --development</span></code>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>次のステップ</h2>
+                <p>セットアップが完了しました！次は実際にコマンドを使ってアドオン開発を始めましょう。</p>
+
+                <div class="alert alert-note">
+                    <div class="alert-title">📌 NOTE</div>
+                    <div class="alert-content">
+                        <p>ローカルインストールの場合、<code>npm run</code> を使わずに <code>npx akhsync</code> コマンドで直接実行することもできます。</p>
+                        <p>例: <code>npx akhsync build</code> または <code>npx akhsync watch</code></p>
+                    </div>
+                </div>
+
+                <div class="quick-links">
+                    <a href="index.html#commands" class="quick-link-card">
+                        <h3>⌨️ コマンド一覧</h3>
+                        <p>利用可能なコマンドを確認</p>
+                    </a>
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="quick-link-card" target="_blank">
+                        <h3>📖 サンプル</h3>
+                        <p>GitHubでサンプルコードを見る</p>
+                    </a>
+                </div>
+            </section>
+
+            <div class="navigation-buttons">
+                <a href="installation.html" class="nav-button">
+                    <div>
+                        <div class="nav-button-label">← 前へ</div>
+                        <div class="nav-button-title">インストール</div>
+                    </div>
+                </a>
+                <a href="index.html#commands" class="nav-button next">
+                    <div>
+                        <div class="nav-button-label">次へ →</div>
+                        <div class="nav-button-title">コマンド一覧</div>
+                    </div>
+                </a>
+            </div>
+        </main>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+        <script src="index.js"></script>
+    </body>
+</html>
