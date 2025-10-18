@@ -12,7 +12,7 @@ A library created by AKHStudio for developing add-ons for Minecraft Bedrock Edit
 
 Detailed command documentation is available on the GitHub Wiki.
 
-[View Documentation](https://github.com/AKHstudio/akh_file_sync/wiki)
+[View Documentation](https://akhstudio.github.io/akh_file_sync/)
 
 ## Installation
 
