@@ -141,15 +141,11 @@ jobs:
               run: |
                   if [ ! -f CHANGELOG.md ]; then
                       echo "CHANGELOG.md が見つかりません。新しいファイルを作成します。"
-                      cat > CHANGELOG.md << 'EOF'
-                        ${{ env.RELEASE_NOTES }}
-                        EOF
+                      echo "${{ env.RELEASE_NOTES }}" >> CHANGELOG.md
                   else
                       echo "CHANGELOG.md が見つかりました。内容を更新します。"
                       echo "" >> CHANGELOG.md
-                      cat >> CHANGELOG.md << 'EOF'
-                        ${{ env.RELEASE_NOTES }}
-                        EOF
+                      echo "${{ env.RELEASE_NOTES }}" >> CHANGELOG.md
                   fi
 
             - name: 変更をコミット & プッシュ
@@ -191,7 +187,7 @@ jobs:
                   TAG_NAME: ${{ env.TAG_NAME }}
 
     publish:
-        needs: [release, get-tag, update-version]
+        needs: [release, get-tag, update-version, create-changelog]
         env:
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         runs-on: ubuntu-latest
