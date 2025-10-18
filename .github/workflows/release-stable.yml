@@ -81,10 +81,11 @@ jobs:
                   fi
 
     release:
-        needs: get-tag
+        needs: [create-branch, get-tag]
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         outputs:
             RELEASE_NOTES: ${{ steps.get-release-notes.outputs.RELEASE_NOTES }}
@@ -187,8 +188,9 @@ jobs:
                   TAG_NAME: ${{ env.TAG_NAME }}
 
     publish:
-        needs: [release, get-tag, update-version, create-changelog]
+        needs: [release, get-tag, update-version, create-changelog, create-branch]
         env:
+            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
             TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
         runs-on: ubuntu-latest
         steps:
