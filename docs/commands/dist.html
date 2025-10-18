@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dist コマンド - akhsync ドキュメント</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">⚡ akhsync</a>
+            <div class="header-links">
+                <a href="../index.html" class="header-link">ホーム</a>
+                <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <a href="../index.html" class="nav-link">ホーム</a>
+        <a href="../installation.html" class="nav-link">インストール方法</a>
+        <a href="../quickstart.html" class="nav-link">クイックスタートガイド</a>
+        <a href="../index.html#commands" class="nav-link">コマンド一覧</a>
+        <a href="build.html" class="nav-link sub-link">build コマンド</a>
+        <a href="sync.html" class="nav-link sub-link">sync コマンド</a>
+        <a href="async.html" class="nav-link sub-link">async コマンド</a>
+        <a href="watch.html" class="nav-link sub-link">watch コマンド</a>
+        <a href="dist.html" class="nav-link sub-link active">dist コマンド</a>
+        <a href="../index.html#development" class="nav-link">開発用ドキュメント</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>📦 akhsync dist</h1>
+            <p>配布用パッケージを作成するコマンド</p>
+        </div>
+
+        <section class="content-section">
+            <h2>概要</h2>
+            <p>アドオンの配布用パッケージを作成します。ワールドデータと一緒に配布する形式と、アドオン単体で配布する形式の両方に対応しています。</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Usage</h2>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist [directories...] [options]</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Arguments</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>引数</th>
+                            <th>説明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>directories...</code></td>
+                            <td>配布用にビルド対象のアドオンのディレクトリ名を指定します。指定しない場合はすべてのアドオンが対象となります。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Options</h2>
+            <div style="overflow-x: auto; margin: 1.5rem 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>オプション</th>
+                            <th>説明</th>
+                            <th>デフォルト</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-t, --type &lt;type&gt;</code></td>
+                            <td>指定したタイプ（<code>world</code> または <code>addon</code>）の配布用ビルドのみ行います。指定しない場合は両方ビルドされます。</td>
+                            <td><code>addon</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>--set-version &lt;version&gt;</code></td>
+                            <td>配布用ビルドに使用するバージョンを指定します。指定しない場合は<code>package.json</code>のバージョンが使用されます。</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>--set-world-name &lt;name&gt;</code></td>
+                            <td>配布用ビルドに使用するワールド名を指定します。<code>{name}</code>はアドオン名、<code>{version}</code>はバージョンに置き換えられます。</td>
+                            <td><code>"{name} {version}"</code></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;"><code>-h, --help</code></td>
+                            <td>コマンドのヘルプを表示します。</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-title">⚠️ WARNING</div>
+                <div class="alert-content">
+                    <p>この<code>type</code>オプションは<code>akhsync build</code>や<code>akhsync sync</code>の<code>--only</code>オプションとは異なり、<code>world</code>と<code>addon</code>の2種類の配布用ビルドを指します。</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-title">⚠️ WARNING</div>
+                <div class="alert-content">
+                    <p>スペースを含むワールド名を指定する場合、コマンドラインでの解釈を避けるために引用符で囲む必要があります。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Examples</h2>
+            
+            <h3>通常配布用ビルド</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist</span></code>
+            </div>
+
+            <h3>特定のアドオンを指定して配布用ビルド</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist informant test-addon</span></code>
+            </div>
+
+            <h3>特定のタイプのみ配布用ビルド</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist --type world</span></code>
+            </div>
+
+            <h3>特定のバージョンを指定して配布用ビルド</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist --set-version 1.2.3</span></code>
+            </div>
+
+            <h3>特定のワールド名を指定して配布用ビルド</h3>
+            <div class="code-block" data-lang="bash">
+                <code><span class="command">npx akhsync dist --set-world-name "My Addon World v{version}"</span></code>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>よくある使用例</h2>
+            <div class="info-box">
+                <p><strong>💡 配布形式の選択</strong><br>
+                <code>--type addon</code>を使用すると、アドオン単体のパッケージが作成されます。<code>--type world</code>を使用すると、ワールドデータを含むパッケージが作成されます。用途に応じて使い分けてください。</p>
+            </div>
+
+            <div class="alert alert-tip">
+                <div class="alert-title">💡 TIP</div>
+                <div class="alert-content">
+                    <p>配布前には必ずバージョン番号を確認し、<code>--set-version</code>オプションで明示的に指定することをお勧めします。これにより、ユーザーがどのバージョンを使用しているか明確になります。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="navigation-buttons">
+            <a href="watch.html" class="nav-button">
+                <div>
+                    <div class="nav-button-label">← 前へ</div>
+                    <div class="nav-button-title">watch コマンド</div>
+                </div>
+            </a>
+            <a href="../index.html#development" class="nav-button next">
+                <div>
+                    <div class="nav-button-label">次へ →</div>
+                    <div class="nav-button-title">開発用ドキュメント</div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+    <script src="../index.js"></script>
+</body>
+</html>
