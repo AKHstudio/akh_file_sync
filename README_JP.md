@@ -10,7 +10,7 @@ AKHStudio が作成した minecraft の統合版のアドオンを開発する�
 
 コマンドの正確なドキュメントはGitHub Wikiにあります。
 
-[ドキュメントはこちら](https://github.com/AKHstudio/akh_file_sync/wiki)
+[ドキュメントはこちら](https://akhstudio.github.io/akh_file_sync/)
 
 ## インストール
 
@@ -144,3 +144,4 @@ npm install @minecraft/server-ui@latest --save-dev
 > ```sh
 > npm run build -- --development
 > ```
+
