@@ -7,7 +7,7 @@ import styles from './layout.module.css';
 export const metadata: Metadata = {
     title: 'akhsync ドキュメント',
     description: 'Minecraft Bedrock Edition アドオン開発のための強力なCLIライブラリ',
-    icons: '/favicon.svg',
+    icons: '/akh_file_sync/favicon.svg',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
