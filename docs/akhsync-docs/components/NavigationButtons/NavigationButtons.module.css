@@ -1,0 +1,49 @@
+.navigationButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.navButton {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-color);
+  border: 2px solid var(--border-color);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+}
+
+.navButton:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+}
+
+.navButtonLabel {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.navButtonTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.navButton.next {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .navigationButtons {
+    flex-direction: column;
+  }
+}

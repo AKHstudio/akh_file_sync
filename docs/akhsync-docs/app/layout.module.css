@@ -1,0 +1,13 @@
+.mainContent {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: 3rem;
+  max-width: 1100px;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+    padding: 2rem 1.5rem;
+  }
+}
