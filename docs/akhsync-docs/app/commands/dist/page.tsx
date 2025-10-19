@@ -109,6 +109,9 @@ export default function DistCommand() {
                         オプションとは異なり、<code>world</code>と<code>addon</code>
                         の2種類の配布用ビルドを指します。
                     </p>
+                    <p>
+                        <code>world</code>ディレクトリが存在しない場合、エラーになります。
+                    </p>
                 </Alert>
 
                 <Alert type='warning' title='⚠️ WARNING'>
