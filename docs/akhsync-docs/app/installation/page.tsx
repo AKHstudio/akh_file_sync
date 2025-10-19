@@ -33,7 +33,7 @@ export default function Installation() {
 
                 <CodeBlock code='<span class="command">npm install -g @akhstudio/akhsync@latest</span>' lang='bash' />
 
-                <Alert type='important' title='⚠️ IMPORTANT'>
+                <Alert type='important' title='❗ IMPORTANT'>
                     <p>グローバルにインストールする場合は、プロジェクトのディレクトリ構造に注意してください。</p>
                 </Alert>
             </ContentSection>

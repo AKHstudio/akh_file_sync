@@ -67,7 +67,7 @@ export default function Quickstart() {
             <ContentSection>
                 <h2>3.1 TypeScript を使用する場合は tsconfig.json を作成 (オプション)</h2>
 
-                <Alert type='important' title='⚠️ 注意'>
+                <Alert type='important' title='❗ IMPORTANT'>
                     <p>TypeScript を使用しない場合、このステップは不要です。</p>
                 </Alert>
 

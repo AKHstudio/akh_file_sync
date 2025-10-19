@@ -103,19 +103,22 @@ export default function DistCommand() {
                     </table>
                 </div>
 
+                <Alert type='important' title='❗ IMPORTANT'>
+                    <p>
+                        <code>--type world</code>を指定した場合、<code>world</code>ディレクトリが存在しない場合、エラーになります。
+                    </p>
+                </Alert>
+
                 <Alert type='warning' title='⚠️ WARNING'>
                     <p>
                         この<code>type</code>オプションは<code>akhsync build</code>や<code>akhsync sync</code>の<code>--only</code>
                         オプションとは異なり、<code>world</code>と<code>addon</code>
                         の2種類の配布用ビルドを指します。
                     </p>
-                    <p>
-                        <code>world</code>ディレクトリが存在しない場合、エラーになります。
-                    </p>
                 </Alert>
 
                 <Alert type='warning' title='⚠️ WARNING'>
-                    <p>スペースを含むワールド名を指定する場合、コマンドラインでの解釈を避けるために引用符で囲む必要があります。</p>
+                    <p>スペースを含むワールド名を指定する場合、コマンドラインでの解釈を避けるために引用符("")で囲む必要があります。</p>
                 </Alert>
             </ContentSection>
 
