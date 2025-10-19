@@ -25,6 +25,7 @@ eslint*
 esbuild*
 *.log
 TODO.md
+docs/
 
 # TypeScript（コンパイル後の.jsだけを公開する場合）
 *.ts
