@@ -8,7 +8,7 @@
 
 AKHStudio が作成した minecraft の統合版のアドオンを開発するためのライブラリです。
 
-コマンドの正確なドキュメントはGitHub Wikiにあります。
+コマンドの正確なドキュメントはGitHub Pagesにあります。
 
 [ドキュメントはこちら](https://akhstudio.github.io/akh_file_sync/)
 
@@ -144,4 +144,3 @@ npm install @minecraft/server-ui@latest --save-dev
 > ```sh
 > npm run build -- --development
 > ```
-

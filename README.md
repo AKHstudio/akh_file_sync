@@ -10,7 +10,7 @@
 
 A library created by AKHStudio for developing add-ons for Minecraft Bedrock Edition.
 
-Detailed command documentation is available on the GitHub Wiki.
+Detailed command documentation is available on the GitHub Pages.
 
 [View Documentation](https://akhstudio.github.io/akh_file_sync/)
 
