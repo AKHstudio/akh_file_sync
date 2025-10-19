@@ -35,6 +35,14 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
 
+            - name: cache .next
+              uses: actions/cache@v3
+              with:
+                  path: docs/akhsync-docs/.next
+                  key: ${{ runner.os }}-nextjs-${{ hashFiles('docs/akhsync-docs/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nextjs-
+
             - name: Install dependencies and build
               working-directory: docs/akhsync-docs
               run: |
