@@ -1,4 +1,4 @@
-import { cpSync, createWriteStream, existsSync, readFileSync } from 'fs';
+import { createWriteStream, existsSync, mkdirSync, readFileSync, rmSync } from 'fs';
 import { cp } from 'fs/promises';
 import path from 'path';
 
@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import { delay, Listr } from 'listr2';
 
 import BuildCommand from '@/commands/build.js';
-import geneleteNbt from '@/helpers/NBT.js';
+import generateNbt from '@/helpers/NBT.js';
 import * as env from '@/index.js';
 
 class DistCommand extends BuildCommand {
@@ -23,17 +23,17 @@ class DistCommand extends BuildCommand {
         if (options.setVersion) {
             this.setVersion = options.setVersion;
         } else {
-            this.setVersion = this.getpackageJsonVersion();
+            this.setVersion = this.getPackageJsonVersion();
         }
         this.setWorldName = options.setWorldName;
-        this.setWorldDirectoryName = this.getPackageJsonName();
+        this.setWorldDirectoryName = `${this.getPackageJsonName()}-world-${this.setVersion}`;
 
         console.debug('🛠️ ', 'type:', this.type);
         console.debug('🛠️ ', 'setVersion:', this.setVersion);
         console.debug('🛠️ ', 'setWorldName:', this.setWorldName);
     }
 
-    private getpackageJsonVersion(): string {
+    private getPackageJsonVersion(): string {
         try {
             const pk = readFileSync('package.json', 'utf-8');
 
@@ -57,6 +57,22 @@ class DistCommand extends BuildCommand {
         }
     }
 
+    private checkWorldDirectory(): boolean {
+        let isWorldValid = true;
+
+        const expectedFilesAndDirs = ['level.dat', 'db', 'behavior_packs', 'resource_packs'];
+
+        for (const item of expectedFilesAndDirs) {
+            const itemPath = path.join(env.worldDir, item);
+            if (!existsSync(itemPath)) {
+                console.error(`❌ [${chalk.red('check world directory')}]`, chalk.red(`world directory is missing required item: ${item}`));
+                isWorldValid = false;
+            }
+        }
+
+        return isWorldValid;
+    }
+
     public override async execute() {
         await super.execute();
 
@@ -67,12 +83,12 @@ class DistCommand extends BuildCommand {
                     task: async () => delay(1000),
                 },
                 {
-                    title: 'Copy to dist',
-                    task: () => this.copyToDist(),
+                    title: 'Clear old dist',
+                    task: () => this.clearOldDist(),
                 },
                 {
-                    title: 'dist delay',
-                    task: async () => delay(1000),
+                    title: 'Copy to dist',
+                    task: async () => await this.copyToDist(),
                 },
             ],
             { concurrent: false },
@@ -83,25 +99,27 @@ class DistCommand extends BuildCommand {
         if (this.type.includes('world')) {
             if (!existsSync(env.worldDir)) {
                 throw new Error(`world directory not found: ${env.worldDir}`);
+            } else if (!this.checkWorldDirectory()) {
+                throw new Error(`world directory is invalid: ${env.worldDir}`);
             }
 
             const task = new Listr(
                 [
                     {
                         title: 'Copy world to dist',
-                        task: () => this.copyWorld(),
+                        task: async () => await this.copyWorld(),
                     },
                     {
                         title: 'generate level.dat',
-                        task: () => this.generateLevelDat(),
+                        task: async () => await this.generateLevelDat(),
                     },
                     {
                         title: 'Copy world Packs',
-                        task: () => this.copyPacks(),
+                        task: async () => await this.copyPacks(),
                     },
                     {
                         title: 'Zip world',
-                        task: () => this.zip(path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`), path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}` + '.mcworld')),
+                        task: () => this.zip(path.join(env.distDir, this.setWorldDirectoryName), path.join(env.distDir, this.setWorldDirectoryName + '.mcworld')),
                     },
                 ],
                 { concurrent: false },
@@ -114,7 +132,7 @@ class DistCommand extends BuildCommand {
             const task = new Listr([
                 {
                     title: 'Create mcAddon',
-                    task: () => this.createmcAddon(),
+                    task: () => this.createMcAddon(),
                 },
             ]);
 
@@ -122,7 +140,7 @@ class DistCommand extends BuildCommand {
         }
     }
 
-    protected createmcAddon() {
+    protected createMcAddon() {
         this.directories.forEach(async (directory) => {
             const addonDirName = `${directory}-${this.setVersion}`;
             const dist = path.join(env.distDir, addonDirName);
@@ -135,7 +153,7 @@ class DistCommand extends BuildCommand {
     }
 
     protected async generateLevelDat() {
-        const world = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`);
+        const world = path.join(env.distDir, this.setWorldDirectoryName);
         const dat = path.join(world, 'level.dat');
         const worldName = this.setWorldName.replace('{name}', path.basename(process.cwd())).replace('{version}', this.setVersion);
 
@@ -146,26 +164,34 @@ class DistCommand extends BuildCommand {
             throw new Error(`level.dat not found: ${dat}`);
         }
 
-        await geneleteNbt(dat, worldName);
+        await generateNbt(dat, worldName);
     }
 
-    protected copyToDist(): void {
-        this.directories.forEach(async (directory) => {
-            const build = path.join(env.buildDir, directory);
-            const dist = path.join(env.distDir, directory + '-' + this.setVersion);
+    protected clearOldDist(): void {
+        rmSync(env.distDir, { recursive: true, force: true });
 
-            console.debug('🛠️ ', 'build:', build);
-            console.debug('🛠️ ', 'dist:', dist);
+        mkdirSync(env.distDir, { recursive: true });
+    }
 
-            await cp(build, dist, { recursive: true, force: true }).catch((error) => {
-                console.error(`❌ [${chalk.red('Copy to dist')}]`, chalk.red(`エラーが発生しました:`), error);
-            });
-        });
+    protected async copyToDist(): Promise<void> {
+        await Promise.all(
+            this.directories.map(async (directory) => {
+                const build = path.join(env.buildDir, directory);
+                const dist = path.join(env.distDir, directory + '-' + this.setVersion);
+
+                console.debug('🛠️ ', 'build:', build);
+                console.debug('🛠️ ', 'dist:', dist);
+
+                await cp(build, dist, { recursive: true, force: true }).catch((error) => {
+                    console.error(`❌ [${chalk.red('Copy to dist')}]`, chalk.red(`エラーが発生しました:`), error);
+                });
+            }),
+        );
     }
 
     protected async copyWorld() {
         const world = path.join(env.worldDir);
-        const dist = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`);
+        const dist = path.join(env.distDir, this.setWorldDirectoryName);
 
         console.debug('🛠️ ', 'world', world);
         console.debug('🛠️ ', 'dist:', dist);
@@ -176,20 +202,31 @@ class DistCommand extends BuildCommand {
     }
 
     protected async copyPacks() {
-        this.directories.forEach(async (directory) => {
-            const behavior_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'behavior_packs');
-            const resource_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'resource_packs');
-            const worldBehavior_pack = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`, 'behavior_packs', directory + '-' + this.setVersion);
-            const worldResource_pack = path.join(env.distDir, `${this.setWorldDirectoryName}-world-${this.setVersion}`, 'resource_packs', directory + '-' + this.setVersion);
+        await Promise.all(
+            this.directories.map(async (directory) => {
+                const behavior_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'behavior_packs');
+                const resource_pack = path.join(env.distDir, directory + '-' + this.setVersion, 'resource_packs');
+                const worldBehavior_pack = path.join(env.distDir, this.setWorldDirectoryName, 'behavior_packs', directory + '-' + this.setVersion);
+                const worldResource_pack = path.join(env.distDir, this.setWorldDirectoryName, 'resource_packs', directory + '-' + this.setVersion);
 
-            if (existsSync(behavior_pack)) {
-                cpSync(behavior_pack, worldBehavior_pack, { recursive: true, force: true });
-            }
+                console.debug('🛠️ ', 'behavior_pack:', behavior_pack);
+                console.debug('🛠️ ', 'resource_pack:', resource_pack);
+                console.debug('🛠️ ', 'worldBehavior_pack:', worldBehavior_pack);
+                console.debug('🛠️ ', 'worldResource_pack:', worldResource_pack);
 
-            if (existsSync(resource_pack)) {
-                cpSync(resource_pack, worldResource_pack, { recursive: true, force: true });
-            }
-        });
+                if (existsSync(behavior_pack)) {
+                    await cp(behavior_pack, worldBehavior_pack, { recursive: true, force: true }).catch((error) => {
+                        console.error(`❌ [${chalk.red('Copy behavior pack')}]`, chalk.red(`エラーが発生しました:`), error);
+                    });
+                }
+
+                if (existsSync(resource_pack)) {
+                    await cp(resource_pack, worldResource_pack, { recursive: true, force: true }).catch((error) => {
+                        console.error(`❌ [${chalk.red('Copy resource pack')}]`, chalk.red(`エラーが発生しました:`), error);
+                    });
+                }
+            }),
+        );
     }
 
     protected async zip(src: string, dest: string): Promise<void> {
