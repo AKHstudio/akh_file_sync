@@ -142,13 +142,13 @@ jobs:
               run: |
                   if [ ! -f CHANGELOG.md ]; then
                       echo "CHANGELOG.md が見つかりません。新しいファイルを作成します。"
-                      cat <<EOF >> CHANGELOG.md
+                      cat <<-EOF >> CHANGELOG.md
                       ${{ env.RELEASE_NOTES }}
                       EOF
                   else
                       echo "CHANGELOG.md が見つかりました。内容を更新します。"
                       echo "" >> CHANGELOG.md
-                      cat <<EOF >> CHANGELOG.md
+                      cat <<-EOF >> CHANGELOG.md
                       ${{ env.RELEASE_NOTES }}
                       EOF         
                   fi
