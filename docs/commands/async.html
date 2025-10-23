@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>async コマンド - akhsync ドキュメント</title>
+        <link rel="stylesheet" href="../style.css" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <a href="../index.html" class="logo">⚡ akhsync</a>
+                <div class="header-links">
+                    <a href="../index.html" class="header-link">ホーム</a>
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                    <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+                </div>
+            </div>
+        </header>
+
+        <nav class="sidebar" id="sidebar">
+            <a href="../index.html" class="nav-link">ホーム</a>
+            <a href="../installation.html" class="nav-link">インストール方法</a>
+            <a href="../quickstart.html" class="nav-link">クイックスタートガイド</a>
+            <a href="../index.html#commands" class="nav-link">コマンド一覧</a>
+            <a href="build.html" class="nav-link sub-link">build コマンド</a>
+            <a href="sync.html" class="nav-link sub-link">sync コマンド</a>
+            <a href="async.html" class="nav-link sub-link active">async コマンド</a>
+            <a href="../index.html#watch" class="nav-link sub-link">watch コマンド</a>
+            <a href="../index.html#dist" class="nav-link sub-link">dist コマンド</a>
+            <a href="../index.html#development" class="nav-link">開発用ドキュメント</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>⚡ akhsync async</h1>
+                <p>同期したアドオンをクリアするコマンド</p>
+            </div>
+
+            <section class="content-section">
+                <h2>概要</h2>
+                <p><code>development_{type}_packs</code> に同期したアドオンをクリアします。</p>
+                <p>ここでのクリアとは、<code>development_{type}_packs</code> フォルダ内のアドオンファイルを削除することを指します。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>Usage</h2>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npx akhsync async [directories...] [options]</span></code>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Arguments</h2>
+                <div style="overflow-x: auto; margin: 1.5rem 0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>引数</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600"><code>directories...</code></td>
+                                <td>クリア対象のアドオンのディレクトリ名を指定します。指定しない場合はすべてのアドオンがクリアされます。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Options</h2>
+                <div style="overflow-x: auto; margin: 1.5rem 0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>オプション</th>
+                                <th>説明</th>
+                                <th>デフォルト</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600"><code>-o, --only &lt;type&gt;</code></td>
+                                <td>指定したタイプ（behavior または resource）のクリアのみ行います。指定しない場合は両方クリアされます。</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600"><code>-h, --help</code></td>
+                                <td>コマンドのヘルプを表示します。</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Examples</h2>
+
+                <h3>通常クリア</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npx akhsync async</span></code>
+                </div>
+
+                <h3>特定のアドオンを指定してクリア</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npx akhsync async informant test-addon</span></code>
+                </div>
+
+                <h3>特定のタイプのみクリア</h3>
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npx akhsync async --only behavior</span></code>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>よくある使用例</h2>
+                <div class="info-box">
+                    <p>
+                        <strong>💡 使用シーン</strong><br />
+                        開発環境をクリーンな状態に戻したい場合や、特定のアドオンの同期を解除したい場合に使用します。Minecraftの開発環境から不要なアドオンファイルを削除できます。
+                    </p>
+                </div>
+
+                <div class="alert alert-warning">
+                    <div class="alert-title">⚠️ 注意</div>
+                    <div class="alert-content">
+                        <p>このコマンドは <code>development_{type}_packs</code> からファイルを削除します。元のソースコードには影響しませんが、実行前に確認することをお勧めします。</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="navigation-buttons">
+                <a href="sync.html" class="nav-button">
+                    <div>
+                        <div class="nav-button-label">← 前へ</div>
+                        <div class="nav-button-title">sync コマンド</div>
+                    </div>
+                </a>
+                <a href="watch.html" class="nav-button next">
+                    <div>
+                        <div class="nav-button-label">次へ →</div>
+                        <div class="nav-button-title">watch コマンド</div>
+                    </div>
+                </a>
+            </div>
+        </main>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+        <script src="../index.js"></script>
+    </body>
+</html>

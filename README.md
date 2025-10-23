@@ -1,115 +1,148 @@
 # akhsync
 
 [![GitHub license](https://img.shields.io/github/license/AKHstudio/akh_file_sync.svg)](https://github.com/AKHstudio/akh_file_sync/blob/main/LICENSE)
+[![npm version](https://img.shields.io/npm/v/@akhstudio/akhsync.svg)](https://www.npmjs.com/package/@akhstudio/akhsync/v/latest)
+[![npm downloads](https://img.shields.io/npm/dt/@akhstudio/akhsync.svg)](https://www.npmjs.com/package/@akhstudio/akhsync)
 
-AKHStudio が作成した mainecraft の統合版のアドオンを開発するためのライブラリです。
+[日本語のREADMEはこちら](./README_JP.md)
 
-## 使い方
+## What is akhsync?
 
-### 目次
+A library created by AKHStudio for developing add-ons for Minecraft Bedrock Edition.
 
-- [akhsync](#akhsync)
-    - [使い方](#使い方)
-        - [目次](#目次)
-        - [インストール](#インストール)
-    - [コマンド](#コマンド)
-        - [build](#build)
-            - [オプション](#オプション)
-            - [例](#例)
-        - [sync](#sync)
-            - [オプション](#オプション-1)
-            - [例](#例-1)
-        - [async](#async)
-            - [例](#例-2)
-        - [watch](#watch)
-            - [オプション](#オプション-2)
-            - [例](#例-3)
-        - [dist](#dist)
-            - [オプション](#オプション-3)
-            - [例](#例-4)
+Detailed command documentation is available on the GitHub Pages.
 
-### インストール
+[View Documentation](https://akhstudio.github.io/akh_file_sync/)
+
+## Installation
+
+If your project is already initialized, you can install `akhsync` with the following command:
 
 ```sh
-npm install akhsync@latest --save-dev
+npm install @akhstudio/akhsync@latest --save-dev
 ```
 
-## コマンド
+> [!NOTE]
+>
+> Using the `-g` option will install it globally, allowing you to use the `akhsync` command directly.
 
-### build
-
-- `src`ディレクトリ内のファイルを`build`ディレクトリにコピーします。
-- `behavior_packs`ディレクトリ内の`scripts`ディレクトリ内のファイル(`*.js, *.ts`)を`esbuild`でビルドして`build`ディレクトリにコピーします。
-
-#### オプション
-
-- -d , --development 開発用ビルド (圧縮なし)
-- -o , --only behavior, resource のどれかを指定して、それだけビルドする
-
-#### 例
+> [!IMPORTANT]
+> When installing globally, be mindful of your project's directory structure.
 
 ```sh
-npx akhsync build --development
+npm install -g @akhstudio/akhsync@latest
 ```
 
-### sync
+## Getting Started
 
-- 開発しているアドオンプロジェクトをビルドして、`development_*_packs` に同期する
-
-#### オプション
-
-- --no-build : ビルドをスキップする
-    - ビルドしたものが存在しない場合はエラー
-- `build` コマンドのオプション
-
-#### 例
+### 1. Initialize npm
 
 ```sh
-npx akhsync sync --no-build
+npm init your_project_name -y
 ```
 
-### async
+### 2. Create File Structure
 
-- 同期を解除する (`development_*_packs` から削除する) - `sync` コマンドで同期されたものを元に戻す
+The root directory structure of your add-on development project should look like this:
 
-#### 例
+```
+your_project_root
+    |-- src/ (Development source code)
+        |-- addon1/
+            |-- behavior_packs/
+            |   |-- scripts/
+            |       |-- main.js
+            |-- resource_packs/
+        |-- addon2/ (For developing multiple add-ons - optional)
+            |-- behavior_packs/
+            |   |-- scripts/
+            |       |-- main.ts
+            |-- resource_packs/
+    |-- world/ (World data for builds - optional)
+    |-- tsconfig.json (Only if using TypeScript)
+    |-- package.json
+```
+
+### 3. Install Required Libraries
+
+Install the `@minecraft` libraries according to the version you want to use.
+
+[Version List - @minecraft/server](https://www.npmjs.com/package/@minecraft/server?activeTab=versions)
+
+[Version List - @minecraft/server-ui](https://www.npmjs.com/package/@minecraft/server-ui?activeTab=versions)
+
+Below is an example of installing the latest stable version.
+
+#### akhsync
 
 ```sh
-npx akhsync async
+npm install @akhstudio/akhsync@latest --save-dev
 ```
 
-### watch
-
-- `src`内の変更を監視し、`build`, `sync`を実行します。
-
-#### オプション
-
-- -d , --development : 開発用ビルド (圧縮なし)
-
-#### 例
+#### @minecraft/server
 
 ```sh
-npm run watch -d
+npm install @minecraft/server@latest --save-dev
 ```
 
-### dist
-
-- リリース用ビルドを行う
-    - ビルドの結果は `./dist` ディレクトリに出力される
-    - バージョンは `package.json` or オプションから取得する
-    - 名前は `ディレクトリ名-バージョン` とする
-
-#### オプション
-
-- -t , --type : world , addon から複数選択可能
-- --set-version : バージョンを指定する
-- --set-world-name : ワールド名を指定する
-    - {name} でディレクトリ名を指定できる
-    - {version} でバージョンを指定できる
-    - 例: "test-{version}" で `test-1.0.0` となる
-
-#### 例
+#### @minecraft/server-ui (If using UI)
 
 ```sh
-npx akhsync dist -t world --set-version 1.0.0　--set-world-name "{name}-{version}"
+npm install @minecraft/server-ui@latest --save-dev
 ```
+
+### 3.1 Create tsconfig.json if Using TypeScript (Optional)
+
+> [!IMPORTANT]
+>
+> - This step is not necessary if you're not using TypeScript.
+
+> [!NOTE]
+>
+> - If using the `@minecraft/math` module, adjust the `paths` option accordingly.
+> - The configuration below is an example. Adjust it to fit your project.
+
+```json title="tsconfig.json"
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "baseUrl": "./",
+        "paths": {
+            "@minecraft/math": ["node_modules/@minecraft/math/dist/minecraft-math.d.ts"]
+        },
+        "resolvePackageJsonImports": true,
+        "allowJs": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true
+    },
+    "include": ["**/scripts/**/*"],
+    "exclude": ["node_modules", "build", "dist"]
+}
+```
+
+### 4. Add Scripts to package.json
+
+```json title="package.json"
+{
+    "scripts": {
+        "build": "akhsync build",
+        "sync": "akhsync sync",
+        "async": "akhsync async",
+        "watch": "akhsync watch",
+        "dist": "akhsync dist"
+    }
+}
+```
+
+> [!TIP]
+>
+> If you want to specify additional options, add them after `--`.
+>
+> ```sh
+> npm run build -- --development
+> ```

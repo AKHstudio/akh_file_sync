@@ -103,6 +103,16 @@ program.command("dist")
     .action(async (directories : string[] , options) => {
         // console.log(directories , options);
 
+        if (options.setVersion) {
+            const expectVersion = /^\d+\.\d+\.\d+(-.+)?$/
+
+            if (!expectVersion.test(options.setVersion)) {
+                console.error(`❌ [${'dist'}]`, `Invalid version format: ${options.setVersion}`);
+                console.error(`   `, `Expected format: x.y.z(-prerelease)`);
+                process.exit(1);
+            }
+        }
+
         const dist = new DistCommand(directories , { setVersion: options.setVersion , type: options.type , setWorldName: options.setWorldName });
         await dist.execute();
     });

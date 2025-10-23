@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>インストール方法 - akhsync ドキュメント</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <a href="index.html" class="logo">⚡ akhsync</a>
+                <div class="header-links">
+                    <a href="index.html" class="header-link">ホーム</a>
+                    <a href="https://github.com/AKHstudio/akh_file_sync" class="header-link" target="_blank">GitHub</a>
+                    <a href="https://www.npmjs.com/package/@akhstudio/akhsync" class="header-link" target="_blank">npm</a>
+                </div>
+            </div>
+        </header>
+
+        <nav class="sidebar" id="sidebar">
+            <a href="index.html" class="nav-link">ホーム</a>
+            <a href="installation.html" class="nav-link active">インストール方法</a>
+            <a href="quickstart.html" class="nav-link">クイックスタートガイド</a>
+            <a href="index.html#commands" class="nav-link">コマンド一覧</a>
+            <a href="./commands/build.html" class="nav-link sub-link">build コマンド</a>
+            <a href="./commands/sync.html" class="nav-link sub-link">sync コマンド</a>
+            <a href="./commands/async.html" class="nav-link sub-link">async コマンド</a>
+            <a href="./commands/watch.html" class="nav-link sub-link">watch コマンド</a>
+            <a href="./commands/dist.html" class="nav-link sub-link">dist コマンド</a>
+            <a href="index.html#development" class="nav-link">開発用ドキュメント</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>📦 インストール方法</h1>
+                <p>akhsyncをプロジェクトに導入する方法</p>
+            </div>
+
+            <section class="content-section">
+                <h2>プロジェクトへのインストール</h2>
+                <p>プロジェクトが既に初期化されている場合は、以下のコマンドで <code>akhsync</code> をインストールできます：</p>
+
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm install @akhstudio/akhsync@latest --save-dev</span></code>
+                </div>
+
+                <p>このコマンドにより、akhsyncが開発依存関係としてプロジェクトに追加されます。</p>
+            </section>
+
+            <section class="content-section">
+                <h2>グローバルインストール</h2>
+
+                <div class="alert alert-note">
+                    <div class="alert-title">📌 NOTE</div>
+                    <div class="alert-content">
+                        <p><code>-g</code> オプションを使用すると、グローバルにインストールされ、<code>akhsync</code> コマンドを直接使用できるようになります。</p>
+                    </div>
+                </div>
+
+                <div class="code-block" data-lang="bash">
+                    <code><span class="command">npm install -g @akhstudio/akhsync@latest</span></code>
+                </div>
+
+                <div class="alert alert-important">
+                    <div class="alert-title">⚠️ IMPORTANT</div>
+                    <div class="alert-content">
+                        <p>グローバルにインストールする場合は、プロジェクトのディレクトリ構造に注意してください。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>インストール方法の選択</h2>
+                <p>以下の表を参考に、プロジェクトに適したインストール方法を選択してください：</p>
+
+                <div style="overflow-x: auto; margin: 1.5rem 0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>インストール方法</th>
+                                <th>メリット</th>
+                                <th>推奨用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600">ローカル</td>
+                                <td>プロジェクトごとにバージョン管理可能</td>
+                                <td>通常のプロジェクト開発</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600">グローバル</td>
+                                <td>どこからでもコマンド実行可能</td>
+                                <td>複数プロジェクトでの使用</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="navigation-buttons">
+                <a href="index.html" class="nav-button">
+                    <div>
+                        <div class="nav-button-label">← 前へ</div>
+                        <div class="nav-button-title">ホーム</div>
+                    </div>
+                </a>
+                <a href="quickstart.html" class="nav-button next">
+                    <div>
+                        <div class="nav-button-label">次へ →</div>
+                        <div class="nav-button-title">クイックスタート</div>
+                    </div>
+                </a>
+            </div>
+        </main>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="メニュー">☰</button>
+
+        <script src="index.js"></script>
+    </body>
+</html>

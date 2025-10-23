@@ -1,0 +1,32 @@
+{
+    "name": "delete-draft-release",
+    "version": "1.0.0",
+    "description": "Action内でDraft Releaseを自動削除するスクリプト",
+    "keywords": [
+        "github",
+        "actions"
+    ],
+    "homepage": "https://github.com/AKHstudio/akh_file_sync#readme",
+    "bugs": {
+        "url": "https://github.com/AKHstudio/akh_file_sync/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AKHstudio/akh_file_sync.git"
+    },
+    "license": "MIT",
+    "author": "tako1dayo",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "esbuild src/index.ts --bundle --platform=node --target=ESNext --format=esm --packages=external --outfile=dist/index.js",
+        "start": "node dist/index.js"
+    },
+    "devDependencies": {
+        "esbuild": "^0.25.0"
+    },
+    "dependencies": {
+        "@actions/core": "^1.11.1",
+        "@actions/github": "^6.0.0"
+    }
+}

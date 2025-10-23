@@ -1,0 +1,28 @@
+.card {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+}
+
+.title {
+  color: var(--primary-color);
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}

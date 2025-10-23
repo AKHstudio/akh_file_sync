@@ -268,7 +268,11 @@ class BuildCommand {
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
-                    sourceRoot: path.join("src", directory, 'behavior_packs', 'scripts'),
+                    // sourceRoot:  path.relative(
+                    //     path.join(env.buildDir, directory, 'behavior_packs', 'scripts'),
+                    //     path.join(env.srcDir, directory, 'behavior_packs', 'scripts')
+                    //     ).replace(/\\/g, '/'),
+                    sourcesContent: false,
                     platform: "node",
                     target: "node18",
                     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),

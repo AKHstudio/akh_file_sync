@@ -1,4 +1,5 @@
 const { GITHUB_TOKEN, TAG_NAME } = process.env;
+import { summary } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 
 async function run() {
@@ -19,11 +20,19 @@ async function run() {
             base: baseBranch,
             head: headBranch,
         })
-        .then((response) => {
+        .then(async (response) => {
             console.log(`PR created: ${response.data.html_url || 'N/A'}`);
+            await summary
+                .addHeading('✅️ Pull Request Created')
+                .addLink('View PR', response.data.html_url || 'N/A')
+                .write();
         })
-        .catch((error) => {
+        .catch(async (error) => {
             console.error('Failed to create PR:', error);
+            await summary
+                .addHeading('❌️ Failed to create PR')
+                .addCodeBlock(JSON.stringify(error, null, 2), 'json')
+                .write();
             process.exit(1);
         });
 }
