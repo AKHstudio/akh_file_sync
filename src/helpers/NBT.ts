@@ -42,7 +42,7 @@ async function writeNbt(file: string, nbtData: nbt.NBT): Promise<void> {
     fs.writeFileSync(file, fixLevelDat(buffer));
 }
 
-export default async function geneleteNbt(datPath: string, worldName: string): Promise<void> {
+export default async function generateNbt(datPath: string, worldName: string): Promise<void> {
     // read old level.dat
     const oldNbt = await readNbt(datPath);
 
