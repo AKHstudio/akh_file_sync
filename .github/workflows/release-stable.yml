@@ -140,7 +140,6 @@ jobs:
 
             - name: changelog を作成
               run: |
-                  RELEASE_NOTES=${{ env.RELEASE_NOTES }}
                   if [ ! -f CHANGELOG.md ]; then
                       echo "CHANGELOG.md が見つかりません。新しいファイルを作成します。"
                       echo "$RELEASE_NOTES" > CHANGELOG.md
