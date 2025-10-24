@@ -1,0 +1,31 @@
+{
+  "name": "release-notes-generator",
+  "version": "1.0.0",
+  "description": "Generate release notes from PR labels",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && ncc build dist/index.js -o dist --source-map --license licenses.txt",
+    "build:tsc": "tsc",
+    "build:ncc": "ncc build dist/index.js -o dist --source-map --license licenses.txt",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "github-actions",
+    "release-notes",
+    "changelog",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@vercel/ncc": "^0.38.1",
+    "typescript": "^5.3.3"
+  }
+}
