@@ -1,266 +1,184 @@
 name: Release Stable
 
 on:
-    push:
-        tags:
-            - 'v[0-9]+.[0-9]+.[0-9]+' # v1.0.0 形式のみ（beta/rcを含まない）
+    pull_request:
+        types: [closed]
+        branches:
+            - main
 
 jobs:
-    get-tag:
+    release-stable-setup:
+        if: github.event.pull_request.merged == true && github.head_ref == 'release'
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
         outputs:
-            TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
-        steps:
-            - name: タグ名を取得
-              id: tag
-              run: |
-                  TAG_NAME=${GITHUB_REF#refs/tags/}
-                  echo "TAG: ${TAG_NAME}"
-                  echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+            version: ${{ steps.extract-version.outputs.version }}
 
-    create-branch:
-        needs: get-tag
-        runs-on: ubuntu-latest
-        env:
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-        outputs:
-            BRANCH_NAME: ${{ steps.branch.outputs.BRANCH_NAME }}
         steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v5
               with:
-                  ref: ${{ github.ref }}
-                  token: ${{ secrets.GH_PAT }}
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
 
-            - name: release ブランチを作成
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-                  git checkout -b release-${{ env.TAG_NAME }}
-                  git push -u origin release-${{ env.TAG_NAME }}
-
-            - name: ブランチ名を取得
-              id: branch
-              run: |
-                  BRANCH_NAME=release-${{ env.TAG_NAME }}
-                  echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_OUTPUT
-
-    update-version:
-        needs: [get-tag, create-branch]
-        runs-on: ubuntu-latest
-        env:
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-        steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
               with:
-                  ref: ${{ env.BRANCH_NAME }}
-                  token: ${{ secrets.GH_PAT }}
+                  node-version: '20'
 
-            - name: package.json のバージョンを更新
+            - name: Extract version from PR
+              id: extract-version
               run: |
-                  NEW_VERSION=${TAG_NAME#v}
-                  jq --indent 4 ".version = \"$NEW_VERSION\"" package.json > temp.json && mv temp.json package.json
-                  echo "📦 package.json のバージョンを更新: $NEW_VERSION" 
-                  cat package.json
+                  # PRのタイトルまたはブランチ名からバージョンを抽出
+                  PR_TITLE="${{ github.event.pull_request.title }}"
+                  BRANCH_NAME="${{ github.head_ref }}"
 
-            - name: 変更をコミット & プッシュ
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-                  if [ -n "$(git diff package.json)" ]; then
-                   git add package.json
-                   git commit -m "Update package.json" -m "update version to ${TAG_NAME#v}"
-                   git push origin ${{ env.BRANCH_NAME }}
+                  # タイトルからバージョンを抽出 (例: "Release v1.2.3" → "1.2.3")
+                  if [[ "$PR_TITLE" =~ [vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
+                  # ブランチ名からバージョンを抽出 (例: "release/1.2.3" → "1.2.3")
+                  elif [[ "$BRANCH_NAME" =~ release/[vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
                   else
-                   echo "package.json に変更はありません 📝"
-                   echo "コミットをスキップします"
+                    # バージョンが見つからない場合は次のパッチバージョンを使用
+                    LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                    VERSION=$(echo $LATEST_TAG | sed 's/v//' | awk -F. '{print $1"."$2"."$3+1}')
                   fi
 
-    release:
-        needs: [create-branch, get-tag]
-        runs-on: ubuntu-latest
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-        outputs:
-            RELEASE_NOTES: ${{ steps.get-release-notes.outputs.RELEASE_NOTES }}
-        steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ env.BRANCH_NAME }}
-                  token: ${{ secrets.GH_PAT }}
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Detected version: $VERSION"
 
-            - name: リリースノートを取得
-              id: get-release-notes
+            - name: Create Release tag
+              env:
+                  VERSION: ${{ steps.extract-version.outputs.version }}
               run: |
-                  if [ ! -f ./changelog/${TAG_NAME#v}.md ]; then
-                      echo "リリースノートが見つかりません: ./changelog/${TAG_NAME#v}.md"
-                      exit 1
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+                  git tag -a "v$VERSION" -m "v$VERSION"
+                  git push origin "v$VERSION"
+
+            - name: Update package.json version
+              env:
+                  VERSION: ${{ steps.extract-version.outputs.version }}
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+                  npm version $VERSION --no-git-tag-version
+                  git add package.json package-lock.json
+                  git commit -m "Update package.json version to v$VERSION"
+                  # 0.0.0の場合はテスト用のためpushしない
+                  if [ "$VERSION" == "0.0.0" ]; then
+                    echo "Version is 0.0.0, skipping push"
+                  else
+                    git push origin ${{ github.base_ref }}
                   fi
-                  RELEASE_NOTES=$(cat ./changelog/${TAG_NAME#v}.md)
-                  {
-                    echo "RELEASE_NOTES<<EOF"
-                    echo "$RELEASE_NOTES"
-                    echo "EOF"
-                  } >> "$GITHUB_OUTPUT"
 
-                  echo "$RELEASE_NOTES" > RELEASE_NOTES.md
+    release-github-release:
+        needs: release-stable-setup
+        env:
+            VERSION: ${{ needs.release-stable-setup.outputs.version }}
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
-            - name: GitHubリリースを作成
-              if: success()
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
+
+            - name: Create GitHub Release
               uses: softprops/action-gh-release@v2
               with:
-                  tag_name: ${{ env.TAG_NAME }}
-                  name: 'Release ${{ env.TAG_NAME }}'
-                  body_path: RELEASE_NOTES.md
+                  tag_name: v${{ env.VERSION }}
+                  name: 🎉 Release v${{ env.VERSION }}
+                  body_path: ./changelogs/${{ env.VERSION }}.md
                   draft: false
                   prerelease: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    create-changelog:
-        needs: [release, create-branch, get-tag]
-        runs-on: ubuntu-latest
+    release-npm-publish:
+        needs: release-stable-setup
         env:
-            RELEASE_NOTES: ${{ needs.release.outputs.RELEASE_NOTES }}
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-        steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ env.BRANCH_NAME }}
-                  token: ${{ secrets.GH_PAT }}
-
-            - name: changelog を作成
-              run: |
-                  if [ ! -f CHANGELOG.md ]; then
-                      echo "CHANGELOG.md が見つかりません。新しいファイルを作成します。"
-                      echo "$RELEASE_NOTES" > CHANGELOG.md
-                  else
-                      echo "CHANGELOG.md が見つかりました。内容を更新します。"
-                      echo "" >> CHANGELOG.md
-                      echo "$RELEASE_NOTES" >> CHANGELOG.md    
-                  fi
-
-            - name: 変更をコミット & プッシュ
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-                  git add CHANGELOG.md
-                  git commit -m "Update CHANGELOG.md" -m "update changelog for ${TAG_NAME#v}"
-                  git push origin ${{ env.BRANCH_NAME }}
-
-    create-pull-requests:
-        needs: [create-changelog, create-branch, get-tag]
+            VERSION: ${{ needs.release-stable-setup.outputs.version }}
         runs-on: ubuntu-latest
-        env:
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
+        permissions:
+            contents: write
+            packages: write
+
         steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v5
               with:
-                  ref: ${{ env.BRANCH_NAME }}
-                  token: ${{ secrets.GH_PAT }}
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
 
-            - name: Node.jsのセットアップ
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-                  cache: 'npm'
-
-            - name: プルリクエストを作成
-              working-directory: .github/actions/create-pull-requests
-              run: |
-                  npm install
-                  npm run build
-                  npm start
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-                  TAG_NAME: ${{ env.TAG_NAME }}
-
-    publish:
-        needs: [release, get-tag, update-version, create-changelog, create-branch]
-        env:
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-        runs-on: ubuntu-latest
-        steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ env.BRANCH_NAME }}
-                  token: ${{ secrets.GH_PAT }}
-
-            - name: Node.jsのセットアップ
-              uses: actions/setup-node@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
               with:
                   node-version: '20'
                   registry-url: 'https://registry.npmjs.org/'
 
-            - name: 依存関係のインストール
+            - name: Install dependencies
               run: npm ci
 
-            - name: リリースビルド
+            - name: Build package
               run: npm run release
 
-            - name: npm publish を実行
-              if: success()
-              run: |
-                  LATEST_STABLE=$(npm info akhsync dist-tags.latest 2>/dev/null || echo "")
-                  if [[ "$LATEST_STABLE" == "${TAG_NAME#v}" ]]; then
-                      echo "🚀 スタブルバージョン ${TAG_NAME#v} は既に公開済みです！スキップします。"
-                  else
-                      echo "🚀 スタブルバージョンのために npm publish を実行します。"
-                      npm publish --access public
-                  fi
+            - name: Publish test to NPM (dry-run)
+              id: publish-npm-dry-run
+              continue-on-error: true
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: npm publish --access public --dry-run
 
-            - name: パッケージを非推奨に設定
-              if: failure()
-              run: |
-                  echo "❌ パブリッシュに失敗しました。パッケージを非推奨に設定します。"
-                  npm deprecate @akhstudio/akhsync@${TAG_NAME#v} "このバージョンは非推奨です。"
+            - name: Publish to NPM
+              if: steps.publish-npm-dry-run.outcome == 'success'
+              id: publish-npm
+              continue-on-error: true
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  exit 0 
+                  # npm publish --access public
+
+            - name: Error if publish failed
+              if: steps.publish-npm.outcome == 'failure'
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  echo "❌ NPM publish failed"
+                  npm deprecate @akhstudio/akhsync@${{ env.VERSION }} "このバージョンは非推奨です。"
 
     error-handling:
-        if: failure()
-        needs: [get-tag, create-branch, update-version, release, publish]
+        needs: [release-stable-setup, release-github-release, release-npm-publish]
+        if: failure() || ${{ needs.release-stable-setup.outputs.version }} == '0.0.0'
         env:
-            TAG_NAME: ${{ needs.get-tag.outputs.TAG_NAME }}
-            BRANCH_NAME: ${{ needs.create-branch.outputs.BRANCH_NAME }}
+            VERSION: ${{ needs.release-stable-setup.outputs.version }}
         runs-on: ubuntu-latest
+
         steps:
-            - name: リポジトリをチェックアウト
-              uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v5
               with:
-                  ref: ${{ github.ref }}
-                  token: ${{ secrets.GH_PAT }}
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
 
-            - name: エラーハンドリング
+            - name: Handle errors
               run: |
-                  echo "エラーが発生しました。"
                   git config --global user.name "github-actions[bot]"
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-                  git push origin --delete ${{ env.TAG_NAME }}
-                  echo "タグを削除しました: ${{ env.TAG_NAME }}"
+                  git push origin --delete v${{ env.VERSION }}
+                  echo "deleted: v${{ env.VERSION }}"
 
-                  echo "リリースブランチを削除します。"
-                  git push origin --delete ${{ env.BRANCH_NAME }}
-                  echo "リリースブランチを削除しました: ${{ env.BRANCH_NAME }}"
-
-            - name: Draft リリースを削除
+            - name: Delete draft GitHub Release
               working-directory: .github/actions/delete-draft-release
               run: |
                   npm install
@@ -268,4 +186,4 @@ jobs:
                   npm start
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  TAG_NAME: ${{ env.TAG_NAME }}
+                  TAG_NAME: v${{ env.VERSION }}

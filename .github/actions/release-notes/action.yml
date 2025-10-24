@@ -1,0 +1,20 @@
+name: 'Generate Release Notes'
+description: 'Generate release notes from PR labels and update CHANGELOG.md'
+author: 'Auto Release Notes Generator'
+
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+  version:
+    description: 'Version number for the release (e.g., 1.0.0)'
+    required: true
+
+outputs:
+  changelog-path:
+    description: 'Path to the generated changelog file'
+    value: ${{ steps.generate.outputs.changelog-path }}
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

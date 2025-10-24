@@ -1,6 +1,6 @@
 {
     "name": "@akhstudio/akhsync",
-    "version": "1.2.1",
+    "version": "0.0.0",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
@@ -44,7 +44,7 @@
         "@types/fs-extra": "^11.0.4",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
-        "eslint": "^9.21.0",
+        "eslint": "^9.26.0",
         "execa": "^9.6.0",
         "fs-extra": "^11.3.2",
         "globals": "^16.0.0",
