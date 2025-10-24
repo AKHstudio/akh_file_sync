@@ -150,6 +150,8 @@ jobs:
 
             - name: Error if publish failed
               if: steps.publish-npm.outcome == 'failure'
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: |
                   echo "❌ NPM publish failed"
                   npm deprecate @akhstudio/akhsync@${{ env.VERSION }} "このバージョンは非推奨です。"
