@@ -22,17 +22,6 @@ describe('Version Display Test', () => {
             throw new Error('Built binary not found. Please run "npm run build" before testing.');
         }
 
-        const packageJson = {
-            name: 'test-addon',
-            version: '1.0.0',
-            description: 'Test Minecraft addon',
-        };
-
-        await fs.writeJson(path.join(tempDir, 'package.json'), packageJson);
-        await fs.ensureDir(path.join(tempDir, 'src'));
-        await fs.ensureDir(path.join(tempDir, 'behavior_packs'));
-        await fs.ensureDir(path.join(tempDir, 'resource_packs'));
-
         process.chdir(tempDir);
     });
 
@@ -60,11 +49,6 @@ describe('Version Display Test', () => {
             cwd: tempDir,
             stdio: 'pipe',
         });
-
-        console.log('Exit Code:', helpResult.exitCode);
-        console.log('Stdout:', JSON.stringify(helpResult.stdout));
-        console.log('Stderr:', JSON.stringify(helpResult.stderr));
-        console.log('Command:', helpResult.command);
 
         expect(helpResult.exitCode).toBe(0);
         expect(helpResult.stdout).toContain('Usage:');
