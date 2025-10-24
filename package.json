@@ -16,7 +16,7 @@
         "prettier:fix": "prettier --write src/**/*.ts",
         "fmt": "npm run prettier && npm run lint",
         "fmt:fix": "npm run prettier:fix && npm run lint:fix",
-        "test": "npm run fmt && npm run build && vitest",
+        "test": "npm run fmt && npm run build && vitest run --testTimeout=5000",
         "release": "npm run fmt & npm run build -- --pure:console.debug --minify"
     },
     "repository": {
@@ -49,6 +49,7 @@
         "fs-extra": "^11.3.2",
         "globals": "^16.0.0",
         "prettier": "^3.5.3",
+        "tar": "^7.5.1",
         "tempy": "^3.1.0",
         "tsx": "^4.19.3",
         "typescript-eslint": "^8.25.0",
