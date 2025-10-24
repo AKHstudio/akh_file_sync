@@ -70,7 +70,12 @@ jobs:
                   npm version $VERSION --no-git-tag-version
                   git add package.json package-lock.json
                   git commit -m "Update package.json version to v$VERSION"
-                  git push
+                  # 0.0.0の場合はテスト用のためpushしない
+                  if [ "$VERSION" == "0.0.0" ]; then
+                    echo "Version is 0.0.0, skipping push"
+                  else
+                    git push origin ${{ github.base_ref }}
+                  fi
 
     release-github-release:
         needs: release-stable-setup
@@ -126,28 +131,34 @@ jobs:
             - name: Build package
               run: npm run release
 
-            - name: Publish test
+            - name: Publish test to NPM (dry-run)
+              id: publish-npm-dry-run
+              continue-on-error: true
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: npm publish --access public --dry-run
 
             - name: Publish to NPM
+              if: steps.publish-npm-dry-run.outcome == 'success'
               id: publish-npm
+              continue-on-error: true
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: |
+                  exit 0 
                   # npm publish --access public
-                  echo success=true >> $GITHUB_OUTPUT
 
             - name: Error if publish failed
-              if: steps.publish-npm.outputs.success != 'true' && ${{ failure() }}
+              if: steps.publish-npm.outcome == 'failure'
               run: |
                   echo "❌ NPM publish failed"
                   npm deprecate @akhstudio/akhsync@${{ env.VERSION }} "このバージョンは非推奨です。"
 
     error-handling:
         needs: [release-stable-setup, release-github-release, release-npm-publish]
-        if: failure()
+        if: failure() || ${{ needs.release-stable-setup.outputs.version }} == '0.0.0'
         env:
-            VERSION: v${{ needs.release-stable-setup.outputs.version }}
+            VERSION: ${{ needs.release-stable-setup.outputs.version }}
         runs-on: ubuntu-latest
 
         steps:
