@@ -1,13 +1,11 @@
 name: Release Stable
 
 on:
-    pull_request:
-        types: [closed]
+    push:
         branches:
             - main
 jobs:
     release-stable-setup:
-        if: github.event.pull_request.merged == true && github.head_ref == 'release'
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -19,7 +17,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
               with:
-                  ref: ${{ github.head_ref }}
+                  ref: main # mainブランチをチェックアウト
                   fetch-depth: 0
 
             - name: Setup Node.js
@@ -27,18 +25,45 @@ jobs:
               with:
                   node-version: '20'
 
-            - name: Extract version from PR
+            - name: Extract last PR title merged into main
+              id: extract-pr-title
+              uses: actions/github-script@v6
+              with:
+                  result-encoding: string
+                  script: |
+                      const { data: pullRequests } = await github.rest.pulls.list({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        state: 'closed',
+                        base: 'main',
+                        sort: 'updated',
+                        direction: 'desc',
+                        per_page: 1
+                      });
+
+                      if (pullRequests.length === 0) {
+                        core.setFailed('No closed PR found for main branch');
+                        return;
+                      }
+
+                      const lastPR = pullRequests[0];
+
+                      if (!lastPR.merged_at) {
+                        core.setFailed('Last PR was not merged');
+                        return;
+                      }
+
+                      core.info(`Last merged PR title: ${lastPR.title}`);
+
+                      return lastPR.title;
+
+            - name: Extract version from PR title
               id: extract-version
               run: |
-                  # PRのタイトルまたはブランチ名からバージョンを抽出
-                  PR_TITLE="${{ github.event.pull_request.title }}"
-                  BRANCH_NAME="${{ github.head_ref }}"
+                  PR_TITLE="${{ steps.extract-pr-title.outputs.result }}"
 
-                  # タイトルからバージョンを抽出 (例: "Release v1.2.3" → "1.2.3")
+                  # PRタイトルからバージョンを抽出 (例: "Release v1.2.3" → "1.2.3")
                   if [[ "$PR_TITLE" =~ [vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
-                    VERSION="${BASH_REMATCH[1]}"
-                  # ブランチ名からバージョンを抽出 (例: "release/1.2.3" → "1.2.3")
-                  elif [[ "$BRANCH_NAME" =~ release/[vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
                     VERSION="${BASH_REMATCH[1]}"
                   else
                     # バージョンが見つからない場合は次のパッチバージョンを使用
@@ -71,7 +96,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
               with:
-                  ref: ${{ github.head_ref }}
+                  ref: main # mainブランチをチェックアウト
                   fetch-depth: 0
 
             - name: Create GitHub Release
@@ -98,7 +123,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
               with:
-                  ref: ${{ github.base_ref }} # mainブランチをチェックアウト
+                  ref: main # mainブランチをチェックアウト
                   fetch-depth: 0
 
             - name: Setup Node.js
@@ -171,7 +196,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
               with:
-                  ref: ${{ github.head_ref }}
+                  ref: main # mainブランチをチェックアウト
                   fetch-depth: 0
 
             - name: Handle errors
