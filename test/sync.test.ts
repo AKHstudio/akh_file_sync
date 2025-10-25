@@ -108,6 +108,25 @@ describe('Sync Process Test', () => {
         expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
     });
 
+    it('should async the project successfully', async () => {
+        await execa('node', [builtBinaryPath, 'sync'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+        });
+
+        const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+        });
+        console.log(asyncResult.stdout);
+        console.log(asyncResult.stderr);
+
+        expect(asyncResult.exitCode).toBe(0);
+        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
+        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
+    });
+
     it('should sync the project successfully in development mode', async () => {
         const syncResult = await execa('node', [builtBinaryPath, 'sync', '--development'], {
             cwd: debugDirPath,
@@ -145,8 +164,41 @@ describe('Sync Process Test', () => {
         });
     });
 
+    ['behavior', 'resource'].forEach((onlyOption) => {
+        it(`should async the project successfully in only ${onlyOption} `, async () => {
+            await execa('node', [builtBinaryPath, 'sync'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            const asyncResult = await execa('node', [builtBinaryPath, 'async', '--only', onlyOption], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(asyncResult.stdout);
+            console.log(asyncResult.stderr);
+
+            expect(asyncResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            if (onlyOption === 'behavior') {
+                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
+                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
+            } else {
+                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
+                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
+            }
+        });
+    });
+
     it('Error handling Non-existent directory', async () => {
         const SyncResult = await execa('node', [builtBinaryPath, 'sync', 'g5a64g6a4g6'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+            reject: false,
+        });
+
+        const asyncResult = await execa('node', [builtBinaryPath, 'async', 'g5a64g6a4g6'], {
             cwd: debugDirPath,
             stdio: 'pipe',
             reject: false,
@@ -155,7 +207,11 @@ describe('Sync Process Test', () => {
         console.log(SyncResult.stdout);
         console.log(SyncResult.stderr);
 
+        console.log(asyncResult.stdout);
+        console.log(asyncResult.stderr);
+
         expect(SyncResult.exitCode).toBe(1);
+        expect(asyncResult.exitCode).toBe(1);
     });
 
     it('Error handling Add-ons directory does not exist', async () => {
@@ -172,10 +228,20 @@ describe('Sync Process Test', () => {
             reject: false,
         });
 
+        const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+            reject: false,
+        });
+
         console.log(SyncResult.stdout);
         console.log(SyncResult.stderr);
 
+        console.log(asyncResult.stdout);
+        console.log(asyncResult.stderr);
+
         expect(SyncResult.exitCode).toBe(1);
+        expect(asyncResult.exitCode).toBe(1);
 
         fs.copySync(srcBackupDir, srcDir);
         fs.removeSync(srcBackupDir);
