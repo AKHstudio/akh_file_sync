@@ -112,7 +112,16 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-                  npm version ${{ env.VERSION }} --no-git-tag-version
+                  # 現在のpackage.jsonのバージョンを取得
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+                  # バージョンが既に同じ場合はスキップ
+                  if [ "$CURRENT_VERSION" == "${{ env.VERSION }}" ]; then
+                    echo "Version is already ${{ env.VERSION }}, skipping version update"
+                    exit 0
+                  fi
+
+                  npm version ${{ env.VERSION }} --no-git-tag-version 
                   git add package.json package-lock.json
                   git commit -m "Update package.json version to v${{ env.VERSION }}"
                   # 0.0.0の場合はテスト用のためpushしない
