@@ -33,4 +33,4 @@ tsconfig.json
 
 # 圧縮のためチェンジログは除外
 CHANGELOG.md
-changelog/
+changelogs/

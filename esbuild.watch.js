@@ -9,7 +9,8 @@ chokidar
         awaitWriteFinish: true,
     })
     .on('change', (path) => {
-        console.log('File changed:', path);
+        const date = new Date().toLocaleTimeString('ja-JP');
+        console.log(date, 'File changed:', path);
 
         const tsc = exec('tsc -p ./tsconfig.json --noEmit', { cwd: process.cwd() });
         tsc.stdout.pipe(process.stdout);
