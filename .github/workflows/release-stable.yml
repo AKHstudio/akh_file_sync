@@ -144,9 +144,7 @@ jobs:
               continue-on-error: true
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-              run: |
-                  exit 0 
-                  # npm publish --access public
+              run: npm publish --access public
 
             - name: Error if publish failed
               if: steps.publish-npm.outcome == 'failure'
@@ -187,3 +185,4 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: v${{ env.VERSION }}
+
