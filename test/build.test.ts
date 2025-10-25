@@ -63,8 +63,6 @@ describe('Build Process Test', () => {
         if (fs.pathExistsSync(path.join(debugDirPath, 'build'))) {
             await fs.remove(path.join(debugDirPath, 'build'));
         }
-
-        console.log(fs.readdirSync(debugDirPath));
     });
 
     it('should display help information', async () => {
