@@ -82,7 +82,7 @@ jobs:
                   script: |
                       const fs = require('fs');
                       const version = '${{ steps.extract-version.outputs.version }}';
-                      const changelogPath = `changelogs/v${version}.md`;
+                      const changelogPath = `changelogs/${version}.md`;
 
                       let comment = `## 🎉 Release Notes Generated\n\n`;
                       comment += `Release notes for version **${version}** have been generated and committed.\n\n`;
