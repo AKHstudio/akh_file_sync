@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs-extra';
 import { temporaryDirectory } from 'tempy';
@@ -12,7 +12,7 @@ describe('Version Display Test', () => {
     let builtBinaryPath: string;
     let debugDirPath: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         tempDir = temporaryDirectory();
         originalCwd = process.cwd();
 
