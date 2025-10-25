@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { describe, it, expect, afterEach, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs-extra';
 import { temporaryDirectory } from 'tempy';
@@ -54,7 +54,7 @@ describe('Version Display Test', () => {
         process.chdir(tempDir);
     });
 
-    afterEach(async () => {
+    afterAll(async () => {
         process.chdir(originalCwd);
         await fs.remove(tempDir);
     });
