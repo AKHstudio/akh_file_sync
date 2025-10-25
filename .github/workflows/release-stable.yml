@@ -153,7 +153,7 @@ jobs:
 
     error-handling:
         needs: [release-stable-setup, release-github-release, release-npm-publish]
-        if: failure() || ${{ needs.release-stable-setup.outputs.version }} == '0.0.0'
+        if: failure()
         env:
             VERSION: ${{ needs.release-stable-setup.outputs.version }}
         runs-on: ubuntu-latest
