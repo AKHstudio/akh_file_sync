@@ -59,24 +59,6 @@ jobs:
                   git tag -a "v$VERSION" -m "v$VERSION"
                   git push origin "v$VERSION"
 
-            - name: Update package.json version
-              env:
-                  VERSION: ${{ steps.extract-version.outputs.version }}
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
-                  git checkout main
-
-                  npm version $VERSION --no-git-tag-version
-                  git add package.json package-lock.json
-                  git commit -m "Update package.json version to v$VERSION"
-                  # 0.0.0の場合はテスト用のためpushしない
-                  if [ "$VERSION" == "0.0.0" ]; then
-                    echo "Version is 0.0.0, skipping push"
-                  else
-                    git push
-                  fi
-
     release-github-release:
         needs: release-stable-setup
         env:
@@ -116,7 +98,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v5
               with:
-                  ref: ${{ github.head_ref }}
+                  ref: ${{ github.base_ref }} # mainブランチをチェックアウト
                   fetch-depth: 0
 
             - name: Setup Node.js
@@ -124,6 +106,21 @@ jobs:
               with:
                   node-version: '20'
                   registry-url: 'https://registry.npmjs.org/'
+
+            - name: Update package.json version
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+                  npm version ${{ env.VERSION }} --no-git-tag-version
+                  git add package.json package-lock.json
+                  git commit -m "Update package.json version to v${{ env.VERSION }}"
+                  # 0.0.0の場合はテスト用のためpushしない
+                  if [ "${{ env.VERSION }}" == "0.0.0" ]; then
+                    echo "Version is 0.0.0, skipping push"
+                  else
+                    git push
+                  fi
 
             - name: Install dependencies
               run: npm ci
@@ -156,7 +153,7 @@ jobs:
 
     error-handling:
         needs: [release-stable-setup, release-github-release, release-npm-publish]
-        if: failure() || ${{ needs.release-stable-setup.outputs.version }} == '0.0.0'
+        if: failure()
         env:
             VERSION: ${{ needs.release-stable-setup.outputs.version }}
         runs-on: ubuntu-latest
