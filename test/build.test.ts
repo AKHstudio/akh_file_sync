@@ -118,8 +118,8 @@ describe('Build Process Test', () => {
         });
     });
 
-    it('Error handling', async () => {
-        const buildResult = await execa('node', [builtBinaryPath, 'build', 'informant'], {
+    it('Error handling Non-existent directory', async () => {
+        const buildResult = await execa('node', [builtBinaryPath, 'build', 'g5a64g6a4g6'], {
             cwd: debugDirPath,
             stdio: 'pipe',
             reject: false,
@@ -129,5 +129,28 @@ describe('Build Process Test', () => {
         console.log(buildResult.stderr);
 
         expect(buildResult.exitCode).toBe(1);
+    });
+
+    it('Error handling Add-ons directory does not exist', async () => {
+        const srcDir = path.join(debugDirPath, 'src');
+        const srcBackupDir = path.join(debugDirPath, 'src_backup');
+
+        fs.mkdirSync(srcBackupDir);
+        fs.copySync(srcDir, srcBackupDir);
+        fs.removeSync(srcDir);
+
+        const buildResult = await execa('node', [builtBinaryPath, 'build'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+            reject: false,
+        });
+
+        console.log(buildResult.stdout);
+        console.log(buildResult.stderr);
+
+        expect(buildResult.exitCode).toBe(1);
+
+        fs.copySync(srcBackupDir, srcDir);
+        fs.removeSync(srcBackupDir);
     });
 });
