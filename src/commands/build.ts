@@ -1,7 +1,6 @@
 import path from 'path';
 import { exit } from 'process';
-import { error } from 'console';
-import { rmSync } from 'fs';
+import { existsSync, rmSync } from 'fs';
 import { cp, mkdir, rm } from 'fs/promises';
 
 import chalk from 'chalk';
@@ -29,7 +28,17 @@ class BuildCommand {
         this.only = options.only;
 
         if (this.directories.length === 0) {
-            this.directories = this.getAllAddondirectories();
+            this.directories = this.getAllAddonDirectories();
+        } else {
+            for (const dir of this.directories) {
+                const fullPath = path.join(env.srcDir, dir);
+                console.debug('🛠️ ', 'Checking directory: ', fullPath);
+
+                if (!existsSync(fullPath)) {
+                    console.error('❌ ', `指定されたアドオンディレクトリが存在しません: ${fullPath}`);
+                    exit(1);
+                }
+            }
         }
 
         console.debug('🛠️ ', 'directories: ', this.directories);
@@ -94,10 +103,16 @@ class BuildCommand {
             { concurrent: true },
         );
 
-        await clear_copy.run().catch((err) => console.error(err));
+        await clear_copy.run().catch((err: unknown) => {
+            console.error(`❌ `, 'ビルドのクリア・コピー処理に失敗しました', (err as Error).toString());
+            exit(1);
+        });
 
         if (this.only === 'behavior' || this.only === undefined) {
-            await compile_scripts.run().catch((err) => console.error(err));
+            await compile_scripts.run().catch((err: unknown) => {
+                console.error(`❌ `, 'スクリプトのビルドに失敗しました', (err as Error).toString());
+                exit(1);
+            });
         }
     }
 
@@ -105,13 +120,19 @@ class BuildCommand {
      * srcディレクトリ配下にある全てのアドオンディレクトリを取得する
      * @returns all addon directories
      */
-    protected getAllAddondirectories(): string[] {
+    protected getAllAddonDirectories(): string[] {
         try {
             const directories = globSync(env.srcDir + '/*/', { posix: true });
             const DirNames = directories.map((directory) => path.basename(directory));
+
+            if (DirNames.length === 0) {
+                throw new Error('No addon directories found');
+            }
+
             return DirNames;
-        } catch (err) {
-            console.error(err);
+        } catch (err: unknown) {
+            console.error(`❌ `, 'アドオンディレクトリの取得に失敗しました', (err as Error).toString());
+            console.info('💡', `[${chalk.blue('info')}] srcディレクトリ配下にアドオンディレクトリが存在するか確認してください。`);
             exit(1);
         }
     }
@@ -139,8 +160,6 @@ class BuildCommand {
                 try {
                     rmSync(rmTargetDir, { recursive: true, force: true });
                 } catch {
-                    // console.error(err);
-
                     console.warn('ℹ️', ' ', `[${chalk.blue('Clear old builds')}]`, chalk.yellow(`処理をスキップしました:`), directory + ' (rm)');
                     console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しない可能性があります。`);
                 }
@@ -148,8 +167,6 @@ class BuildCommand {
                 try {
                     rmSync(`${rmTargetDir}/${only}_packs`, { recursive: true, force: true });
                 } catch {
-                    // console.error(err);
-
                     console.warn('ℹ️', ' ', `[${chalk.blue('Clear old builds')}]`, chalk.yellow(`処理をスキップしました:`), directory + ' (rm)');
                     console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しない可能性があります。`);
                 }
@@ -296,8 +313,8 @@ class BuildCommand {
                         })
                     ]
                 })
-                .catch((e : unknown) => {
-                    error('Error building project' , e);
+                .catch((err : unknown) => {
+                    console.error('❌ ', 'スクリプトのビルドに失敗しました', (err as Error).toString());
                     process.exit(1);
                 });
         });
