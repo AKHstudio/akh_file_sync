@@ -11,7 +11,7 @@ class AsyncCommand extends BuildCommand {
         this.directories = directories;
 
         if (this.directories.length === 0) {
-            this.directories = super.getAllAddondirectories();
+            this.directories = super.getAllAddonDirectories();
         }
     }
 
