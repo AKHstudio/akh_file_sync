@@ -1,14 +1,12 @@
 name: Release Stable
 
 on:
-    pull_request:
-        types: [closed]
+    push:
         branches:
             - main
-
 jobs:
     release-stable-setup:
-        if: github.event.pull_request.merged == true && github.head_ref == 'release'
+        if: github.head_ref == 'release'
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -74,7 +72,7 @@ jobs:
                   if [ "$VERSION" == "0.0.0" ]; then
                     echo "Version is 0.0.0, skipping push"
                   else
-                    git push origin ${{ github.base_ref }}
+                    git push origin main
                   fi
 
     release-github-release:
