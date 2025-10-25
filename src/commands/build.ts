@@ -104,13 +104,13 @@ class BuildCommand {
         );
 
         await clear_copy.run().catch((err: unknown) => {
-            console.error(`❌ `, 'ビルドのクリア・コピー処理に失敗しました', (err as Error).toString());
+            console.error(`❌ `, chalk.red('ビルドのクリア・コピー処理に失敗しました'), (err as Error).toString());
             exit(1);
         });
 
         if (this.only === 'behavior' || this.only === undefined) {
             await compile_scripts.run().catch((err: unknown) => {
-                console.error(`❌ `, 'スクリプトのビルドに失敗しました', (err as Error).toString());
+                console.error(`❌ `, chalk.red('scriptsのビルドに失敗しました'), (err as Error).toString());
                 exit(1);
             });
         }
@@ -131,7 +131,7 @@ class BuildCommand {
 
             return DirNames;
         } catch (err: unknown) {
-            console.error(`❌ `, 'アドオンディレクトリの取得に失敗しました', (err as Error).toString());
+            console.error(`❌ `, chalk.red('アドオンディレクトリの取得に失敗しました'), (err as Error).toString());
             console.info('💡', `[${chalk.blue('info')}] srcディレクトリ配下にアドオンディレクトリが存在するか確認してください。`);
             exit(1);
         }
@@ -314,7 +314,7 @@ class BuildCommand {
                     ]
                 })
                 .catch((err : unknown) => {
-                    console.error('❌ ', 'スクリプトのビルドに失敗しました', (err as Error).toString());
+                    console.error('❌ ', chalk.red('scriptsのビルドに失敗しました'), (err as Error).toString());
                     process.exit(1);
                 });
         });
