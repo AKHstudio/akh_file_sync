@@ -16,7 +16,7 @@
         "prettier:fix": "prettier --write src/**/*.ts",
         "fmt": "npm run prettier && npm run lint",
         "fmt:fix": "npm run prettier:fix && npm run lint:fix",
-        "test": "npm run fmt && npm run build && vitest run --testTimeout=5000",
+        "test": "npm run fmt && npm run build && vitest run",
         "release": "npm run fmt & npm run build -- --pure:console.debug --minify"
     },
     "repository": {
