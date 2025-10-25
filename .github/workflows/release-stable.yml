@@ -1,12 +1,13 @@
 name: Release Stable
 
 on:
-    push:
+    pull_request:
+        types: [closed]
         branches:
             - main
 jobs:
     release-stable-setup:
-        if: github.head_ref == 'release'
+        if: github.event.pull_request.merged == true && github.head_ref == 'release'
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -64,6 +65,7 @@ jobs:
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git checkout main
 
                   npm version $VERSION --no-git-tag-version
                   git add package.json package-lock.json
@@ -72,7 +74,7 @@ jobs:
                   if [ "$VERSION" == "0.0.0" ]; then
                     echo "Version is 0.0.0, skipping push"
                   else
-                    git push origin main
+                    git push
                   fi
 
     release-github-release:
@@ -183,4 +185,3 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAG_NAME: v${{ env.VERSION }}
-
