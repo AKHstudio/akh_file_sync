@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, afterAll, beforeAll } from 'vitest';
 import { execa } from 'execa';
 import { temporaryDirectory } from 'tempy';
 import fs from 'fs-extra';
@@ -8,15 +8,19 @@ import * as tar from 'tar';
 
 describe('Build Process Test', () => {
     let tempDir: string;
+    let debugDirPath: string;
     let originalCwd: string;
     let builtBinaryPath: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         tempDir = temporaryDirectory();
         originalCwd = process.cwd();
 
         // ビルド済みのバイナリパスを指定
         builtBinaryPath = path.join(originalCwd, 'dist/bin/akhsync.js');
+
+        // debug ディレクトリのパス
+        debugDirPath = path.join(tempDir, 'debug');
 
         // ビルド済みファイルの存在確認
         if (!(await fs.pathExists(builtBinaryPath))) {
@@ -24,27 +28,25 @@ describe('Build Process Test', () => {
         }
 
         // debug.tar.gz をテスト用ディレクトリにコピー
-        const originalDebugTarPath = path.join(originalCwd, 'debug.tar.gz');
-        const debugTarPath = path.join(tempDir, 'debug.tar.gz');
+        const originalDebugTarPath = path.join(originalCwd, 'test', 'fixtures', 'fixture.tar.gz');
 
         if (!(await fs.pathExists(originalDebugTarPath))) {
-            throw new Error('debug.tar.gz not found in the original directory.');
+            throw new Error('Original fixture.tar.gz not found in test fixtures.');
         }
 
-        await fs.copyFile(originalDebugTarPath, debugTarPath);
+        await fs.copy(originalDebugTarPath, path.join(tempDir, 'fixture.tar.gz'));
 
-        // tar ライブラリで解凍
+        // fixture.tar.gz を解凍
         await tar.x({
-            file: debugTarPath,
+            file: path.join(tempDir, 'fixture.tar.gz'),
             cwd: tempDir,
         });
 
-        // 解凍後、debug.tar.gz を削除
-        await fs.remove(debugTarPath);
+        console.log(fs.readdirSync(tempDir));
 
         // npm install を実行して依存関係をインストール
         await execa('npm', ['install'], {
-            cwd: path.join(tempDir, 'debug'),
+            cwd: debugDirPath,
             stdio: 'inherit',
         });
 
@@ -52,18 +54,80 @@ describe('Build Process Test', () => {
         process.chdir(tempDir);
     });
 
-    afterEach(async () => {
+    afterAll(async () => {
         process.chdir(originalCwd);
         await fs.remove(tempDir);
     });
 
+    afterEach(async () => {
+        if (fs.pathExistsSync(path.join(debugDirPath, 'build'))) {
+            await fs.remove(path.join(debugDirPath, 'build'));
+        }
+
+        console.log(fs.readdirSync(debugDirPath));
+    });
+
     it('should display help information', async () => {
         const helpResult = await execa('node', [builtBinaryPath, 'build', '--help'], {
-            cwd: tempDir,
+            cwd: debugDirPath,
             stdio: 'pipe',
         });
 
         expect(helpResult.exitCode).toBe(0);
         expect(helpResult.stdout).toContain('Usage: akhsync build [directory...] [options]');
+    });
+
+    it('should build the project successfully', async () => {
+        const buildResult = await execa('node', [builtBinaryPath, 'build'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+        });
+
+        console.log(buildResult.stdout);
+        console.log(buildResult.stderr);
+
+        expect(buildResult.exitCode).toBe(0);
+        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+    });
+
+    it('should build the project successfully in development mode', async () => {
+        const buildResult = await execa('node', [builtBinaryPath, 'build', '--development'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+        });
+
+        console.log(buildResult.stdout);
+        console.log(buildResult.stderr);
+
+        expect(buildResult.exitCode).toBe(0);
+        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+    });
+
+    ['behavior', 'resource'].forEach((onlyOption) => {
+        it(`should build the project successfully in only ${onlyOption} `, async () => {
+            const buildResult = await execa('node', [builtBinaryPath, 'build', '--only', onlyOption], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(buildResult.stdout);
+            console.log(buildResult.stderr);
+
+            expect(buildResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+        });
+    });
+
+    it('Error handling', async () => {
+        const buildResult = await execa('node', [builtBinaryPath, 'build', 'informant'], {
+            cwd: debugDirPath,
+            stdio: 'pipe',
+            reject: false,
+        });
+
+        console.log(buildResult.stdout);
+        console.log(buildResult.stderr);
+
+        expect(buildResult.exitCode).toBe(1);
     });
 });
