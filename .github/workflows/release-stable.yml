@@ -65,6 +65,7 @@ jobs:
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git checkout main
 
                   npm version $VERSION --no-git-tag-version
                   git add package.json package-lock.json
@@ -73,7 +74,7 @@ jobs:
                   if [ "$VERSION" == "0.0.0" ]; then
                     echo "Version is 0.0.0, skipping push"
                   else
-                    git push origin main
+                    git push
                   fi
 
     release-github-release:
