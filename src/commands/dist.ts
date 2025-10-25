@@ -98,9 +98,15 @@ class DistCommand extends BuildCommand {
 
         if (this.type.includes('world')) {
             if (!existsSync(env.worldDir)) {
-                throw new Error(`world directory not found: ${env.worldDir}`);
+                console.error(`❌ [${chalk.red('check world directory')}]`, chalk.red(`world directory does not exist: ${env.worldDir}`));
+                console.info('💡', `[${chalk.blue('info')}] worldディレクトリが存在するか確認してください。`);
+                console.info('💡', `[${chalk.blue('info')}] 基本的にworldディレクトリは ${path.join(env.syncTargetDir, 'minecraftWorlds')} 配下に存在しています`);
+                process.exit(1);
             } else if (!this.checkWorldDirectory()) {
-                throw new Error(`world directory is invalid: ${env.worldDir}`);
+                console.error(`❌ [${chalk.red('check world directory')}]`, chalk.red(`world directory is missing required files or directories.`));
+                console.info('💡', `[${chalk.blue('info')}] worldディレクトリ内にlevel.dat、db、behavior_packs、resource_packsが存在するか確認してください。`);
+                console.info('💡', `[${chalk.blue('info')}] 基本的にworldディレクトリは ${path.join(env.syncTargetDir, 'minecraftWorlds')} 配下に存在しています`);
+                process.exit(1);
             }
 
             const task = new Listr(
