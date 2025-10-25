@@ -15,7 +15,7 @@ class SyncCommand extends buildCommand {
         super(directories, options);
 
         if (this.directories.length === 0) {
-            this.directories = super.getAllAddondirectories();
+            this.directories = super.getAllAddonDirectories();
         }
 
         console.debug('🛠️ ', 'build', options.build);

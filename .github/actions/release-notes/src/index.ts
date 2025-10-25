@@ -200,7 +200,7 @@ function categorizePRs(prs: PullRequest[]): CategorizedPRs {
  */
 function generateReleaseNotes(version: string, categorizedPRs: CategorizedPRs): string {
     const date = new Date().toISOString().split('T')[0];
-    let notes = `## ${version} - ${date}\n\n`;
+    let notes = `\n## ${version} - ${date}\n\n`;
 
     // カテゴリを優先度順にソート
     const sortedCategories = Object.entries(categorizedPRs).sort(([, a], [, b]) => a.priority - b.priority);
@@ -213,8 +213,6 @@ function generateReleaseNotes(version: string, categorizedPRs: CategorizedPRs): 
             const author = pr.user ? `[@${pr.user.login}](${pr.user.html_url})` : '@unknown';
             notes += `- ${pr.title} ${prLink} by ${author}\n`;
         }
-
-        notes += '\n';
     }
 
     return notes;

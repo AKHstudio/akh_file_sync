@@ -60,5 +60,12 @@
 
 - `[Patch]` `dist` コマンド実行時にリソースパックが正しくコピーされない問題を修正
     - その他非同期処理を改善
-## 0.0.0 - 2025-10-24
 
+## 1.2.2 - 2025-10-25
+
+### 🐛 Bug Fixes
+
+- 本来処理が止まる必要がある箇所で止まっていなかったバグを修正 [#31](https://github.com/AKHstudio/akh_file_sync/pull/31) by [@tako-dayo8](https://github.com/tako-dayo8)
+### 🔧 Chore
+
+- npm audit fix を実行し依存関係を改善 [#29](https://github.com/AKHstudio/akh_file_sync/pull/29) by [@tako-dayo8](https://github.com/tako-dayo8)
