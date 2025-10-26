@@ -8,17 +8,15 @@ import * as tar from 'tar';
 
 describe('Sync Process Test', () => {
     let tempDir: string;
-    let originalCwd: string;
     let builtBinaryPath: string;
     let debugDirPath: string;
     let syncTargetDir: string;
 
     beforeEach(async () => {
         tempDir = temporaryDirectory();
-        originalCwd = process.cwd();
 
         // ビルド済みのバイナリパスを指定
-        builtBinaryPath = path.join(originalCwd, 'dist/bin/akhsync.js');
+        builtBinaryPath = path.join(process.cwd(), 'dist/bin/akhsync.js');
 
         // debug ディレクトリのパス
         debugDirPath = path.join(tempDir, 'debug');
@@ -36,7 +34,7 @@ describe('Sync Process Test', () => {
         }
 
         // debug.tar.gz をテスト用ディレクトリにコピー
-        const originalDebugTarPath = path.join(originalCwd, 'test', 'fixtures', 'fixture.tar.gz');
+        const originalDebugTarPath = path.join(process.cwd(), 'test', 'fixtures', 'fixture.tar.gz');
 
         if (!(await fs.pathExists(originalDebugTarPath))) {
             throw new Error('Original fixture.tar.gz not found in test fixtures.');
@@ -57,13 +55,9 @@ describe('Sync Process Test', () => {
             cwd: debugDirPath,
             stdio: 'inherit',
         });
-
-        // 作業ディレクトリを一時ディレクトリに変更
-        process.chdir(tempDir);
     });
 
     afterEach(async () => {
-        process.chdir(originalCwd);
         await fs.remove(tempDir);
     });
 
