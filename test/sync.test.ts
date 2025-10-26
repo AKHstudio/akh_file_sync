@@ -1,5 +1,4 @@
 import path from 'path';
-import os from 'os';
 
 import { describe, afterAll, beforeAll, afterEach, it, expect } from 'vitest';
 import { execa } from 'execa';
@@ -17,18 +16,19 @@ describe('Sync Process Test', () => {
     beforeAll(async () => {
         tempDir = temporaryDirectory();
         originalCwd = process.cwd();
-        syncTargetDir = path.join(os.homedir(), 'AppData/Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang');
-
-        // 存在しない場合は syncTargetDir を作成
-        fs.ensureDirSync(syncTargetDir);
-        fs.ensureDirSync(path.join(syncTargetDir, 'development_behavior_packs'));
-        fs.ensureDirSync(path.join(syncTargetDir, 'development_resource_packs'));
 
         // ビルド済みのバイナリパスを指定
         builtBinaryPath = path.join(originalCwd, 'dist/bin/akhsync.js');
 
         // debug ディレクトリのパス
         debugDirPath = path.join(tempDir, 'debug');
+
+        syncTargetDir = path.join(debugDirPath, 'akhsync_sync_target');
+
+        // 存在しない場合は syncTargetDir を作成
+        fs.ensureDirSync(syncTargetDir);
+        fs.ensureDirSync(path.join(syncTargetDir, 'development_behavior_packs'));
+        fs.ensureDirSync(path.join(syncTargetDir, 'development_resource_packs'));
 
         // ビルド済みファイルの存在確認
         if (!(await fs.pathExists(builtBinaryPath))) {
