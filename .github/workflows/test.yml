@@ -30,19 +30,19 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-                  # 変更がある場合のみコミットしてプッシュ
-                  if git diff --staged --quiet; then
-                    echo "No changes to commit"
-                    exit 0
-                    else
-                    echo "Changes detected, committing..."
-                    git add .
-                    git commit -m "ci: format code"
-                    git push
-
-                    # フォーマットによる変更があった場合、ghコマンドでPRにコメント
-                    gh pr comment ${{ github.event.pull_request.number }} --body "🤖 コードフォーマットを自動適用しました ✨"
-                  fi
+                    # 変更がある場合のみコミットしてプッシュ
+                    $hasChanges = git diff --quiet; $LASTEXITCODE -ne 0
+                    if ($hasChanges) {
+                      Write-Host "Changes detected, committing..."
+                      git add .
+                      git commit -m "ci: format code"
+                      git push
+                      
+                      # フォーマットによる変更があった場合、ghコマンドでPRにコメント
+                      gh pr comment ${{ github.event.pull_request.number }} --body "🤖 コードフォーマットを自動適用しました ✨"
+                    } else {
+                      Write-Host "No changes to commit"
+                    }
 
             - name: Build project
               run: npm run release
