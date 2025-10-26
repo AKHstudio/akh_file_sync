@@ -15,6 +15,7 @@ const navItems = [
     { href: '/commands/async', label: 'async コマンド', sub: true },
     { href: '/commands/watch', label: 'watch コマンド', sub: true },
     { href: '/commands/dist', label: 'dist コマンド', sub: true },
+    { href: '/config', label: '設定ファイル' },
     { href: '/#development', label: '開発用ドキュメント' },
 ];
 
