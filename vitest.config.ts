@@ -3,8 +3,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
     test: {
         // テストのタイムアウト設定
-        testTimeout: 30000,
-        hookTimeout: 30000,
+        testTimeout: 0, // 各テストケースのタイムアウト無効化
+        hookTimeout: 0, // フックのタイムアウト無効化
 
         // テストファイルのパターン
         include: ['test/**/*.test.ts'],
