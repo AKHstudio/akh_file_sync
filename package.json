@@ -23,7 +23,7 @@
         "fmt": "npm run prettier && npm run lint",
         "fmt:fix": "npm run prettier:fix && npm run lint:fix",
         "release": "npm run fmt & npm run build -- --pure:console.debug --minify",
-        "test": "npm run release && vitest run"
+        "test": "vitest run"
     },
     "repository": {
         "type": "git",
