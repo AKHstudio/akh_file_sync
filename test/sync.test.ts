@@ -91,54 +91,39 @@ describe('Sync Process Test', () => {
         expect(helpResult.stdout).toContain('Usage: akhsync sync [directory...] [options]');
     });
 
-    it('should sync and async the project successfully', async () => {
-        const syncResult = await execa('node', [builtBinaryPath, 'sync'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
+    describe("run 'akhsync sync' and 'akhsync async' commands", () => {
+        it('should sync and async the project successfully', async () => {
+            const syncResult = await execa('node', [builtBinaryPath, 'sync'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(syncResult.stdout);
+            console.log(syncResult.stderr);
+
+            console.log(fs.readdirSync(path.join(syncTargetDir, 'development_behavior_packs')));
+            console.log(fs.readdirSync(path.join(syncTargetDir, 'development_resource_packs')));
+
+            expect(syncResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
+
+            const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+            console.log(asyncResult.stdout);
+            console.log(asyncResult.stderr);
+
+            expect(asyncResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
         });
 
-        console.log(syncResult.stdout);
-        console.log(syncResult.stderr);
-
-        console.log(fs.readdirSync(path.join(syncTargetDir, 'development_behavior_packs')));
-        console.log(fs.readdirSync(path.join(syncTargetDir, 'development_resource_packs')));
-
-        expect(syncResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
-
-        const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-        });
-        console.log(asyncResult.stdout);
-        console.log(asyncResult.stderr);
-
-        expect(asyncResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
-    });
-
-    it('should sync the project successfully in development mode', async () => {
-        const syncResult = await execa('node', [builtBinaryPath, 'sync', '--development'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-        });
-
-        console.log(syncResult.stdout);
-        console.log(syncResult.stderr);
-
-        expect(syncResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
-    });
-
-    ['behavior', 'resource'].forEach((onlyOption) => {
-        it(`should sync and async the project successfully in only ${onlyOption} `, async () => {
-            const syncResult = await execa('node', [builtBinaryPath, 'sync', '--only', onlyOption], {
+        it('should sync the project successfully in development mode', async () => {
+            const syncResult = await execa('node', [builtBinaryPath, 'sync', '--development'], {
                 cwd: debugDirPath,
                 stdio: 'pipe',
             });
@@ -148,85 +133,106 @@ describe('Sync Process Test', () => {
 
             expect(syncResult.exitCode).toBe(0);
             expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-            if (onlyOption === 'behavior') {
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
-            } else {
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
-            }
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
+        });
+    });
 
-            const asyncResult = await execa('node', [builtBinaryPath, 'async', '--only', onlyOption], {
+    describe('sync and async run with only option', () => {
+        ['behavior', 'resource'].forEach((onlyOption) => {
+            it(`should sync and async the project successfully in only ${onlyOption} `, async () => {
+                const syncResult = await execa('node', [builtBinaryPath, 'sync', '--only', onlyOption], {
+                    cwd: debugDirPath,
+                    stdio: 'pipe',
+                });
+
+                console.log(syncResult.stdout);
+                console.log(syncResult.stderr);
+
+                expect(syncResult.exitCode).toBe(0);
+                expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+                if (onlyOption === 'behavior') {
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(true);
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
+                } else {
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(true);
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
+                }
+
+                const asyncResult = await execa('node', [builtBinaryPath, 'async', '--only', onlyOption], {
+                    cwd: debugDirPath,
+                    stdio: 'pipe',
+                });
+
+                console.log(asyncResult.stdout);
+                console.log(asyncResult.stderr);
+
+                expect(asyncResult.exitCode).toBe(0);
+                expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+                if (onlyOption === 'behavior') {
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
+                } else {
+                    expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
+                }
+            });
+        });
+    });
+
+    describe("Error handling 'akhsync sync' and 'akhsync async' commands", () => {
+        it('Error handling Non-existent directory', async () => {
+            const SyncResult = await execa('node', [builtBinaryPath, 'sync', 'g5a64g6a4g6'], {
                 cwd: debugDirPath,
                 stdio: 'pipe',
+                reject: false,
             });
+
+            const asyncResult = await execa('node', [builtBinaryPath, 'async', 'g5a64g6a4g6'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+                reject: false,
+            });
+
+            console.log(SyncResult.stdout);
+            console.log(SyncResult.stderr);
 
             console.log(asyncResult.stdout);
             console.log(asyncResult.stderr);
 
-            expect(asyncResult.exitCode).toBe(0);
-            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-            if (onlyOption === 'behavior') {
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))).toBe(false);
-            } else {
-                expect(fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))).toBe(false);
-            }
-        });
-    });
-
-    it('Error handling Non-existent directory', async () => {
-        const SyncResult = await execa('node', [builtBinaryPath, 'sync', 'g5a64g6a4g6'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
+            expect(SyncResult.exitCode).toBe(1);
+            expect(asyncResult.exitCode).toBe(1);
         });
 
-        const asyncResult = await execa('node', [builtBinaryPath, 'async', 'g5a64g6a4g6'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
+        it('Error handling Add-ons directory does not exist', async () => {
+            const srcDir = path.join(debugDirPath, 'src');
+            const srcBackupDir = path.join(debugDirPath, 'src_backup');
+
+            fs.mkdirSync(srcBackupDir);
+            fs.copySync(srcDir, srcBackupDir);
+            fs.removeSync(srcDir);
+
+            const SyncResult = await execa('node', [builtBinaryPath, 'sync'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+                reject: false,
+            });
+
+            const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+                reject: false,
+            });
+
+            console.log(SyncResult.stdout);
+            console.log(SyncResult.stderr);
+
+            console.log(asyncResult.stdout);
+            console.log(asyncResult.stderr);
+
+            expect(SyncResult.exitCode).toBe(1);
+            expect(asyncResult.exitCode).toBe(1);
+
+            fs.copySync(srcBackupDir, srcDir);
+            fs.removeSync(srcBackupDir);
         });
-
-        console.log(SyncResult.stdout);
-        console.log(SyncResult.stderr);
-
-        console.log(asyncResult.stdout);
-        console.log(asyncResult.stderr);
-
-        expect(SyncResult.exitCode).toBe(1);
-        expect(asyncResult.exitCode).toBe(1);
-    });
-
-    it('Error handling Add-ons directory does not exist', async () => {
-        const srcDir = path.join(debugDirPath, 'src');
-        const srcBackupDir = path.join(debugDirPath, 'src_backup');
-
-        fs.mkdirSync(srcBackupDir);
-        fs.copySync(srcDir, srcBackupDir);
-        fs.removeSync(srcDir);
-
-        const SyncResult = await execa('node', [builtBinaryPath, 'sync'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
-        });
-
-        const asyncResult = await execa('node', [builtBinaryPath, 'async'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
-        });
-
-        console.log(SyncResult.stdout);
-        console.log(SyncResult.stderr);
-
-        console.log(asyncResult.stdout);
-        console.log(asyncResult.stderr);
-
-        expect(SyncResult.exitCode).toBe(1);
-        expect(asyncResult.exitCode).toBe(1);
-
-        fs.copySync(srcBackupDir, srcDir);
-        fs.removeSync(srcBackupDir);
     });
 });

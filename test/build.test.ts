@@ -75,35 +75,22 @@ describe('Build Process Test', () => {
         expect(helpResult.stdout).toContain('Usage: akhsync build [directory...] [options]');
     });
 
-    it('should build the project successfully', async () => {
-        const buildResult = await execa('node', [builtBinaryPath, 'build'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
+    describe("run 'akhsync build' command", () => {
+        it('should build the project successfully', async () => {
+            const buildResult = await execa('node', [builtBinaryPath, 'build'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(buildResult.stdout);
+            console.log(buildResult.stderr);
+
+            expect(buildResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
         });
 
-        console.log(buildResult.stdout);
-        console.log(buildResult.stderr);
-
-        expect(buildResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-    });
-
-    it('should build the project successfully in development mode', async () => {
-        const buildResult = await execa('node', [builtBinaryPath, 'build', '--development'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-        });
-
-        console.log(buildResult.stdout);
-        console.log(buildResult.stderr);
-
-        expect(buildResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-    });
-
-    ['behavior', 'resource'].forEach((onlyOption) => {
-        it(`should build the project successfully in only ${onlyOption} `, async () => {
-            const buildResult = await execa('node', [builtBinaryPath, 'build', '--only', onlyOption], {
+        it('should build the project successfully in development mode', async () => {
+            const buildResult = await execa('node', [builtBinaryPath, 'build', '--development'], {
                 cwd: debugDirPath,
                 stdio: 'pipe',
             });
@@ -116,39 +103,58 @@ describe('Build Process Test', () => {
         });
     });
 
-    it('Error handling Non-existent directory', async () => {
-        const buildResult = await execa('node', [builtBinaryPath, 'build', 'g5a64g6a4g6'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
+    describe('build run with only option', () => {
+        ['behavior', 'resource'].forEach((onlyOption) => {
+            it(`should build the project successfully in only ${onlyOption} `, async () => {
+                const buildResult = await execa('node', [builtBinaryPath, 'build', '--only', onlyOption], {
+                    cwd: debugDirPath,
+                    stdio: 'pipe',
+                });
+
+                console.log(buildResult.stdout);
+                console.log(buildResult.stderr);
+
+                expect(buildResult.exitCode).toBe(0);
+                expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            });
         });
-
-        console.log(buildResult.stdout);
-        console.log(buildResult.stderr);
-
-        expect(buildResult.exitCode).toBe(1);
     });
 
-    it('Error handling Add-ons directory does not exist', async () => {
-        const srcDir = path.join(debugDirPath, 'src');
-        const srcBackupDir = path.join(debugDirPath, 'src_backup');
+    describe("Error handling 'akhsync build' command", () => {
+        it('Error handling Non-existent directory', async () => {
+            const buildResult = await execa('node', [builtBinaryPath, 'build', 'g5a64g6a4g6'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+                reject: false,
+            });
 
-        fs.mkdirSync(srcBackupDir);
-        fs.copySync(srcDir, srcBackupDir);
-        fs.removeSync(srcDir);
+            console.log(buildResult.stdout);
+            console.log(buildResult.stderr);
 
-        const buildResult = await execa('node', [builtBinaryPath, 'build'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-            reject: false,
+            expect(buildResult.exitCode).toBe(1);
         });
 
-        console.log(buildResult.stdout);
-        console.log(buildResult.stderr);
+        it('Error handling Add-ons directory does not exist', async () => {
+            const srcDir = path.join(debugDirPath, 'src');
+            const srcBackupDir = path.join(debugDirPath, 'src_backup');
 
-        expect(buildResult.exitCode).toBe(1);
+            fs.mkdirSync(srcBackupDir);
+            fs.copySync(srcDir, srcBackupDir);
+            fs.removeSync(srcDir);
 
-        fs.copySync(srcBackupDir, srcDir);
-        fs.removeSync(srcBackupDir);
+            const buildResult = await execa('node', [builtBinaryPath, 'build'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+                reject: false,
+            });
+
+            console.log(buildResult.stdout);
+            console.log(buildResult.stderr);
+
+            expect(buildResult.exitCode).toBe(1);
+
+            fs.copySync(srcBackupDir, srcDir);
+            fs.removeSync(srcBackupDir);
+        });
     });
 });

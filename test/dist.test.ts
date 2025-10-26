@@ -79,46 +79,9 @@ describe('Dist Process Test', () => {
         expect(helpResult.stdout).toContain('Usage: akhsync dist [directory...] [options]');
     });
 
-    it('should dist the project successfully', async () => {
-        const distResult = await execa('node', [builtBinaryPath, 'dist'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-        });
-
-        console.log(distResult.stdout);
-        console.log(distResult.stderr);
-
-        const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
-        console.log(distFiles);
-
-        expect(distResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
-        expect(distFiles.find((file) => file.endsWith('.mcaddon'))).toBeTruthy();
-    });
-
-    it(`should dist the project successfully with --type addon world`, async () => {
-        const distResult = await execa('node', [builtBinaryPath, 'dist', '--type', 'addon', 'world'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
-        });
-
-        console.log(distResult.stdout);
-        console.log(distResult.stderr);
-
-        const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
-        console.log(distFiles);
-
-        expect(distResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
-        expect(distFiles.find((file) => file.endsWith('mcaddon'))).toBeTruthy();
-        expect(distFiles.find((file) => file.endsWith('mcworld'))).toBeTruthy();
-    });
-
-    ['world', 'addon'].forEach((type) => {
-        it(`should dist the project successfully with --type ${type}`, async () => {
-            const distResult = await execa('node', [builtBinaryPath, 'dist', '--type', type], {
+    describe("run 'akhsync dist' command", () => {
+        it('should dist the project successfully', async () => {
+            const distResult = await execa('node', [builtBinaryPath, 'dist'], {
                 cwd: debugDirPath,
                 stdio: 'pipe',
             });
@@ -132,25 +95,66 @@ describe('Dist Process Test', () => {
             expect(distResult.exitCode).toBe(0);
             expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
             expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
-            expect(distFiles.find((file) => file.endsWith('mc' + type))).toBeTruthy();
+            expect(distFiles.find((file) => file.endsWith('.mcaddon'))).toBeTruthy();
         });
     });
 
-    it(`should dist the project successfully with --set-version`, async () => {
-        const distResult = await execa('node', [builtBinaryPath, 'dist', '--set-version', '9.9.9'], {
-            cwd: debugDirPath,
-            stdio: 'pipe',
+    describe("run 'akhsync dist' command with options", () => {
+        it(`should dist the project successfully with --type addon world`, async () => {
+            const distResult = await execa('node', [builtBinaryPath, 'dist', '--type', 'addon', 'world'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(distResult.stdout);
+            console.log(distResult.stderr);
+
+            const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
+            console.log(distFiles);
+
+            expect(distResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
+            expect(distFiles.find((file) => file.endsWith('mcaddon'))).toBeTruthy();
+            expect(distFiles.find((file) => file.endsWith('mcworld'))).toBeTruthy();
         });
 
-        console.log(distResult.stdout);
-        console.log(distResult.stderr);
+        ['world', 'addon'].forEach((type) => {
+            it(`should dist the project successfully with --type ${type}`, async () => {
+                const distResult = await execa('node', [builtBinaryPath, 'dist', '--type', type], {
+                    cwd: debugDirPath,
+                    stdio: 'pipe',
+                });
 
-        const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
-        console.log(distFiles);
+                console.log(distResult.stdout);
+                console.log(distResult.stderr);
 
-        expect(distResult.exitCode).toBe(0);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
-        expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
-        expect(distFiles.find((file) => file.includes('9.9.9'))).toBeTruthy();
+                const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
+                console.log(distFiles);
+
+                expect(distResult.exitCode).toBe(0);
+                expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+                expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
+                expect(distFiles.find((file) => file.endsWith('mc' + type))).toBeTruthy();
+            });
+        });
+
+        it(`should dist the project successfully with --set-version`, async () => {
+            const distResult = await execa('node', [builtBinaryPath, 'dist', '--set-version', '9.9.9'], {
+                cwd: debugDirPath,
+                stdio: 'pipe',
+            });
+
+            console.log(distResult.stdout);
+            console.log(distResult.stderr);
+
+            const distFiles = fs.readdirSync(path.join(debugDirPath, 'dist'));
+            console.log(distFiles);
+
+            expect(distResult.exitCode).toBe(0);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'build'))).toBe(true);
+            expect(fs.pathExistsSync(path.join(debugDirPath, 'dist'))).toBe(true);
+            expect(distFiles.find((file) => file.includes('9.9.9'))).toBeTruthy();
+        });
     });
 });
