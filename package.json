@@ -7,8 +7,14 @@
     "bin": {
         "akhsync": "./dist/bin/akhsync.js"
     },
+    "exports": {
+        "./config": {
+            "types": "./dist/config/types.d.ts"
+        }
+    },
     "scripts": {
-        "build": "tsc -p ./tsconfig.json --noEmit && esbuild src/**/*.ts --bundle --platform=node --outdir=dist --target=esnext --tsconfig=./tsconfig.json --format=esm --packages=external",
+        "build:config": "tsc src/config/types.ts --outDir ./dist/config --declaration --emitDeclarationOnly",
+        "build": "tsc -p ./tsconfig.json --noEmit && npm run build:config &esbuild src/**/*.ts --bundle --platform=node --outdir=dist --target=esnext --tsconfig=./tsconfig.json --format=esm --packages=external",
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
