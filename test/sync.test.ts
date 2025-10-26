@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { describe, afterAll, beforeAll, afterEach, it, expect } from 'vitest';
+import { describe, afterEach, it, expect, beforeEach } from 'vitest';
 import { execa } from 'execa';
 import { temporaryDirectory } from 'tempy';
 import fs from 'fs-extra';
@@ -13,7 +13,7 @@ describe('Sync Process Test', () => {
     let debugDirPath: string;
     let syncTargetDir: string;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         tempDir = temporaryDirectory();
         originalCwd = process.cwd();
 
@@ -62,23 +62,9 @@ describe('Sync Process Test', () => {
         process.chdir(tempDir);
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         process.chdir(originalCwd);
         await fs.remove(tempDir);
-    });
-
-    afterEach(async () => {
-        if (fs.pathExistsSync(path.join(debugDirPath, 'build'))) {
-            await fs.remove(path.join(debugDirPath, 'build'));
-        }
-
-        if (fs.pathExistsSync(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'))) {
-            await fs.remove(path.join(syncTargetDir, 'development_behavior_packs', 'akhsync-informant-debug'));
-        }
-
-        if (fs.pathExistsSync(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'))) {
-            await fs.remove(path.join(syncTargetDir, 'development_resource_packs', 'akhsync-informant-debug'));
-        }
     });
 
     it('should display help information', async () => {
