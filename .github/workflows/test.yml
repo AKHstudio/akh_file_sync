@@ -42,6 +42,7 @@ jobs:
                       gh pr comment ${{ github.event.pull_request.number }} --body "🤖 コードフォーマットを自動適用しました ✨"
                     } else {
                       Write-Host "No changes to commit"
+                      exit 0
                     }
 
             - name: Build project
