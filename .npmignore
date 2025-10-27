@@ -29,6 +29,8 @@ docs/
 
 # TypeScript（コンパイル後の.jsだけを公開する場合）
 *.ts
+# ただし型定義ファイルは含める
+!*.d.ts 
 tsconfig.json
 
 # 圧縮のためチェンジログは除外
