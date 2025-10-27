@@ -9,9 +9,6 @@ export default defineConfig({
         // テストファイルのパターン
         include: ['test/**/*.test.ts'],
 
-        // ファイル単位で順次実行（テスト内は並列可）
-        fileParallelism: false,
-
         // 並列実行の設定
         poolOptions: {
             threads: {
