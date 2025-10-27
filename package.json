@@ -20,9 +20,10 @@
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
         "prettier": "prettier --check src/**/*.ts",
         "prettier:fix": "prettier --write src/**/*.ts",
-        "test": "npm run prettier && npm run lint",
-        "test:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm test & npm run build -- --pure:console.debug --minify"
+        "fmt": "npm run prettier && npm run lint",
+        "fmt:fix": "npm run prettier:fix && npm run lint:fix",
+        "release": "npm run fmt & npm run build -- --pure:console.debug --minify",
+        "test": "vitest run"
     },
     "repository": {
         "type": "git",
@@ -46,13 +47,19 @@
         "@eslint/js": "^9.21.0",
         "@types/archiver": "^6.0.3",
         "@types/cli-progress": "^3.11.6",
+        "@types/fs-extra": "^11.0.4",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
         "eslint": "^9.26.0",
+        "execa": "^9.6.0",
+        "fs-extra": "^11.3.2",
         "globals": "^16.0.0",
         "prettier": "^3.5.3",
+        "tar": "^7.5.1",
+        "tempy": "^3.1.0",
         "tsx": "^4.19.3",
-        "typescript-eslint": "^8.25.0"
+        "typescript-eslint": "^8.25.0",
+        "vitest": "^3.2.4"
     },
     "dependencies": {
         "archiver": "^7.0.1",
