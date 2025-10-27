@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { cp } from 'fs/promises';
 
 import chalk from 'chalk';
-import { delay, Listr } from 'listr2';
+import { Listr } from 'listr2';
 
 import * as env from '@/index.js';
 import buildCommand from '@/commands/build.js';
@@ -67,24 +67,20 @@ class SyncCommand extends buildCommand {
         const syncTask = new Listr(
             [
                 {
-                    title: 'Build delay',
-                    task: async () => await delay(1000),
-                },
-                {
                     title: 'Checking Builded',
                     task: () => this.checkBuilded(),
                 },
                 {
                     title: 'Syncing',
                     task: async () => {
+                        // onlyオプションに応じて同期処理を実行
                         if (this.only === 'behavior') {
-                            this.runSync('behavior');
+                            await this.runSync('behavior');
                         } else if (this.only === 'resource') {
-                            this.runSync('resource');
+                            await this.runSync('resource');
                         } else {
-                            this.runSync('behavior');
-                            await delay(1000);
-                            this.runSync('resource');
+                            // behaviorとresourceを並列で同期（非同期処理が正しく実装されたため）
+                            await Promise.all([this.runSync('behavior'), this.runSync('resource')]);
                         }
                     },
                 },
@@ -132,22 +128,28 @@ class SyncCommand extends buildCommand {
     }
 
     protected async runSync(type: 'behavior' | 'resource') {
-        this.directories.forEach((directory) => {
+        // 全ディレクトリの同期処理を並列実行し、完了を待つ
+        const promises = this.directories.map(async (directory) => {
             console.debug(`🛠️ [${chalk.yellow(`Sync target ${type} ${directory}`)}]`, chalk.yellow(`ビルドディレクトリ: ${path.join(env.buildDir, directory, `${type}_packs`)}`));
 
             const buildDir = path.join(env.buildDir, directory, `${type}_packs`);
             const srcDir = path.join(env.srcDir, directory, `${type}_packs`);
             const syncTargetDir = path.join(env.syncTargetDir, `development_${type}_packs`, `${env.akhsyncFlag}-${directory}`);
 
+            // ソースディレクトリが存在しない場合はスキップ
             if (!existsSync(srcDir)) {
                 console.debug(`🛠️ [${chalk.yellow(`Sync target ${type} ${directory}`)}]`, chalk.yellow(`ソースディレクトリが存在しません: ${srcDir}`));
                 return;
             }
 
-            cp(buildDir, syncTargetDir, { recursive: true, force: true }).catch((err) => {
+            // ビルドディレクトリを同期先にコピー
+            await cp(buildDir, syncTargetDir, { recursive: true, force: true }).catch((err) => {
                 console.error(`❌ [${chalk.red(`Sync target ${type} ${directory}`)}]`, chalk.red(`エラーが発生しました:`), err);
             });
         });
+
+        // 全ての同期処理が完了するまで待機
+        await Promise.all(promises);
     }
 }
 
