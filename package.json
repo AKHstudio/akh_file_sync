@@ -1,22 +1,29 @@
 {
     "name": "@akhstudio/akhsync",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
     "bin": {
         "akhsync": "./dist/bin/akhsync.js"
     },
+    "exports": {
+        "./config": {
+            "types": "./dist/config/types.d.ts"
+        }
+    },
     "scripts": {
-        "build": "tsc -p ./tsconfig.json --noEmit && esbuild src/**/*.ts --bundle --platform=node --outdir=dist --target=esnext --tsconfig=./tsconfig.json --format=esm --packages=external",
+        "build:config": "tsc src/config/types.ts --outDir ./dist/config --declaration --emitDeclarationOnly",
+        "build": "tsc -p ./tsconfig.json --noEmit && npm run build:config && esbuild src/**/*.ts --bundle --platform=node --outdir=dist --target=esnext --tsconfig=./tsconfig.json --format=esm --packages=external",
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
         "prettier": "prettier --check src/**/*.ts",
         "prettier:fix": "prettier --write src/**/*.ts",
-        "test": "npm run prettier && npm run lint",
-        "test:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm test & npm run build -- --pure:console.debug --minify"
+        "fmt": "npm run prettier && npm run lint",
+        "fmt:fix": "npm run prettier:fix && npm run lint:fix",
+        "release": "npm run fmt & npm run build -- --pure:console.debug --minify",
+        "test": "vitest run"
     },
     "repository": {
         "type": "git",
@@ -40,13 +47,19 @@
         "@eslint/js": "^9.21.0",
         "@types/archiver": "^6.0.3",
         "@types/cli-progress": "^3.11.6",
+        "@types/fs-extra": "^11.0.4",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
         "eslint": "^9.26.0",
+        "execa": "^9.6.0",
+        "fs-extra": "^11.3.2",
         "globals": "^16.0.0",
         "prettier": "^3.5.3",
+        "tar": "^7.5.1",
+        "tempy": "^3.1.0",
         "tsx": "^4.19.3",
-        "typescript-eslint": "^8.25.0"
+        "typescript-eslint": "^8.25.0",
+        "vitest": "^3.2.4"
     },
     "dependencies": {
         "archiver": "^7.0.1",

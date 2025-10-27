@@ -4,7 +4,7 @@ import path from 'path';
 
 import archiver from 'archiver';
 import chalk from 'chalk';
-import { delay, Listr } from 'listr2';
+import { Listr } from 'listr2';
 
 import BuildCommand from '@/commands/build.js';
 import generateNbt from '@/helpers/NBT.js';
@@ -74,14 +74,11 @@ class DistCommand extends BuildCommand {
     }
 
     public override async execute() {
+        // ビルド処理を実行（非同期処理が正しく完了するまで待機）
         await super.execute();
 
         const task = new Listr(
             [
-                {
-                    title: 'build delay',
-                    task: async () => delay(1000),
-                },
                 {
                     title: 'Clear old dist',
                     task: () => this.clearOldDist(),

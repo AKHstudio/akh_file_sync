@@ -137,22 +137,25 @@ class BuildCommand {
         }
     }
 
-    public clearSyncTargetDir(type: 'behavior' | 'resource') {
+    public async clearSyncTargetDir(type: 'behavior' | 'resource') {
         const DevDirPath = path.join(env.syncTargetDir, `development_${type}_packs`);
 
+        // 全ディレクトリの削除処理を並列実行し、完了を待つ
         const promises = this.directories.map(async (directory) => {
             const rmTargetDir = path.join(DevDirPath, `${env.akhsyncFlag}-${directory}`);
 
-            rm(rmTargetDir, { recursive: true }).catch(() => {
+            await rm(rmTargetDir, { recursive: true }).catch(() => {
                 console.warn('ℹ️', ` [${chalk.green(`Clear target ${type}`)}]`, chalk.yellow(`処理をスキップしました:`), path.basename(rmTargetDir));
                 console.info('💡', `[${chalk.blue('info')}] ディレクトリが存在しないまたはゲームを起動中の可能性があります。`);
             });
         });
 
-        Promise.all(promises);
+        // 全ての削除処理が完了するまで待機
+        await Promise.all(promises);
     }
 
-    public clearOldSyncedBuildDir(only: typeof this.only) {
+    public async clearOldSyncedBuildDir(only: typeof this.only) {
+        // 全ディレクトリのビルド済みファイル削除処理を並列実行し、完了を待つ
         const promises = this.directories.map(async (directory) => {
             const rmTargetDir = path.join(env.buildDir, directory);
 
@@ -173,14 +176,17 @@ class BuildCommand {
             }
         });
 
-        Promise.all(promises);
+        // 全ての削除処理が完了するまで待機
+        await Promise.all(promises);
     }
 
-    public cpSrcDirToBuildDir(only: typeof this.only) {
+    public async cpSrcDirToBuildDir(only: typeof this.only) {
+        // 全ディレクトリのコピー処理を並列実行し、完了を待つ
         const promises = this.directories.map(async (directory) => {
             const srcDir = path.join(env.srcDir, directory);
             const destDir = path.join(env.buildDir, directory);
 
+            // scriptsディレクトリはコピーしない（後でコンパイルする）
             const cpFilter = async (src: string) => {
                 if (await checkDirectoryExists(src)) {
                     if (path.basename(src) === 'scripts') {
@@ -212,38 +218,47 @@ class BuildCommand {
             }
         });
 
-        Promise.all(promises);
+        // 全てのコピー処理が完了するまで待機
+        await Promise.all(promises);
     }
 
-    public cpScriptsDirToBuildDir() {
+    public async cpScriptsDirToBuildDir() {
+        // 全ディレクトリのscriptsディレクトリ内の非TSファイルコピー処理を並列実行し、完了を待つ
         const promises = this.directories.map(async (directory) => {
             const destDir = path.join(env.buildDir, directory);
 
             const scriptsDirPath = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
 
+            // TypeScriptとJavaScript以外のファイルを取得（設定ファイルなど）
             const files = await glob(`${scriptsDirPath}/**/*`, {
                 posix: true,
                 nodir: true,
                 ignore: `${scriptsDirPath}/**/*.{ts,js}`,
             });
 
-            files.forEach(async (file) => {
-                const filePath = path.join(destDir, 'behavior_packs', 'scripts', file.slice(file.indexOf('scripts') + 8));
+            // 各ファイルのディレクトリ作成を並列実行
+            await Promise.all(
+                files.map(async (file) => {
+                    const filePath = path.join(destDir, 'behavior_packs', 'scripts', file.slice(file.indexOf('scripts') + 8));
 
-                await mkdir(path.dirname(filePath), { recursive: true }).catch(() => {
-                    console.log('ℹ️', ' ', `[${chalk.blue('Copy to build scripts')}]`, chalk.yellow(`処理をスキップしました:`), file + ' (mkdir)');
-                });
-            });
+                    await mkdir(path.dirname(filePath), { recursive: true }).catch(() => {
+                        console.log('ℹ️', ' ', `[${chalk.blue('Copy to build scripts')}]`, chalk.yellow(`処理をスキップしました:`), file + ' (mkdir)');
+                    });
+                }),
+            );
         });
 
-        Promise.all(promises);
+        // 全てのコピー処理が完了するまで待機
+        await Promise.all(promises);
     }
 
-    public compileScripts() {
-        this.directories.forEach(async (directory) => {
+    public async compileScripts() {
+        // 全ディレクトリのTypeScriptコンパイル処理を並列実行し、完了を待つ
+        const promises = this.directories.map(async (directory) => {
             const entry = path.posix.join(path.basename(env.srcDir), directory, 'behavior_packs', 'scripts');
             const outdir = path.posix.join(path.basename(env.buildDir), directory, 'behavior_packs', 'scripts');
 
+            // tsconfig.jsonを検索
             const tsconfigFiles = await glob(path.join(process.cwd(), 'tsconfig.json'), {
                 posix: true,
                 nodir: true,
@@ -253,6 +268,7 @@ class BuildCommand {
             const tsconfigFlag = tsconfigFiles.length > 0;
             const tsconfig = tsconfigFlag ? path.resolve(tsconfigFiles[0]) : undefined;
 
+            // コンパイル対象のTypeScript/JavaScriptファイルを取得
             const scriptFiles = await glob(`${entry}/**/*.{ts,js}`, {
                 posix: true,
                 nodir: true,
@@ -263,37 +279,21 @@ class BuildCommand {
             console.debug('🛠️ ', 'tsconfig: ', tsconfig);
             console.debug('🛠️ ', 'tsconfigFiles: ', tsconfigFiles);
 
-            // console.debug("🛠️",'esbuildOptions: ', {
-            //     entryPoints: [...scriptFiles],
-            //     bundle: false,
-            //     outdir: outdir,
-            //     minify: Boolean(!this.dev),
-            //     sourcemap: Boolean(this.dev),
-            //     sourceRoot: path.join(env.srcDir, directory, 'behavior_packs', 'scripts'),
-            //     platform: 'node',
-            //     target: 'ESNext',
-            //     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
-            //     format: 'esm',
-            //     packages: 'external',
-            // });
-
             // prettier-ignore
+            // esbuildでTypeScriptをコンパイル
             await esbuild
                 .build({
                     entryPoints: [...scriptFiles],
-                    bundle: true, // 通常のインポートはバンドルしない
+                    bundle: true,
                     outdir: outdir,
                     minify: Boolean(!this.dev),
                     sourcemap: Boolean(this.dev),
-                    // sourceRoot:  path.relative(
-                    //     path.join(env.buildDir, directory, 'behavior_packs', 'scripts'),
-                    //     path.join(env.srcDir, directory, 'behavior_packs', 'scripts')
-                    //     ).replace(/\\/g, '/'),
                     sourcesContent: false,
                     platform: "node",
                     target: "node18",
                     ...(tsconfigFlag ? { tsconfig: tsconfig } : {}),
                     format: 'esm',
+                    // Minecraftのモジュールは外部依存として扱う
                     external: [
                         "@minecraft/server",
                         "@minecraft/server-ui",
@@ -318,6 +318,9 @@ class BuildCommand {
                     process.exit(1);
                 });
         });
+
+        // 全てのコンパイル処理が完了するまで待機
+        await Promise.all(promises);
     }
 }
 

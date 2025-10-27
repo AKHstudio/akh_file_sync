@@ -1,0 +1,191 @@
+name: Release Preparation
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+        branches:
+            - main
+
+jobs:
+    generate-release-notes:
+        # releaseからmainへのPRの場合のみ実行
+        if: github.head_ref == 'release'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: Extract version from PR
+              id: extract-version
+              run: |
+                  # PRのタイトルまたはブランチ名からバージョンを抽出
+                  PR_TITLE="${{ github.event.pull_request.title }}"
+                  BRANCH_NAME="${{ github.head_ref }}"
+
+                  # タイトルからバージョンを抽出 (例: "Release v1.2.3" → "1.2.3")
+                  if [[ "$PR_TITLE" =~ [vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
+                  # ブランチ名からバージョンを抽出 (例: "release/1.2.3" → "1.2.3")
+                  elif [[ "$BRANCH_NAME" =~ release/[vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
+                  else
+                    # バージョンが見つからない場合は次のパッチバージョンを使用
+                    LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                    VERSION=$(echo $LATEST_TAG | sed 's/v//' | awk -F. '{print $1"."$2"."$3+1}')
+                  fi
+
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Detected version: $VERSION"
+
+            - name: Install dependencies
+              working-directory: .github/actions/release-notes
+              run: |
+                  npm install 
+                  npm run build
+
+            - name: Generate release notes
+              id: generate
+              uses: ./.github/actions/release-notes
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  version: ${{ steps.extract-version.outputs.version }}
+
+            - name: Commit and push changes
+              run: |
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+
+                  git add CHANGELOG.md changelogs/
+
+                  if git diff --staged --quiet; then
+                    echo "No changes to commit"
+                  else
+                    git commit -m "docs: update release notes for v${{ steps.extract-version.outputs.version }}"
+                    git pull --rebase
+                    git push
+                  fi
+
+            - name: Comment on PR
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('fs');
+                      const version = '${{ steps.extract-version.outputs.version }}';
+                      const changelogPath = `changelogs/${version}.md`;
+
+                      let comment = `## 🎉 Release Notes Generated\n\n`;
+                      comment += `Release notes for version **${version}** have been generated and committed.\n\n`;
+
+                      if (fs.existsSync(changelogPath)) {
+                        const content = fs.readFileSync(changelogPath, 'utf8');
+                        comment += `<details>\n<summary>Preview</summary>\n\n${content}\n</details>`;
+                      }
+
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: comment
+                      });
+
+    update-package-version:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '20'
+
+            - name: Extract version from PR
+              id: extract-version
+              run: |
+                  # PRのタイトルまたはブランチ名からバージョンを抽出
+                  PR_TITLE="${{ github.event.pull_request.title }}"
+                  BRANCH_NAME="${{ github.head_ref }}"
+
+                  # タイトルからバージョンを抽出 (例: "Release v1.2.3" → "1.2.3")
+                  if [[ "$PR_TITLE" =~ [vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
+                  # ブランチ名からバージョンを抽出 (例: "release/1.2.3" → "1.2.3")
+                  elif [[ "$BRANCH_NAME" =~ release/[vV]?([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+                    VERSION="${BASH_REMATCH[1]}"
+                  else
+                    # バージョンが見つからない場合は次のパッチバージョンを使用
+                    LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                    VERSION=$(echo $LATEST_TAG | sed 's/v//' | awk -F. '{print $1"."$2"."$3+1}')
+                  fi
+
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Detected version: $VERSION"
+
+            - name: Update package.json version
+              env:
+                  VERSION: ${{ steps.extract-version.outputs.version }}
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+                  # 現在のpackage.jsonのバージョンを取得
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+                  # バージョンが既に同じ場合はスキップ
+                  if [ "$CURRENT_VERSION" == "${{ env.VERSION }}" ]; then
+                    echo "Version is already ${{ env.VERSION }}, skipping version update"
+                    exit 0
+                  fi
+
+                  npm version ${{ env.VERSION }} --no-git-tag-version 
+                  git add package.json package-lock.json
+                  git commit -m "Update package.json version to v${{ env.VERSION }}"
+                  # 0.0.0の場合はテスト用のためpushしない
+                  if [ "${{ env.VERSION }}" == "0.0.0" ]; then
+                    echo "Version is 0.0.0, skipping push"
+                  else
+                    git pull --rebase
+                    git push
+                  fi
+
+            - name: Create Release PR comment
+              env:
+                  VERSION: ${{ steps.extract-version.outputs.version }}
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('fs');
+                      const version = '${{ env.VERSION }}';
+                      const packageJson = fs.readFileSync('./package.json', 'utf8');
+
+                      const comment = `## 📦 Package Version Updated\n\n` +
+                                      `The \`package.json\` version has been updated to **${version}**.\n\n` + 
+                                      `\`\`\`json\n` +
+                                      `${packageJson}\n` +
+                                      `\`\`\``;
+
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: comment
+                      });

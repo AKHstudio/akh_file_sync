@@ -169,9 +169,9 @@ export default function DistCommand() {
                     title: 'watch コマンド',
                 }}
                 next={{
-                    href: '/#development',
+                    href: '/config',
                     label: '次へ →',
-                    title: '開発用ドキュメント',
+                    title: '設定ファイル',
                 }}
             />
         </>
