@@ -18,11 +18,9 @@
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
-        "prettier": "prettier --check src/**/*.ts",
-        "prettier:fix": "prettier --write src/**/*.ts",
-        "fmt": "npm run prettier && npm run lint",
-        "fmt:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm run fmt & npm run build -- --pure:console.debug --minify",
+        "format": "prettier --check src/**/*.ts",
+        "format:fix": "prettier --write src/**/*.ts",
+        "release": "npm run build -- --pure:console.debug --minify",
         "test": "vitest run"
     },
     "repository": {
