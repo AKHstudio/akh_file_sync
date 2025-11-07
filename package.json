@@ -1,6 +1,6 @@
 {
     "name": "@akhstudio/akhsync",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "private": false,
     "description": "マインクラフト統合版アドオン開発用のファイル同期ツールです。",
     "type": "module",
@@ -18,12 +18,11 @@
         "watch": "node esbuild.watch.js",
         "lint": "eslint --config ./eslint.config.js src/",
         "lint:fix": "eslint --fix --config ./eslint.config.js src/",
-        "prettier": "prettier --check src/**/*.ts",
-        "prettier:fix": "prettier --write src/**/*.ts",
-        "fmt": "npm run prettier && npm run lint",
-        "fmt:fix": "npm run prettier:fix && npm run lint:fix",
-        "release": "npm run fmt & npm run build -- --pure:console.debug --minify",
-        "test": "vitest run"
+        "format": "prettier --check src/**/*.ts",
+        "format:fix": "prettier --write src/**/*.ts",
+        "release": "npm run build -- --pure:console.debug --minify",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage"
     },
     "repository": {
         "type": "git",
@@ -50,16 +49,17 @@
         "@types/fs-extra": "^11.0.4",
         "@types/glob": "^8.1.0",
         "@types/node": "^22.13.5",
+        "@vitest/coverage-v8": "^4.0.7",
         "eslint": "^9.26.0",
         "execa": "^9.6.0",
         "fs-extra": "^11.3.2",
         "globals": "^16.0.0",
         "prettier": "^3.5.3",
-        "tar": "^7.5.1",
+        "tar": "^7.5.2",
         "tempy": "^3.1.0",
         "tsx": "^4.19.3",
         "typescript-eslint": "^8.25.0",
-        "vitest": "^3.2.4"
+        "vitest": "^4.0.7"
     },
     "dependencies": {
         "archiver": "^7.0.1",

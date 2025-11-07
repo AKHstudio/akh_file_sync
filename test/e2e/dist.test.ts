@@ -2,9 +2,9 @@ import path from 'path';
 
 import { describe, it, expect, afterEach, afterAll, beforeAll } from 'vitest';
 import { execa } from 'execa';
-import { temporaryDirectory } from 'tempy';
 import fs from 'fs-extra';
-import * as tar from 'tar';
+
+import { setupTestEnvironment } from '../helpers/test-utils';
 
 describe('Dist Process Test', () => {
     let tempDir: string;
@@ -12,41 +12,10 @@ describe('Dist Process Test', () => {
     let builtBinaryPath: string;
 
     beforeAll(async () => {
-        tempDir = temporaryDirectory();
-
-        // ビルド済みのバイナリパスを指定
-        builtBinaryPath = path.join(process.cwd(), 'dist/bin/akhsync.js');
-
-        // debug ディレクトリのパス
-        debugDirPath = path.join(tempDir, 'debug');
-
-        // ビルド済みファイルの存在確認
-        if (!(await fs.pathExists(builtBinaryPath))) {
-            throw new Error('Built binary not found. Please run "npm run build" before testing.');
-        }
-
-        // debug.tar.gz をテスト用ディレクトリにコピー
-        const originalDebugTarPath = path.join(process.cwd(), 'test', 'fixtures', 'fixture.tar.gz');
-
-        if (!(await fs.pathExists(originalDebugTarPath))) {
-            throw new Error('Original fixture.tar.gz not found in test fixtures.');
-        }
-
-        await fs.copy(originalDebugTarPath, path.join(tempDir, 'fixture.tar.gz'));
-
-        // fixture.tar.gz を解凍
-        await tar.x({
-            file: path.join(tempDir, 'fixture.tar.gz'),
-            cwd: tempDir,
-        });
-
-        console.log(fs.readdirSync(tempDir));
-
-        // npm install を実行して依存関係をインストール
-        await execa('npm', ['install'], {
-            cwd: debugDirPath,
-            stdio: 'inherit',
-        });
+        const env = await setupTestEnvironment();
+        tempDir = env.tempDir;
+        debugDirPath = env.debugDirPath;
+        builtBinaryPath = env.builtBinaryPath;
     });
 
     afterAll(async () => {
