@@ -6,7 +6,7 @@ on:
         branches: [main, release]
 
 jobs:
-    run-tests:
+    lint-and-format:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
