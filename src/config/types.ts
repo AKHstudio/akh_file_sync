@@ -1,7 +1,7 @@
 export interface AKHsyncConfig {
     /**
      * 同期対象ディレクトリのパス
-     * @default "{userHome}/AppData/Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang"
+     * @default "{userHome}/AppData/Roaming/Minecraft Bedrock/Users/Shared/games/com.mojang"
      */
     syncTargetDir?: string;
     /**
