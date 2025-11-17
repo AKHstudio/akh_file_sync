@@ -10,7 +10,7 @@ if (config !== null) {
     console.info('⚙️ ', '設定ファイルを読み込みました。\n', config);
 }
 
-const syncTargetDir = config?.syncTargetDir ?? path.join(homedir(), 'AppData/Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang');
+const syncTargetDir = config?.syncTargetDir ?? path.join(homedir(), 'AppData/Roaming/Minecraft Bedrock/Users/Shared/games/com.mojang');
 const srcDir = path.join(process.cwd(), 'src');
 const buildDir = path.join(process.cwd(), 'build');
 const distDir = path.join(process.cwd(), 'dist');

@@ -42,7 +42,7 @@ describe('Index Module', () => {
             // 設定ファイルが存在しない状態で動的にインポート
             const module = await import(path.join(originalCwd, 'src/index.ts') + `?nocache=${Date.now()}`);
 
-            expect(module.syncTargetDir).toContain('Microsoft.MinecraftUWP');
+            expect(module.syncTargetDir).toContain('Minecraft Bedrock\\Users\\Shared\\games\\com.mojang');
         });
 
         it('should use default worldDirName when no config', async () => {
