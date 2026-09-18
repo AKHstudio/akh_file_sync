@@ -1,0 +1,24 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "{{ADDON_DESCRIPTION}}",
+        "name": "{{ADDON_NAME}}",
+        "uuid": "{{RP_HEADER_UUID}}",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 21, 0]
+    },
+    "modules": [
+        {
+            "description": "{{ADDON_NAME}} resource pack",
+            "type": "resources",
+            "uuid": "{{RP_MODULE_UUID}}",
+            "version": [1, 0, 0]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "{{BP_HEADER_UUID}}",
+            "version": [1, 0, 0]
+        }
+    ]
+}

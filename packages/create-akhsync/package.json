@@ -1,8 +1,8 @@
 {
     "name": "create-akhsync",
-    "type": "commonjs",
+    "type": "module",
     "version": "1.0.0",
-    "description": "",
+    "description": "Create Akhsync projects with one command",
     "bin": {
         "create-akhsync": "./dist/index.js"
     },
@@ -11,9 +11,25 @@
         "build": "ncc build src/index.ts -o dist --license dist/licenses.txt --minify",
         "type-check": "tsc --noEmit"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "keywords": [
+        "minecraft",
+        "addon",
+        "bedrock",
+        "create",
+        "scaffold",
+        "cli"
+    ],
+    "author": "tako1dayo (akhstudio)",
+    "license": "GPL-3.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AKHstudio/akh_file_sync.git",
+        "directory": "packages/create-akhsync"
+    },
+    "bugs": {
+        "url": "https://github.com/AKHstudio/akh_file_sync/issues"
+    },
+    "homepage": "https://github.com/AKHstudio/akh_file_sync/tree/main/packages/create-akhsync#readme",
     "devDependencies": {
         "@types/node": "^24.10.1",
         "@types/prompts": "^2.4.9",
@@ -21,6 +37,7 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
+        "chalk": "^5.4.1",
         "commander": "^14.0.2",
         "degit": "^2.8.4",
         "fs-extra": "^11.3.2",

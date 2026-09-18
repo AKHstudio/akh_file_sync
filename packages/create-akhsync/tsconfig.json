@@ -13,6 +13,7 @@
         // Environment Settings
         // See also https://aka.ms/tsconfig/module
         "module": "nodenext",
+        "moduleResolution": "nodenext",
         "target": "esnext",
         // For nodejs:
         // "lib": ["esnext"],
@@ -46,5 +47,5 @@
         "moduleDetection": "force",
         "skipLibCheck": true
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "helper/**/*"]
 }

@@ -1,0 +1,40 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "{{ADDON_DESCRIPTION}}",
+        "name": "{{ADDON_NAME}}",
+        "uuid": "{{BP_HEADER_UUID}}",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 21, 0]
+    },
+    "modules": [
+        {
+            "description": "{{ADDON_NAME}} behavior pack",
+            "type": "data",
+            "uuid": "{{BP_MODULE_UUID}}",
+            "version": [1, 0, 0]
+        },
+        {
+            "description": "script module",
+            "language": "javascript",
+            "type": "script",
+            "uuid": "{{BP_SCRIPT_UUID}}",
+            "version": [1, 0, 0],
+            "entry": "scripts/main.js"
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "{{RP_HEADER_UUID}}",
+            "version": [1, 0, 0]
+        },
+        {
+            "module_name": "@minecraft/server",
+            "version": "1.16.0-beta"
+        },
+        {
+            "module_name": "@minecraft/server-ui",
+            "version": "1.3.0-beta"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "name": "{{PROJECT_NAME}}",
+    "version": "1.0.0",
+    "description": "Minecraft Bedrock Edition Addon Project",
+    "type": "module",
+    "scripts": {
+        "build": "akhsync build",
+        "sync": "akhsync sync",
+        "async": "akhsync async",
+        "watch": "akhsync watch",
+        "dist": "akhsync dist"
+    },
+    "keywords": [
+        "minecraft",
+        "addon"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@akhstudio/akhsync": "^1.2.5",
+        "@minecraft/server": "^1.16.0-beta",
+        "@minecraft/server-ui": "^1.3.0-beta"
+    }
+}
