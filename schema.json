@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "akhsync config",
+    "type": "object",
+    "properties": {
+        "$schema": { "type": "string" },
+        "syncTargetDir": {
+            "type": "string",
+            "description": "同期先ディレクトリ。省略時は %AppData%\\Minecraft Bedrock\\Users\\Shared\\games\\com.mojang"
+        },
+        "worldDirName": {
+            "type": "string",
+            "description": "ワールドのディレクトリ名",
+            "default": "world"
+        }
+    },
+    "additionalProperties": false
+}
