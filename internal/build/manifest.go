@@ -22,14 +22,17 @@ var extCandidates = []string{
 	".ts", ".mts", ".cts", ".js", ".mjs", ".cjs",
 }
 
-
 const MANIFEST_FILE = "manifest.json"
 
-func getManifestEntryPath(cfg config.Config , packDir string) (string, error) {
+func getManifestEntryPath(cfg config.Config, packDir string) (string, error) {
 	path := filepath.Join(cfg.SrcDir, packDir, "behavior_packs", MANIFEST_FILE)
 
-	if info, err := os.Stat(path); err != nil || info.IsDir() {
+	if info, err := os.Stat(path); errors.Is(err, fs.ErrNotExist) {
 		return "", fmt.Errorf("missing to manifest json %s: %w", path, err)
+	} else if err != nil {
+		return "", fmt.Errorf("stat error %s: %w", path, err)
+	} else if info.IsDir() {
+		return "", fmt.Errorf("%q is a directory", path)
 	}
 
 	data, err := os.ReadFile(path)
@@ -49,10 +52,10 @@ func getManifestEntryPath(cfg config.Config , packDir string) (string, error) {
 	for _, module := range manifestEntry.Modules {
 		if module.Type == "script" {
 			entryPath := filepath.Join(cfg.SrcDir, packDir, "behavior_packs", module.Entry)
-			
+
 			for _, ext := range extCandidates {
-				newEntryPath := strings.TrimSuffix(entryPath, filepath.Ext(entryPath)) + ext	
-				if _, err := os.Stat(newEntryPath); err == nil { 
+				newEntryPath := strings.TrimSuffix(entryPath, filepath.Ext(entryPath)) + ext
+				if _, err := os.Stat(newEntryPath); err == nil {
 					return newEntryPath, nil
 				} else if !errors.Is(err, fs.ErrNotExist) {
 					return "", err
