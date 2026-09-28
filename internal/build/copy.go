@@ -51,7 +51,7 @@ func copyPack(srcDir string, distDir string) error {
 			return err
 		}
 
-		rel , err := filepath.Rel(srcDir, path)
+		rel, err := filepath.Rel(srcDir, path)
 		if err != nil {
 			return err
 		}
@@ -59,7 +59,7 @@ func copyPack(srcDir string, distDir string) error {
 		dstPath := filepath.Join(distDir, rel)
 
 		if d.IsDir() {
-			isAllScriptFile, err := checkAllScriptFile(path) 
+			isAllScriptFile, err := checkAllScriptFile(path)
 			if err != nil {
 				return err
 			}
