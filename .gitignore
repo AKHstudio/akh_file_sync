@@ -127,6 +127,7 @@ out
 .yarn/install-state.gz
 .pnp.*
 
+temp
 debug
 dist
 !docs/**/dist
