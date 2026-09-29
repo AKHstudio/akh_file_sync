@@ -18,6 +18,8 @@ type rawMessage struct {
 	kind esbuild.MessageKind
 }
 
+var ErrCompileFailed = errors.New("failed compile")
+
 func compile(entry string, outfile string, tsconfig string, dev bool) ([]Message, error) {
 	var sourceMap esbuild.SourceMap = esbuild.SourceMapNone
 	if dev {
@@ -84,7 +86,7 @@ func compile(entry string, outfile string, tsconfig string, dev bool) ([]Message
 	}
 
 	if len(result.Errors) > 0 {
-		return messages, errors.New("failed compile")
+		return messages, ErrCompileFailed
 	}
 
 	return messages, nil
