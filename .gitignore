@@ -130,4 +130,5 @@ out
 temp
 debug
 dist
+!internal/dist
 !docs/**/dist
