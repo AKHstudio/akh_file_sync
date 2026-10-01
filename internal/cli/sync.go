@@ -1,7 +1,11 @@
 package cli
 
 import (
+	"akh_file_sync/internal/build"
+	"akh_file_sync/internal/config"
+	"akh_file_sync/internal/link"
 	"akh_file_sync/internal/ui"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -15,8 +19,27 @@ var syncCmd = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return validateOnly(only)
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		ui.Debug("run sync command", "args", args)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cfg, err := config.GetConfig()
+		if err != nil {
+			ui.Error(err.Error())
+			os.Exit(1)
+		}
+		buildOpts := build.Options{Addons: args, Development: developmentFlag, Only: only}
+		if !noBuildFlag {
+			if err := build.Run(cfg, buildOpts); err != nil {
+				ui.Error(err.Error())
+				os.Exit(1)
+			}
+			ui.Success("successful build. is syncing...")
+		}
+		if err := link.Link(cfg, buildOpts); err != nil {
+			ui.Error(err.Error())
+			os.Exit(1)
+		}
+
+		ui.Success("successful sync")
+		return nil
 	},
 }
 
