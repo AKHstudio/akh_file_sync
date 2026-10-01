@@ -47,7 +47,7 @@ func Link(cfg config.Config, opts build.Options) error {
 	if len(opts.Addons) == 0 {
 		return errors.New("not found addon in src directory")
 	}
-	
+
 	bpPath := filepath.Join(cfg.SyncTargetDir, "development_behavior_packs")
 	rpPath := filepath.Join(cfg.SyncTargetDir, "development_resource_packs")
 
@@ -58,7 +58,7 @@ func Link(cfg config.Config, opts build.Options) error {
 			if alreadySynced(mountPt) {
 				return fmt.Errorf("has already been synced (%s)", addon)
 			}
-			
+
 			if err := junction.Create(target, mountPt); err != nil {
 				return err
 			}
@@ -71,7 +71,7 @@ func Link(cfg config.Config, opts build.Options) error {
 			if alreadySynced(mountPt) {
 				return fmt.Errorf("has already been synced (%s)", addon)
 			}
-			
+
 			if err := junction.Create(target, mountPt); err != nil {
 				return err
 			}
