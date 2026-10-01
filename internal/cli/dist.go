@@ -1,8 +1,11 @@
 package cli
 
 import (
+	"akh_file_sync/internal/config"
+	"akh_file_sync/internal/dist"
 	"akh_file_sync/internal/ui"
 	"fmt"
+	"os"
 	"regexp"
 
 	"github.com/spf13/cobra"
@@ -40,6 +43,25 @@ var distCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ui.Debug("run dist command", "args", args)
+		cfg, err := config.GetConfig()
+		if err != nil {
+			ui.Error(err.Error())
+			os.Exit(1)
+		}
+
+		distOptions := dist.Options{ 
+			Addons: args,
+			SetVersion: setVersion,
+			SetWorldName: setWorldName,
+			Type: distType,
+		}
+
+		if err := dist.Run(cfg, distOptions); err != nil {
+			ui.Error(err.Error())
+			os.Exit(1)
+		}
+
+		ui.Success("successful dist")
 
 		return nil
 	},
