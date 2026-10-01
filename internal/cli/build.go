@@ -17,20 +17,19 @@ var buildCmd = &cobra.Command{
 		return validateOnly(only)
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ui.Debug("run build command", "args", args, "development", developmentFlag, "only", only)
 		config, err := config.GetConfig()
 		if err != nil {
 			ui.Error(err.Error())
 			os.Exit(1)
 		}
 
-		ui.Debug("check config", "config", config)
 		err = build.Run(config, build.Options{Addons: args, Development: developmentFlag, Only: only})
 		if err != nil {
 			ui.Error(err.Error())
 			os.Exit(1)
 		}
 
+		ui.Success("successful build")
 		return nil
 	},
 }
