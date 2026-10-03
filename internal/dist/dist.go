@@ -13,12 +13,11 @@ import (
 )
 
 type Options struct {
-	Addons      []string // 空なら src 直下の全部
-	SetVersion string
-	Type []string
+	Addons       []string // 空なら src 直下の全部
+	SetVersion   string
+	Type         []string
 	SetWorldName string
 }
-
 
 func exist(path string) bool {
 	if _, err := os.Stat(path); err == nil {
@@ -32,41 +31,40 @@ func exist(path string) bool {
 
 func archive(zipWriter *zip.Writer, sourceRootPath string, cfg config.Config) error {
 	return filepath.WalkDir(sourceRootPath, func(path string, d fs.DirEntry, err error) error {
-					if err != nil {
-						return err
-					}
-					
-					if d.IsDir() {
-						return nil
-					}
+		if err != nil {
+			return err
+		}
 
-					relPath, err := filepath.Rel(cfg.BuildDir, path)
-					if err != nil {
-						return err
-					}
+		if d.IsDir() {
+			return nil
+		}
 
-					zipPath := filepath.ToSlash(relPath)
+		relPath, err := filepath.Rel(cfg.BuildDir, path)
+		if err != nil {
+			return err
+		}
 
-					w, err := zipWriter.Create(zipPath)
-					if err != nil {
-						return err
-					}
+		zipPath := filepath.ToSlash(relPath)
 
-					f, err := os.Open(path)
-					if err != nil {
-						return err
-					}
-					defer f.Close()
+		w, err := zipWriter.Create(zipPath)
+		if err != nil {
+			return err
+		}
 
-					_, err = io.Copy(w, f)
-					if err != nil {
-						return err
-					}
-					
-					return nil
-				})
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+
+		_, err = io.Copy(w, f)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
-
 
 func Run(cfg config.Config, opts Options) error {
 	if len(opts.Addons) == 0 {
@@ -91,7 +89,7 @@ func Run(cfg config.Config, opts Options) error {
 	}
 	// create new dist
 	if err := os.MkdirAll(cfg.DistDir, 0o755); err != nil {
-		return  fmt.Errorf("failed to make a directory %q: %w", cfg.DistDir, err)
+		return fmt.Errorf("failed to make a directory %q: %w", cfg.DistDir, err)
 	}
 
 	if slices.Contains(opts.Type, "addon") {
@@ -113,7 +111,7 @@ func Run(cfg config.Config, opts Options) error {
 				if err != nil {
 					return err
 				}
-			} 
+			}
 			if exist(targetRP) {
 				err := archive(zipWriter, targetRP, cfg)
 				if err != nil {
@@ -121,11 +119,11 @@ func Run(cfg config.Config, opts Options) error {
 				}
 			}
 		}
-	} 
+	}
 
 	if slices.Contains(opts.Type, "world") {
 		//TODO
-	} 
-	
+	}
+
 	return nil
 }

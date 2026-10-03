@@ -49,11 +49,11 @@ var distCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		distOptions := dist.Options{ 
-			Addons: args,
-			SetVersion: setVersion,
+		distOptions := dist.Options{
+			Addons:       args,
+			SetVersion:   setVersion,
 			SetWorldName: setWorldName,
-			Type: distType,
+			Type:         distType,
 		}
 
 		if err := dist.Run(cfg, distOptions); err != nil {
